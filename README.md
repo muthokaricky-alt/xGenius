@@ -36,10 +36,12 @@ No always-on server, no database, no cold starts. Training runs offline in Pytho
 
 | Source | Gives us | Notes |
 |---|---|---|
-| [football-data.co.uk](https://football-data.co.uk) | Results + bookmaker odds, 2014/15 onwards, 15 leagues | Free CSVs. xG only from 2026/27. |
+| [football-data.co.uk](https://football-data.co.uk) | Results + bookmaker odds, 2014/15 onwards, 15 leagues | Free CSVs. xG only from 2026/27 (see below). |
 | [football-data.org](https://www.football-data.org) | Fixtures, Champions League | Free API key, 10 requests/min. Champions League results only from 2023/24 on the free tier. |
 
 We ingest 10 leagues beyond the 5 we show (Netherlands, Portugal, Belgium, Scotland, Turkey, Greece, Austria, Switzerland, Denmark, Norway). Their clubs play in the Champions League, so we need ratings for them.
+
+**xG:** the 2026/27 files have `HxG`/`AxG` (→ `home_xg`/`away_xg`) for the 11 one-file-per-season leagues; the four all-seasons files (Austria, Switzerland, Denmark, Norway) have none, and no earlier season has any. football-data.co.uk doesn't say who computes it: its notes only define the column, and its credits list match statistics from BBC, Flashscore, ESPN and league sites, without naming an xG provider. Treat it as an unverified xG model of unknown origin; milestone 5 should check it against results before trusting it.
 
 **API rate limit:** the client follows football-data.org's `X-Requests-Available-Minute` / `X-RequestCounter-Reset` headers, falls back to 6.5 s between calls if they're missing, and on a 429 waits for the reset and retries once.
 
