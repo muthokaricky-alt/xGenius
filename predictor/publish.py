@@ -23,12 +23,13 @@ import pandas as pd
 
 from predictor.backtest import OUT_DIR as BACKTEST_DIR
 from predictor.backtest import WEB_DATA
-from predictor.config import ROOT, is_shown, load_coverage
+from predictor.config import DATA_PROCESSED, ROOT, is_shown, load_coverage
 from predictor.data import CL, load_fixtures, load_training
 from predictor.leagues import current_season
 from predictor.models.dixon_coles import DixonColes, outcome_probs, team_group
 from predictor.models.elo import Elo
 from predictor.models.ensemble import load_params, pool
+from predictor.races import build as build_races
 from predictor.teams import load_teams
 
 DAYS_AHEAD = 21
@@ -248,10 +249,23 @@ def main():
                             "note": "Expected goal difference per match against an average Champions League side on neutral ground.",
                             "teams": ratings})
 
+    # Season races: scorers, assists, clean sheets per shown competition
+    scorers_path = DATA_PROCESSED / "scorers.csv"
+    scorers = pd.read_csv(scorers_path) if scorers_path.exists() else pd.DataFrame()
+    race_leagues = [lg for lg in LEAGUE_NAMES if lg in ("premier_league", "champions_league", "la_liga",
+                                                         "bundesliga", "serie_a", "ligue_1")]
+    races = build_races(train, fx, scorers, dc, now, race_leagues, team_info)
+    for r in races:
+        r["name"] = LEAGUE_NAMES[r["league"]]
+    _write("races.json", {"generated_at": now.isoformat(timespec="seconds"),
+                          "data_through": f"{train.date.max():%Y-%m-%d}", "competitions": races})
+
     live = sum(h.get("source") == "live" for h in hist)
     print(f"predictions.json: {len(rows)} upcoming, {len(recent)} recent results")
     print(f"history.json: {len(hist)} forecasts ({live} live, {len(hist) - live} replay; {seeded} back-filled now)")
     print(f"ratings.json: {len(ratings)} teams")
+    print(f"races.json: {len(races)} competitions"
+          + ("" if not scorers.empty else " (no scorers.csv: player races empty)"))
 
 
 if __name__ == "__main__":
