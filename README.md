@@ -1,4 +1,4 @@
-# ⚽ Match Predictor
+# ⚽ xGenius
 
 Predicts football match outcomes with statistical models: home/draw/away probabilities, likely scorelines, expected goals, over/under 2.5 and both-teams-to-score. It's a stats project, not a betting tool.
 

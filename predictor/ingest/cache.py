@@ -4,7 +4,7 @@ import time
 import urllib.request
 from pathlib import Path
 
-USER_AGENT = "match-predictor/0.1 (personal research project)"
+USER_AGENT = "xgenius/0.1 (personal research project)"
 
 
 def is_fresh(dest: Path, max_age_hours: float | None) -> bool:
