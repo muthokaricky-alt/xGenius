@@ -4,6 +4,8 @@ import { fixtureKits } from '../lib/kit.js';
 import { href } from '../lib/router.js';
 import KitBar from './KitBar.jsx';
 import Shirt from './Shirt.jsx';
+import Tip from './Tip.jsx';
+import { EXPLAIN } from '../lib/explain.js';
 
 const LABELS = ['Home', 'Draw', 'Away'];
 
@@ -47,21 +49,27 @@ export function FixtureRow({ m, selected, showLeague }) {
   const kits = fixtureKits(m.home, m.away);
   const fav = favourite(m.p);
   return (
-    <a
-      className="fx"
-      href={href(`/match/${m.id}`)}
-      aria-current={selected ? 'true' : undefined}
-      aria-label={`${m.home.name} v ${m.away.name}, ${fmtTime(m.kickoff)}. ${OUTCOME.map(
-        (o, i) => `${o} ${pct(m.p[i])}`,
-      ).join(', ')}`}
-    >
+    <div className={`fx fx--link${selected ? ' fx--selected' : ''}`}>
+      {/* The whole card is clickable through this link's ::after; the (i) buttons sit above it. */}
+      <a
+        className="fx__link"
+        href={href(`/match/${m.id}`)}
+        aria-current={selected ? 'true' : undefined}
+        aria-label={`${m.home.name} v ${m.away.name}, ${fmtTime(m.kickoff)}. ${OUTCOME.map(
+          (o, i) => `${o} ${pct(m.p[i])}`,
+        ).join(', ')}`}
+      />
       <Meta m={m} showLeague={showLeague}>
         {m.market && (
-          <span className="tag" title="Blended with the betting market's pre-match odds">
+          <Tip text={EXPLAIN.odds} label="+ odds" className="tag">
             + odds
-          </span>
+          </Tip>
         )}
-        {m.confidence === 'low' && <span className="tag" title="Little recent data behind at least one team">Low data</span>}
+        {m.confidence === 'low' && (
+          <Tip text={EXPLAIN.lowData} label="low data" className="tag">
+            Low data
+          </Tip>
+        )}
       </Meta>
       <div className="fx__teams">
         <Team team={m.home} kit={kits.home} strong={fav === 0} />
@@ -72,7 +80,7 @@ export function FixtureRow({ m, selected, showLeague }) {
       </div>
       <KitBar p={m.p} kits={kits} />
       <Numbers p={m.p} lead={fav} />
-    </a>
+    </div>
   );
 }
 
@@ -86,9 +94,9 @@ export function ResultRow({ m, showLeague }) {
       <Meta m={m} showLeague={showLeague}>
         <time dateTime={m.kickoff}>{fmtShort(m.kickoff)}</time>
         {m.source === 'replay' && (
-          <span className="tag" title="Forecast reconstructed from the walk-forward backtest, made before the site went live">
+          <Tip text={EXPLAIN.replay} label="replay" className="tag">
             Replay
-          </span>
+          </Tip>
         )}
       </Meta>
       <div className="fx__teams">

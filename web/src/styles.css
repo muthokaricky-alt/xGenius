@@ -639,18 +639,40 @@ main {
   /* release springs back with a little overshoot (squash & stretch) */
   transition: background 140ms ease-out, transform 260ms var(--spring);
 }
-a.fx .kitbar {
+.fx--link {
+  position: relative;
+  cursor: pointer;
+}
+.fx__link::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+}
+.fx__link:focus-visible {
+  outline: none;
+}
+.fx--link:has(.fx__link:focus-visible) {
+  outline: 2px solid var(--focus);
+  outline-offset: -3px;
+  border-radius: 6px;
+}
+.fx--link .tip__btn {
+  position: relative;
+  z-index: 2; /* above the stretched link, so (i) opens its explanation */
+}
+.fx--link .kitbar {
   transform-origin: center;
   transition: transform 260ms var(--spring);
 }
-a.fx:hover .kitbar {
+.fx--link:hover .kitbar {
   transform: scaleY(1.22);
 }
-a.fx:active {
+.fx--link:has(.fx__link:active) {
   transform: scale(0.985);
   transition: transform 70ms ease-out, background 70ms ease-out;
 }
-a.fx:active .kitbar {
+.fx--link:has(.fx__link:active) .kitbar {
   transform: scaleY(0.82);
   transition: transform 70ms ease-out;
 }
@@ -662,16 +684,13 @@ a.fx:active .kitbar {
     border-bottom: 0;
   }
 }
-a.fx:hover {
+.fx--link:hover {
   background: var(--sunk);
 }
-a.fx[aria-current='true'] {
+.fx--selected,
+.fx--selected:hover {
   background: var(--sel);
   box-shadow: inset 0 0 0 1px var(--rule-strong);
-}
-a.fx:focus-visible {
-  outline-offset: -3px;
-  border-radius: 6px;
 }
 .fx__meta {
   display: flex;
@@ -1343,6 +1362,12 @@ main > .detail {
   .hide-sm {
     display: none;
   }
+  .table tbody th[scope='row'] {
+    min-width: 8em;
+  }
+  .table thead th {
+    white-space: normal;
+  }
   .table th,
   .table td {
     padding: 9px 10px;
@@ -1551,7 +1576,7 @@ main > .detail {
   width: 60px;
 }
 .race thead th:nth-child(5) {
-  width: 104px;
+  width: 130px;
 }
 .race th[scope='row'] {
   font-weight: 600;
@@ -1638,19 +1663,25 @@ main > .detail {
 }
 @media (max-width: 719px) {
   .race thead th:nth-child(1) {
-    width: 22px;
+    width: 20px;
   }
   .race thead th:nth-child(2) {
-    width: 31%;
+    width: 27%;
   }
   .race thead th:nth-child(3) {
-    width: 32px;
+    width: 44px;
   }
   .race thead th:nth-child(5) {
-    width: 52px;
+    width: 74px;
+  }
+  .race thead .tip {
+    flex-wrap: wrap;
   }
   .race .shirt {
     display: none;
+  }
+  .race .race__barcol {
+    min-width: 0;
   }
   .race .race__chance-h {
     font-size: 11px;
@@ -1677,6 +1708,227 @@ main > .detail {
   .legend {
     font-size: 12.5px;
   }
+}
+
+/* ---------- explanations: (i) buttons, keys, direct labels ---------- */
+.tip {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+}
+.tip__btn {
+  display: inline-grid;
+  place-items: center;
+  width: 22px;
+  height: 22px;
+  margin: -4px -4px -4px 0;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  background: transparent;
+  color: var(--ink-3);
+  cursor: help;
+  flex: none;
+  transition: color 120ms ease-out, background 120ms ease-out;
+}
+.tip__btn:hover,
+.tip__btn[aria-expanded='true'] {
+  color: var(--ink);
+  background: var(--sunk);
+}
+.tip__pop {
+  position: fixed;
+  z-index: 50;
+  transform: translateY(-100%);
+  background: var(--ink);
+  color: var(--ground);
+  font: 400 14px/1.45 var(--font-text);
+  text-transform: none;
+  letter-spacing: 0;
+  text-align: left;
+  padding: 10px 12px;
+  border-radius: 10px;
+  box-shadow: 0 10px 30px -8px rgba(0, 0, 0, 0.45);
+  pointer-events: auto;
+}
+.tip__pop--below {
+  transform: none;
+}
+.tag.tip {
+  gap: 1px;
+  padding-right: 2px;
+}
+.tag .tip__btn {
+  width: 18px;
+  height: 18px;
+  margin: -2px -2px -2px 0;
+}
+h2 .tip,
+h1 .tip {
+  gap: 6px;
+}
+.th-wrap {
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+}
+.num .th-wrap,
+.num > .tip {
+  justify-content: flex-end;
+}
+.readkey {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 13.5px;
+  color: var(--ink-2);
+  background: var(--surface);
+  border: 1px dashed var(--rule-strong);
+  border-radius: 10px;
+  padding: 9px 12px;
+  margin-bottom: 18px;
+}
+.readkey p {
+  flex: 1;
+}
+.readkey__bar {
+  display: flex;
+  gap: 2px;
+  width: 64px;
+  height: 10px;
+  flex: none;
+}
+.readkey__home {
+  flex: 5;
+  background: var(--ink-2);
+  border-radius: 3px 0 0 3px;
+}
+.readkey__draw {
+  flex: 2.5;
+  background: var(--draw);
+}
+.readkey__away {
+  flex: 2.5;
+  background: var(--gold);
+  border-radius: 0 3px 3px 0;
+}
+.readkey__diverge {
+  position: relative;
+  display: flex;
+  width: 64px;
+  height: 8px;
+  flex: none;
+  background: var(--sunk);
+  border-radius: 4px;
+}
+.readkey__diverge::before {
+  content: '';
+  position: absolute;
+  left: 50%;
+  top: -3px;
+  bottom: -3px;
+  width: 1px;
+  background: var(--rule-strong);
+}
+.readkey__neg {
+  margin-left: 25%;
+  width: 25%;
+  background: var(--draw);
+  border-radius: 4px 0 0 4px;
+}
+.readkey__pos {
+  width: 40%;
+  background: var(--ink-2);
+  border-radius: 0 4px 4px 0;
+}
+.detail__label {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--ink-2);
+}
+.gridkey {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px 14px;
+  font-size: 12.5px;
+  color: var(--ink-2);
+  max-width: none !important;
+}
+.gridkey__item {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+.gridkey__sw {
+  width: 14px;
+  height: 14px;
+  border-radius: 3px;
+  box-shadow: inset 0 0 0 1px var(--kit-edge-strong);
+}
+.gridkey__sw--draw {
+  background: var(--draw);
+}
+.gridkey__note {
+  color: var(--ink-3);
+}
+.formkey {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 4px;
+  font-size: 12.5px;
+  color: var(--ink-3);
+}
+.formkey .chip {
+  width: 20px;
+  height: 20px;
+  font-size: 12px;
+  margin-left: 6px;
+}
+.formkey .chip:first-child {
+  margin-left: 0;
+}
+.calib__label {
+  fill: var(--ink);
+  font: 700 12px var(--font-text);
+}
+.calib__label--ideal {
+  fill: var(--ink-3);
+  font-weight: 600;
+}
+.calib__key {
+  list-style: none;
+  margin: 0 0 12px;
+  padding: 0;
+  display: grid;
+  gap: 6px;
+}
+.calib__key li {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.calib__k {
+  display: inline-block;
+  width: 26px;
+  flex: none;
+}
+.calib__k--line {
+  height: 2px;
+  background: var(--ink);
+}
+.calib__k--ideal {
+  height: 0;
+  border-top: 1.5px dashed var(--ink-3);
+}
+.calib__k--dot {
+  width: 12px;
+  height: 12px;
+  margin: 0 7px;
+  border-radius: 50%;
+  background: var(--gold);
+  box-shadow: inset 0 0 0 1.5px var(--ink);
 }
 
 /* ---------- buttons, notices, skeleton ---------- */
@@ -1771,9 +2023,9 @@ main > .detail {
 }
 
 @media (prefers-reduced-motion: reduce) {
-  a.fx:hover .kitbar,
-  a.fx:active,
-  a.fx:active .kitbar,
+  .fx--link:hover .kitbar,
+  .fx--link:has(.fx__link:active),
+  .fx--link:has(.fx__link:active) .kitbar,
   .chipbtn:active,
   .btn:active,
   .kit-toggle:active,

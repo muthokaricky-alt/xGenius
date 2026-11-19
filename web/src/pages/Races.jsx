@@ -1,6 +1,8 @@
 import { useState } from 'react';
 import ScrollRow from '../components/ScrollRow.jsx';
 import Shirt from '../components/Shirt.jsx';
+import Tip from '../components/Tip.jsx';
+import { EXPLAIN } from '../lib/explain.js';
 import { Empty, ErrorState, Loading } from '../components/State.jsx';
 import { LEAGUE_ORDER, fmtStamp, useData } from '../lib/data.js';
 import { luminance } from '../lib/kit.js';
@@ -54,7 +56,7 @@ function pctLabel(p) {
   return p >= 0.995 ? '>99%' : p < 0.005 ? '<1%' : `${Math.round(p * 100)}%`;
 }
 
-function RaceTable({ rows, stat, unit, who, chance }) {
+function RaceTable({ rows, stat, unit, who, chance, chanceTip }) {
   if (!rows.length) return <Empty title="No data yet for this race." />;
   const max = Math.max(...rows.map((r) => r.range[1]), 1) * 1.08; // room for the label
   return (
@@ -64,10 +66,20 @@ function RaceTable({ rows, stat, unit, who, chance }) {
           <tr>
             <th scope="col" className="num">#</th>
             <th scope="col">{who}</th>
-            <th scope="col" className="num">Now</th>
-            <th scope="col">Projection</th>
-            <th scope="col" className="num race__chance-h" title={`Chance of finishing the season ${chance.toLowerCase()} (a shared first place counts as a share)`}>
-              {chance}
+            <th scope="col" className="num">
+              <Tip text={EXPLAIN.soFar} label="so far">
+                So far
+              </Tip>
+            </th>
+            <th scope="col">
+              <Tip text={EXPLAIN.projection} label="the projection">
+                Season projection
+              </Tip>
+            </th>
+            <th scope="col" className="num race__chance-h">
+              <Tip text={chanceTip} label={`${chance} chance`}>
+                {chance} chance
+              </Tip>
             </th>
           </tr>
         </thead>
@@ -160,7 +172,7 @@ export default function Races() {
 
       <section className="panel" aria-labelledby="g-h">
         <h2 id="g-h">Top scorers</h2>
-        <RaceTable rows={c.scorers} stat="goals" unit="goals" who="Player" chance="Golden Boot" />
+        <RaceTable rows={c.scorers} stat="goals" unit="goals" who="Player" chance="Golden Boot" chanceTip={EXPLAIN.goldenBoot} />
         <p className="panel__note">
           <strong>Assumes every player stays fit and keeps their role.</strong> A player keeps their share of their
           team’s goals so far (eased back a little for small samples), applied to the goals the model expects the team
@@ -171,7 +183,7 @@ export default function Races() {
 
       <section className="panel" aria-labelledby="a-h">
         <h2 id="a-h">Top assists</h2>
-        <RaceTable rows={c.assists} stat="assists" unit="assists" who="Player" chance="Top assister" />
+        <RaceTable rows={c.assists} stat="assists" unit="assists" who="Player" chance="Top assister" chanceTip={EXPLAIN.topAssister} />
         <p className="panel__note">
           <strong>Assumes they stay fit. Incomplete list:</strong> our data only includes players who have scored at
           least once, so creators who haven’t scored yet are missing.
@@ -180,7 +192,7 @@ export default function Races() {
 
       <section className="panel" aria-labelledby="cs-h">
         <h2 id="cs-h">Clean sheets</h2>
-        <RaceTable rows={c.clean_sheets} stat="cs" unit="clean sheets" who="Team" chance="Most clean sheets" />
+        <RaceTable rows={c.clean_sheets} stat="cs" unit="clean sheets" who="Team" chance="Most clean sheets" chanceTip={EXPLAIN.mostCleanSheets} />
         <p className="panel__note">
           By team, not goalkeeper (we don’t have lineups). Each remaining match adds the model’s chance that the
           opponent doesn’t score. Tested on last season from this point: off by about 2 clean sheets per team over the

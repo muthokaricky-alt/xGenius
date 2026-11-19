@@ -1,9 +1,11 @@
 import { ArrowLeft } from 'lucide-react';
 import { LEAGUE_SHORT, OUTCOME, dayOf, favourite, fmtShort, fmtTime, pct, pctNum, verdict } from '../lib/data.js';
-import { fixtureKits, inkOn, luminance } from '../lib/kit.js';
+import { distance, fixtureKits, inkOn, luminance } from '../lib/kit.js';
 import { href } from '../lib/router.js';
 import KitBar from './KitBar.jsx';
 import Shirt from './Shirt.jsx';
+import Tip from './Tip.jsx';
+import { EXPLAIN } from '../lib/explain.js';
 
 const CONFIDENCE = {
   high: 'Plenty of recent matches behind both teams’ ratings.',
@@ -16,7 +18,12 @@ function ScoreGrid({ m, kits }) {
   const max = Math.max(...m.grid.flat());
   // A white or near-white shirt can't tint a cell on a light page: use its trim colour instead.
   const tint = (kit) => (luminance(kit[0]) > 0.75 ? kit[1] : kit[0]);
-  const colour = (i, j) => (i > j ? tint(kits.home) : i < j ? tint(kits.away) : null);
+  const homeTint = tint(kits.home);
+  // Same kit-clash rule as the bar: if the two tints are hard to tell apart, the away side changes colour.
+  const awayTint = [tint(kits.away), ...kits.away, '#4A5A80'].find(
+    (c) => luminance(c) <= 0.75 && distance(c, homeTint) >= 150,
+  );
+  const colour = (i, j) => (i > j ? homeTint : i < j ? awayTint : null);
   return (
     <figure className="grid-fig">
       <table className="scoregrid">
@@ -57,19 +64,28 @@ function ScoreGrid({ m, kits }) {
           ))}
         </tbody>
       </table>
-      <figcaption>
-        Chance (%) of each exact score after 90 minutes. Tinted by who wins it: {m.home.short} below the diagonal,
-        draws on it, {m.away.short} above.
+      <figcaption className="gridkey">
+        <span className="gridkey__item">
+          <span className="gridkey__sw" style={{ background: homeTint }} aria-hidden="true" /> {m.home.short} win
+        </span>
+        <span className="gridkey__item">
+          <span className="gridkey__sw gridkey__sw--draw" aria-hidden="true" /> Draw
+        </span>
+        <span className="gridkey__item">
+          <span className="gridkey__sw" style={{ background: awayTint }} aria-hidden="true" /> {m.away.short} win
+        </span>
+        <span className="gridkey__item gridkey__note">Darker = more likely · numbers are % chance</span>
+        <Tip text={EXPLAIN.scoreGrid} label="the score grid" />
       </figcaption>
     </figure>
   );
 }
 
-function Meter({ label, value, hint }) {
+function Meter({ label, value, hint, tip }) {
   return (
     <div className="meter">
       <div className="meter__row">
-        <span className="meter__label">{label}</span>
+        <span className="meter__label">{tip ? <Tip text={tip} label={label}>{label}</Tip> : label}</span>
         <span className="meter__value">{pct(value)}</span>
       </div>
       <div className="meter__track" aria-hidden="true">
@@ -94,7 +110,7 @@ function Form({ team, games }) {
           </li>
         ))}
       </ol>
-      <ul className="form__list">
+      <ul className="form__list" aria-label="Most recent three">
         {[...games].reverse().slice(0, 3).map((g, i) => (
           <li key={i}>
             <span className={`res res--${g.res}`}>{g.gf}–{g.ga}</span> {g.home ? 'v' : 'at'} {g.opp}
@@ -133,11 +149,23 @@ export default function MatchDetail({ m, backHref = href('/') }) {
         <span className="halves__side halves__side--away">
           <Shirt kit={kits.away} size={40} className="halves__shirt" />
           <span className="halves__name">{m.away.name}</span>
-          <span className="halves__role">Away{kits.changed ? ' · change colours' : ''}</span>
+          <span className="halves__role">
+            Away
+            {kits.changed && (
+              <Tip text={EXPLAIN.changeColours} label="change colours">
+                {' · change colours'}
+              </Tip>
+            )}
+          </span>
         </span>
       </h1>
 
       <section className="detail__hero" aria-label="Result chances">
+        <p className="detail__label">
+          <Tip text={`${EXPLAIN.chances} ${EXPLAIN.kitBar}`} label="these chances">
+            Chance of each result
+          </Tip>
+        </p>
         <KitBar p={m.p} kits={kits} size="large" />
         <div className="bignums">
           {m.p.map((x, i) => (
@@ -156,7 +184,11 @@ export default function MatchDetail({ m, backHref = href('/') }) {
       </section>
 
       <section className="panel" aria-labelledby="xg-h">
-        <h2 id="xg-h">Expected goals</h2>
+        <h2 id="xg-h">
+          <Tip text={EXPLAIN.xg} label="expected goals">
+            Expected goals
+          </Tip>
+        </h2>
         <div className="xg">
           <div className="xg__side">
             <span className="xg__n">{xh.toFixed(1)}</span>
@@ -174,7 +206,11 @@ export default function MatchDetail({ m, backHref = href('/') }) {
       </section>
 
       <section className="panel" aria-labelledby="scores-h">
-        <h2 id="scores-h">Most likely scores</h2>
+        <h2 id="scores-h">
+          <Tip text={EXPLAIN.scoreBars} label="most likely scores">
+            Most likely scores
+          </Tip>
+        </h2>
         <ol className="scores">
           {m.scores.map((s, i) => (
             <li key={i}>
@@ -197,14 +233,23 @@ export default function MatchDetail({ m, backHref = href('/') }) {
 
       <section className="panel" aria-labelledby="goals-h">
         <h2 id="goals-h">Goals</h2>
-        <Meter label="Over 2.5 goals" value={m.over25} hint="Three or more goals in total." />
-        <Meter label="Both teams score" value={m.btts} />
-        <Meter label={`${m.home.short} keep a clean sheet`} value={m.clean_sheet[0]} />
-        <Meter label={`${m.away.short} keep a clean sheet`} value={m.clean_sheet[1]} />
+        <Meter label="Over 2.5 goals" value={m.over25} hint="Three or more goals in total." tip={EXPLAIN.over25} />
+        <Meter label="Both teams score" value={m.btts} hint="Each side scores at least once." tip={EXPLAIN.btts} />
+        <Meter label={`${m.home.short} keep a clean sheet`} value={m.clean_sheet[0]} tip={EXPLAIN.cleanSheet} />
+        <Meter label={`${m.away.short} keep a clean sheet`} value={m.clean_sheet[1]} tip={EXPLAIN.cleanSheet} />
+        <p className="panel__note">Each bar fills to its percentage.</p>
       </section>
 
       <section className="panel" aria-labelledby="form-h">
-        <h2 id="form-h">Recent form</h2>
+        <h2 id="form-h">
+          <Tip text={EXPLAIN.form} label="recent form">
+            Recent form
+          </Tip>
+        </h2>
+        <p className="formkey" aria-hidden="true">
+          <span className="chip chip--W">W</span> win <span className="chip chip--D">D</span> draw{' '}
+          <span className="chip chip--L">L</span> loss · oldest → newest
+        </p>
         <div className="form-pair">
           <div>
             <h3>{m.home.short}</h3>
@@ -215,11 +260,15 @@ export default function MatchDetail({ m, backHref = href('/') }) {
             <Form team={m.away.short} games={m.form.away} />
           </div>
         </div>
-        <p className="panel__note">Last five matches in our data, all competitions we track, oldest first.</p>
+        <p className="panel__note">Last five matches in our data, all competitions we track. The list shows the most recent three.</p>
       </section>
 
       <section className={`panel panel--confidence panel--${m.confidence}`} aria-labelledby="conf-h">
-        <h2 id="conf-h">How sure is this?</h2>
+        <h2 id="conf-h">
+          <Tip text={EXPLAIN.confidence} label="confidence">
+            How sure is this?
+          </Tip>
+        </h2>
         <p>
           <strong className="conf">{m.confidence[0].toUpperCase() + m.confidence.slice(1)} data confidence.</strong>{' '}
           {CONFIDENCE[m.confidence]}

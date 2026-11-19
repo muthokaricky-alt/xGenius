@@ -165,6 +165,9 @@ As fixture row with the 90-minute score in place of "v" and a verdict line: chec
 ### Navigation
 Collar header: wordmark, text tabs with a 3px gold underline for the current page, kit toggle (shirt icon). Segmented control for Upcoming / Results.
 
+### Explanations (site-wide rule)
+Every chart, number and visual explains itself. Charts carry a visible key or direct labels (the reading key above the match list, the score-grid key, the form key, the race legend, the calibration chart's labels and key, the goal-edge key). Every stat has a plain-words explanation behind an (i) button that opens on hover, keyboard focus and tap; Escape, tapping elsewhere or scrolling closes it. Explanations live in one place (`web/src/lib/explain.js`) so a stat is described the same way everywhere. Column headers name what they measure ("Golden Boot chance", "Goal edge", "Log loss ↓"); no bare "Top" or "Rating".
+
 ## Do's and Don'ts
 
 ### Do:
