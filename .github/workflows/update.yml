@@ -1,0 +1,54 @@
+# Refreshes the site's data: download new results/fixtures, refit, republish.
+# Every push it makes to main triggers a Cloudflare Pages deploy.
+name: Update predictions
+
+on:
+  schedule:
+    - cron: "17 */6 * * *"   # every 6 hours (UTC)
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: data-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.13"
+          cache: pip
+
+      - run: pip install -r requirements.txt
+
+      # Finished seasons never change, so keep the download cache between runs.
+      - uses: actions/cache@v6
+        with:
+          path: data/raw
+          key: raw-${{ github.run_id }}
+          restore-keys: raw-
+
+      - name: Ingest
+        env:
+          FOOTBALL_DATA_API_KEY: ${{ secrets.FOOTBALL_DATA_API_KEY }}
+        run: python -m predictor.ingest
+
+      - name: Publish
+        run: python -m predictor.publish
+
+      - name: Commit if changed
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add web/public/data
+          if git diff --cached --quiet; then echo "no changes"; exit 0; fi
+          git commit -m "data: update predictions $(date -u +'%Y-%m-%d %H:%M') UTC"
+          git pull --rebase
+          git push
