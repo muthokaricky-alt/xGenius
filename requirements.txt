@@ -1,0 +1,2 @@
+# Added per milestone, only when needed.
+pytest==8.3.4
