@@ -6,8 +6,8 @@ export default function About() {
       <header className="page__head">
         <h1>How it works</h1>
         <p className="lede">
-          xGenius turns results into probabilities. It doesn’t know about injuries, team news or the weather, only what
-          the scorelines say about how good each team is.
+          xGenius turns results into probabilities. Our models only know what the scorelines say about how good each
+          team is; when bookmakers’ odds are out, they bring in what we can’t see, like injuries and team news.
         </p>
       </header>
 
@@ -38,9 +38,17 @@ export default function About() {
             not just whether they went in.
           </li>
         </ul>
+        <ul>
+          <li>
+            <strong>The betting market.</strong> A few days before most league matches, bookmakers publish odds. Those
+            prices react to injuries, suspensions and team news that our models never see, so when they’re available
+            we blend them in. Matches that use them are marked “+ odds”. Champions League forecasts and anything
+            further ahead are pure statistics.
+          </li>
+        </ul>
         <p>
-          The two are blended, with weights learned on seasons the final test never sees, and checked for
-          calibration: when the blend says 60%, that outcome should happen about 60% of the time.
+          The blend’s weights are re-learned every season from forecasts the models made before seeing the results,
+          and checked for calibration: when xGenius says 60%, that outcome should happen about 60% of the time.
         </p>
 
         <h2>Season races</h2>
@@ -84,8 +92,8 @@ export default function About() {
 
         <h2>Not betting advice</h2>
         <p>
-          This is a statistics project. The betting market is more accurate than this model, and no model can make
-          betting a safe way to earn money. If gambling stops being fun, <a href="https://www.begambleaware.org" rel="noopener">BeGambleAware</a> can help.
+          This is a statistics project. It uses market odds as information, but shows no odds, gives no tips and
+          links to no bookmaker. No model can make betting a safe way to earn money. If gambling stops being fun, <a href="https://www.begambleaware.org" rel="noopener">BeGambleAware</a> can help.
         </p>
       </section>
     </div>

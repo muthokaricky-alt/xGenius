@@ -28,7 +28,7 @@ from predictor.data import CL, load_fixtures, load_training
 from predictor.leagues import current_season
 from predictor.models.dixon_coles import DixonColes, outcome_probs, team_group
 from predictor.models.elo import Elo
-from predictor.models.ensemble import load_params, pool
+from predictor.models.ensemble import combine, load_params
 from predictor.races import build as build_races
 from predictor.teams import load_teams
 
@@ -126,6 +126,25 @@ def form(train: pd.DataFrame, tid: str, before, n=5) -> list[dict]:
     return out
 
 
+PRE = ["odds_pre_h", "odds_pre_d", "odds_pre_a"]
+
+
+def attach_odds(upcoming: pd.DataFrame, odds: pd.DataFrame) -> pd.DataFrame:
+    """Match posted odds to fixtures by teams, allowing a day either way (the
+    odds file uses UK dates, fixtures use UTC kickoffs)."""
+    up = upcoming.copy()
+    for c in PRE:
+        up[c] = np.nan
+    if odds.empty or up.empty:
+        return up
+    for i, r in up.iterrows():
+        o = odds[(odds.home_id == r.home_id) & (odds.away_id == r.away_id)
+                 & ((odds.date - r.date).abs() <= pd.Timedelta(days=1))]
+        if len(o):
+            up.loc[i, PRE] = o.iloc[0][PRE].to_numpy(float)
+    return up
+
+
 def _load(name, default):
     path = WEB_DATA / name
     return json.loads(path.read_text(encoding="utf-8")) if path.exists() else default
@@ -182,18 +201,25 @@ def main():
     upcoming["season"] = [current_season(d.date()) for d in upcoming.date]
     upcoming["neutral"] = upcoming.stage.eq("FINAL")
 
+    # Pre-match market odds for upcoming domestic matches, when already posted
+    odds_path = DATA_PROCESSED / "odds_upcoming.csv"
+    odds = pd.read_csv(odds_path, parse_dates=["date"]) if odds_path.exists() else pd.DataFrame()
+    upcoming = attach_odds(upcoming, odds)
+
     rows = []
     if len(upcoming):
         blind = upcoming[["date", "season", "league", "home_id", "away_id", "neutral"]]
         p_elo, p_dc = elo.predict(blind), dc.predict(blind)
-        p_ens = pool(p_elo, p_dc, params, upcoming.league.eq(CL).to_numpy())
-        for r, pe, mat in zip(upcoming.itertuples(index=False), p_ens, dc.matrices(blind)):
+        p_ens, used = combine(p_elo, p_dc, upcoming[PRE].to_numpy(float),
+                              upcoming.league.eq(CL).to_numpy(), params)
+        for r, pe, mat, um in zip(upcoming.itertuples(index=False), p_ens, dc.matrices(blind), used):
             rows.append({
                 "id": int(r.match_id), "kickoff": r.kickoff.isoformat(), "league": r.league,
                 "stage": STAGES.get(r.stage, None) if r.league == CL else None,
                 "home": team_info(r.home_id), "away": team_info(r.away_id),
                 "p": [_r(x) for x in pe], **describe(adjust(mat, pe)),
                 "confidence": confidence(dc, r.home_id, r.away_id, r.league),
+                "market": bool(um),
                 "form": {"home": form(train, r.home_id, r.date), "away": form(train, r.away_id, r.date)},
             })
 
@@ -206,6 +232,7 @@ def main():
             history[str(m["id"])] = {"id": m["id"], "kickoff": m["kickoff"], "league": m["league"],
                                      "home": m["home"]["id"], "away": m["away"]["id"], "p": m["p"],
                                      "xg": m["xg"], "top": m["scores"][0], "source": "live",
+                                     "market": m["market"],
                                      "published_at": now.isoformat(timespec="seconds")}
     finished = fx[fx.status.eq("FINISHED") & fx.home_goals.notna()]
     finished = finished.set_index(finished.match_id.astype(str))
@@ -261,7 +288,8 @@ def main():
                           "data_through": f"{train.date.max():%Y-%m-%d}", "competitions": races})
 
     live = sum(h.get("source") == "live" for h in hist)
-    print(f"predictions.json: {len(rows)} upcoming, {len(recent)} recent results")
+    print(f"predictions.json: {len(rows)} upcoming ({sum(r['market'] for r in rows)} with market odds), "
+          f"{len(recent)} recent results")
     print(f"history.json: {len(hist)} forecasts ({live} live, {len(hist) - live} replay; {seeded} back-filled now)")
     print(f"ratings.json: {len(ratings)} teams")
     print(f"races.json: {len(races)} competitions"

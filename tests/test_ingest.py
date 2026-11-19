@@ -41,3 +41,23 @@ def test_api_uses_90_minute_score_in_knockouts():
     row = parse_matches(payload, "champions_league").iloc[0]
     assert (row.home_goals, row.away_goals) == (1, 0)
     assert (row.home_id, row.away_id) == ("atletico-madrid", "real-madrid")
+
+
+def test_parse_upcoming_odds_maps_leagues_teams_and_falls_back_to_bet365():
+    import pandas as pd
+
+    from predictor.ingest.football_data_uk import parse_upcoming_odds
+
+    df = pd.DataFrame({
+        "Div": ["E0", "E0", "E2", "SP1"],
+        "Date": ["21/11/2026", "22/11/2026", "21/11/2026", "22/11/2026"],
+        "HomeTeam": ["Man City", "Arsenal", "Blackpool", "Ath Madrid"],
+        "AwayTeam": ["Fulham", "Nott'm Forest", "Wigan", "Barcelona"],
+        "AvgH": [1.4, None, 2.0, 2.6], "AvgD": [5.0, None, 3.3, 3.4], "AvgA": [7.5, None, 3.6, 2.7],
+        "B365H": [1.4, 1.5, 2.0, 2.6], "B365D": [5.0, 4.2, 3.3, 3.4], "B365A": [7.0, 6.5, 3.6, 2.7],
+    })
+    out = parse_upcoming_odds(df)
+    assert list(out.league) == ["premier_league", "premier_league", "la_liga"]   # E2 isn't ingested
+    assert out.home_id.tolist() == ["manchester-city", "arsenal", "atletico-madrid"]
+    assert out.iloc[1][["odds_pre_h", "odds_pre_d", "odds_pre_a"]].tolist() == [1.5, 4.2, 6.5]
+    assert out.date.iloc[0] == pd.Timestamp("2026-11-21")

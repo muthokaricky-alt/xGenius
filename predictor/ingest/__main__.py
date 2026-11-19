@@ -7,6 +7,7 @@ Outputs:
   matches.csv   played domestic matches (football-data.co.uk, with odds)
   fixtures.csv  this season's fixtures + CL results (football-data.org; needs API key)
   scorers.csv   this season's top 100 scorers per shown competition (football-data.org)
+  odds_upcoming.csv  pre-match odds for upcoming domestic matches (football-data.co.uk)
 """
 import sys
 
@@ -31,6 +32,10 @@ def main(refresh: bool = True):
     df = df.sort_values(["date", "league", "home_id"]).reset_index(drop=True)
     df.to_csv(DATA_PROCESSED / "matches.csv", index=False, date_format="%Y-%m-%d")
     print(f"matches.csv: {len(df):,} matches, {df.date.min():%Y-%m-%d} to {df.date.max():%Y-%m-%d}")
+
+    odds = football_data_uk.load_upcoming_odds(refresh)
+    odds.to_csv(DATA_PROCESSED / "odds_upcoming.csv", index=False, date_format="%Y-%m-%d")
+    print(f"odds_upcoming.csv: {len(odds)} upcoming matches with pre-match odds")
 
     try:
         fx = football_data_org.load_fixtures()

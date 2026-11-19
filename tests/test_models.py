@@ -5,7 +5,7 @@ import pandas as pd
 import pytest
 
 from predictor.models.dixon_coles import DixonColes, outcome_probs, score_matrix
-from predictor.models.ensemble import fit_pool, pool
+from predictor.models.ensemble import combine, fit_params, pool_market, pool_stats
 
 ENG = ["arsenal", "chelsea", "everton", "fulham"]
 NED = ["ajax", "psv", "feyenoord", "utrecht"]
@@ -67,18 +67,32 @@ def test_dixon_coles_unknown_team_gets_promoted_prior():
     assert p[0] > 0.5 and m.experience("brand-new-fc") == 0
 
 
-def test_pool_weights_and_cl_fallback():
+def test_stats_pool_weights_and_cl_fallback():
     pe = np.array([[0.6, 0.25, 0.15]] * 2)
     pd_ = np.array([[0.4, 0.3, 0.3]] * 2)
-    out = pool(pe, pd_, [1.0, 0.0, 0.0, 0.0], is_cl=[False, True])
+    out = pool_stats(pe, pd_, [1.0, 0.0, 0.0, 0.0, 0.0, 0.0], is_cl=[False, True])
     assert out[0] == pytest.approx(pe[0])            # domestic: Elo only
     assert out[1] == pytest.approx(pd_[1])           # CL: Elo ignored, DC gets its weight
 
 
-def test_fit_pool_prefers_the_informative_model():
+def test_combine_uses_market_only_where_odds_exist():
+    pe = np.array([[0.5, 0.3, 0.2]] * 3)
+    pd_ = np.array([[0.5, 0.3, 0.2]] * 3)
+    odds = np.array([[2.0, 4.0, 4.0], [np.nan] * 3, [2.0, 4.0, 4.0]])
+    params = {"stats": [0.5, 0.5, 0, 0, 0, 0], "market": [0.0, 0.0, 1.0, 0, 0]}
+    p, used = combine(pe, pd_, odds, [False, False, True], params)
+    assert used.tolist() == [True, False, False]     # no odds, and never in the CL
+    assert p[0] == pytest.approx([0.5, 0.25, 0.25])  # market only, margin-free
+    assert p[1] == pytest.approx(pe[1])
+
+
+def test_fit_params_prefers_the_informative_input():
     rng = np.random.default_rng(3)
     truth = rng.dirichlet([4, 2, 2], 4000)
     y = np.array([rng.choice(3, p=t) for t in truth])
     noise = np.full_like(truth, 1 / 3)
-    w_good, w_noise, *_ = fit_pool(truth, noise, y)
-    assert w_good > 0.8
+    odds = 1 / truth
+    params = fit_params(noise, truth, odds, np.zeros(len(y), bool), y)
+    assert params["stats"][1] > 0.8                  # Dixon-Coles slot carries the signal
+    assert params["market"][1] + params["market"][2] > 0.8  # DC and market both hold the signal
+    assert pool_market(noise, truth, truth, params["market"]).shape == (len(y), 3)
