@@ -33,6 +33,7 @@ No always-on server, no database, no cold starts. Training runs in Python on a s
 | `predictor/models/` | Models (`fit` / `predict` / `update` contract): base rate, Elo, Dixon-Coles, ensemble |
 | `predictor/metrics.py` | Log loss, Brier, RPS, accuracy; odds → probabilities |
 | `predictor/backtest.py` | Walk-forward backtest, tuning, ensemble fitting; writes `performance.json` |
+| `predictor/races.py` | Season-end projections: top scorers, assists, clean sheets |
 | `predictor/publish.py` | Fits on everything known today and writes the site's JSON |
 | `web/` | React + Vite site; `web/public/data/` is the published data |
 | `.github/workflows/` | `update.yml` (every 6 h), `backtest.yml` (weekly), `ci.yml` (tests + build) |
@@ -45,7 +46,7 @@ No always-on server, no database, no cold starts. Training runs in Python on a s
 | Source | Gives us | Notes |
 |---|---|---|
 | [football-data.co.uk](https://football-data.co.uk) | Results + bookmaker odds, 2014/15 onwards, 15 leagues | Free CSVs. xG only from 2026/27 (see below). |
-| [football-data.org](https://www.football-data.org) | Fixtures, Champions League | Free API key, 10 requests/min. Champions League results only from 2023/24 on the free tier. |
+| [football-data.org](https://www.football-data.org) | Fixtures, Champions League, top scorers | Free API key, 10 requests/min. Champions League results only from 2023/24 on the free tier. Scorers: top 100 per competition, this season only; players without a goal are not listed (so assist-only players are missing). |
 
 We ingest 10 leagues beyond the 5 we show (Netherlands, Portugal, Belgium, Scotland, Turkey, Greece, Austria, Switzerland, Denmark, Norway). Their clubs play in the Champions League, so we need ratings for them.
 
@@ -100,6 +101,14 @@ npm run dev
 - **Ensemble** (`models/ensemble.py`): a logarithmic pool of the two with per-outcome calibration biases, fitted on the validation seasons. Champions League forecasts use Dixon-Coles alone. The site's scoreline grid is rescaled to match the ensemble's home/draw/away.
 
 **Cross-league strength (milestone 7).** Each team's attack and defence is a country offset plus a team effect. Domestic matches can't see the country offsets; Champions League matches pin them down, which puts every club on one scale. Clubs from countries we don't ingest (Slavia, Qarabağ, Kairat...) share one "other" group, so they borrow strength from each other's European results, and their forecasts are flagged low-confidence until they have played enough. This replaced the earlier plan of a prior from UEFA country coefficients: it needs no hand-maintained coefficient file, and the shrinkage strength was tuned on the 2024/25 Champions League (1.0016 → 0.9186 log loss vs the base rate). A coefficient-based prior for the "other" group remains a possible refinement.
+
+## Season races
+
+`races.json` projects end-of-season totals for every shown competition, simulated 20,000 times (likely range = 10th–90th percentile, plus each contender's chance of finishing top):
+
+- **Clean sheets (teams):** current total + the Dixon-Coles chance that the opponent scores 0 in each remaining fixture. Backtested from 19 Nov 2025 to the end of 2025/26 (96 teams, 5 leagues): mean absolute error 2.11 clean sheets per team vs 3.32 for extending each team's pace; team goals 5.75 vs 7.39.
+- **Goals and assists (players):** a player keeps their share of the team's goals in that competition so far (`goals / (team goals + 3)`), applied to the team's expected goals in its remaining fixtures. Not backtested (no historical mid-season scorer data on the free tier). Blind to minutes, injuries, transfers and penalty duty.
+- Champions League projections cover scheduled fixtures only; knockout rounds count once drawn.
 
 ## Model leaderboard
 
