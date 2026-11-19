@@ -1,7 +1,6 @@
 """Walk-forward backtest.
 
-    python -m predictor.backtest                  # leaderboard + web/public/data/performance.json
-    python -m predictor.backtest --fit-ensemble   # fit the Elo/Dixon-Coles pool on validation
+    python -m predictor.backtest                  # leaderboard, performance.json, config/ensemble.json
     python -m predictor.backtest --tune           # grid-search Elo on validation
     python -m predictor.backtest --tune-dc        # grid-search Dixon-Coles on validation
 
@@ -11,8 +10,11 @@ predict that day's matches, then reveal their results with update().
 
 Periods (split by date so calendar-year leagues like Norway fit in too):
   burn-in     2014 -> 2016-06-30   ratings settle
-  validation  2016-07 -> 2018-06   hyperparameter tuning and ensemble fitting ONLY
+  validation  2016-07 -> 2018-06   hyperparameter tuning ONLY
   test        2018-07 -> 2026-06   the leaderboard (8 complete seasons)
+The ensemble pools are refitted before every test season on the walk-forward
+predictions of the seasons before it (never on the season being scored);
+config/ensemble.json, used live, is fitted on everything before this season.
   season      2026-07 -> today     this season so far, same walk-forward replay
 Champions League rows (2023/24 onwards) ride along; they're scored separately
 from 2024/25, once a season of CL history exists to link the leagues.
@@ -36,7 +38,7 @@ from predictor.metrics import implied_probs, outcome, score_frame
 from predictor.models import BaseRate
 from predictor.models.dixon_coles import DixonColes
 from predictor.models.elo import Elo
-from predictor.models.ensemble import PARAMS_PATH, fit_pool, pool
+from predictor.models.ensemble import PARAMS_PATH, combine, fit_params, pool_stats
 from predictor.config import DATA_PROCESSED
 
 VALIDATION = (pd.Timestamp("2016-07-01"), pd.Timestamp("2018-07-01"))
@@ -45,6 +47,7 @@ CL_SCORED_FROM = pd.Timestamp("2024-07-01")
 OUT_DIR = DATA_PROCESSED / "backtest"
 WEB_DATA = ROOT / "web" / "public" / "data"
 PIN = ["pin_close_h", "pin_close_d", "pin_close_a"]
+PRE = ["odds_pre_h", "odds_pre_d", "odds_pre_a"]
 P = ["p_home", "p_draw", "p_away"]
 BLIND = ["date", "season", "league", "home_id", "away_id", "neutral"]  # what predict() may see
 
@@ -74,9 +77,43 @@ def market(preds: pd.DataFrame) -> pd.DataFrame:
     return preds.assign(p_home=p[:, 0], p_draw=p[:, 1], p_away=p[:, 2])
 
 
-def pooled(elo: pd.DataFrame, dc: pd.DataFrame, params) -> pd.DataFrame:
-    p = pool(elo[P].to_numpy(), dc[P].to_numpy(), params, dc.league.eq(CL).to_numpy())
-    return dc.assign(p_home=p[:, 0], p_draw=p[:, 1], p_away=p[:, 2])
+def season_start(d: pd.Series) -> pd.Series:
+    return pd.to_datetime((d.dt.year.where(d.dt.month >= 7, d.dt.year - 1)).astype(str) + "-07-01")
+
+
+def ensemble_preds(elo: pd.DataFrame, dc: pd.DataFrame, start) -> tuple[pd.DataFrame, pd.DataFrame, dict]:
+    """Expanding-window ensemble from `start`: each season scored with pools
+    fitted only on earlier seasons. Returns (full ensemble, stats-only, params
+    fitted on everything before the latest season)."""
+    key = ["date", "league", "home_id", "away_id"]
+    E = ["e_h", "e_d", "e_a"]
+    d = dc.merge(elo[key + P].rename(columns=dict(zip(P, E))), on=key)
+    y = outcome(d.home_goals, d.away_goals)
+    is_cl = d.league.eq(CL).to_numpy()
+    starts = season_start(d.date)
+    pe, pd_ = d[E].to_numpy(), d[P].to_numpy()
+    odds = d[PRE].to_numpy(float) if set(PRE) <= set(d) else np.full((len(d), 3), np.nan)
+    full = np.full((len(d), 3), np.nan)
+    stats = np.full((len(d), 3), np.nan)
+    used = np.zeros(len(d), bool)
+    params = None
+    for s in sorted(starts[d.date >= start].unique()):
+        tr = (d.date < s).to_numpy()
+        rows = (starts == s).to_numpy()
+        params = fit_params(pe[tr], pd_[tr], odds[tr], is_cl[tr], y[tr])
+        full[rows], used[rows] = combine(pe[rows], pd_[rows], odds[rows], is_cl[rows], params)
+        stats[rows] = pool_stats(pe[rows], pd_[rows], params["stats"], is_cl[rows])
+    keep = (d.date >= start).to_numpy()
+    base = d.drop(columns=E)
+    ens = base.assign(p_home=full[:, 0], p_draw=full[:, 1], p_away=full[:, 2], used_market=used)[keep]
+    ens_stats = base.assign(p_home=stats[:, 0], p_draw=stats[:, 1], p_away=stats[:, 2])[keep]
+    return ens.reset_index(drop=True), ens_stats.reset_index(drop=True), params
+
+
+def market_pre(preds: pd.DataFrame) -> pd.DataFrame:
+    ok = preds[PRE].notna().all(axis=1) & (preds[PRE] > 1).all(axis=1)
+    p = implied_probs(*(preds.loc[ok, c] for c in PRE))
+    return preds[ok].assign(p_home=p[:, 0], p_draw=p[:, 1], p_away=p[:, 2])
 
 
 def calibration(preds: pd.DataFrame, bins=10) -> list[dict]:
@@ -108,31 +145,54 @@ def _row(key, label, s, note=""):
 def run():
     matches = load_matches()
     OUT_DIR.mkdir(parents=True, exist_ok=True)
-    end = pd.Timestamp(dt.date.today())
+    end = pd.Timestamp(dt.date.today()) + pd.Timedelta(days=1)
     preds = {}
     for model in (BaseRate(), Elo(), DixonColes()):
         print(f"backtesting {model.name}...", flush=True)
-        preds[model.name] = walk_forward(model, matches, TEST[0], end)
-    preds["ensemble"] = pooled(preds["elo"], preds["dixon_coles"], json.loads(PARAMS_PATH.read_text())["params"])
+        preds[model.name] = walk_forward(model, matches, VALIDATION[0], end)
+    print("fitting ensembles season by season...", flush=True)
+    preds["ensemble"], preds["ensemble_stats"], live = ensemble_preds(preds["elo"], preds["dixon_coles"], TEST[0])
     for name, df in preds.items():
         df.to_csv(OUT_DIR / f"{name}.csv", index=False, date_format="%Y-%m-%d")
+    PARAMS_PATH.write_text(json.dumps({
+        "_comment": "Fitted by `python -m predictor.backtest` on all walk-forward predictions before this "
+                    "season. stats: w_elo, w_dc, b_draw, b_away, cl_b_draw, cl_b_away. "
+                    "market: w_elo, w_dc, w_market, b_draw, b_away.",
+        "stats": [round(x, 5) for x in live["stats"]], "market": [round(x, 5) for x in live["market"]]},
+        indent=1) + "\n")
 
     def period(df, a, b):
         return df[(df.date >= a) & (df.date < b)]
 
-    labels = {"ensemble": "Ensemble (Elo + Dixon-Coles)", "dixon_coles": "Dixon-Coles",
+    labels = {"ensemble": "xGenius", "ensemble_stats": "xGenius, stats only", "dixon_coles": "Dixon-Coles",
               "elo": "Elo", "base_rate": "Base rate"}
+    notes = {"ensemble": "Elo + Dixon-Coles, plus pre-match odds where available",
+             "ensemble_stats": "Elo + Dixon-Coles, no odds", "base_rate": "league averages, ignores teams"}
     test = {k: scored(period(v[v.league != CL], *TEST)) for k, v in preds.items()}
     mkt = market(test["ensemble"])
+    pre = market_pre(test["ensemble"])
     n = len(mkt)
-    print(f"\nTest: {TEST[0]:%Y-%m-%d} to {TEST[1]:%Y-%m-%d}, {n:,} matches with Pinnacle closing odds\n")
+    share = float(test["ensemble"].used_market.mean())
+    print(f"\nTest: {TEST[0]:%Y-%m-%d} to {TEST[1]:%Y-%m-%d}, {n:,} matches with Pinnacle closing odds "
+          f"({share:.0%} with pre-match odds)\n")
     print("| Model | Log loss | Brier | RPS | Accuracy | Notes |\n|---|---|---|---|---|---|")
     board = []
     for k in labels:
-        s = score_frame(test[k]); board.append(_row(k, labels[k], s))
-        print(_fmt(labels[k], s))
-    s = score_frame(mkt); board.append(_row("market", "Market (Pinnacle closing)", s, "benchmark only"))
-    print(_fmt("market (Pinnacle closing)", s, "benchmark only"))
+        sc = score_frame(test[k])
+        board.append(_row(k, labels[k], sc, notes.get(k, "")))
+        print(_fmt(labels[k], sc, notes.get(k, "")))
+    sc = score_frame(pre)
+    board.append(_row("market_pre", "Market, pre-match average", sc, f"only the {len(pre):,} matches with pre-match odds"))
+    print(_fmt("market, pre-match average", sc, f"{len(pre):,} matches"))
+    sc = score_frame(mkt)
+    board.append(_row("market", "Market (Pinnacle closing)", sc, "benchmark only"))
+    print(_fmt("market (Pinnacle closing)", sc, "benchmark only"))
+    with_odds = test["ensemble"][test["ensemble"].used_market]
+    odds_rows = {"matches": len(with_odds), "xgenius": round(score_frame(with_odds)["log_loss"], 4),
+                 "market_pre": round(score_frame(market_pre(with_odds))["log_loss"], 4),
+                 "market_close": round(score_frame(market(with_odds))["log_loss"], 4)}
+    print(f"\nOn the {len(with_odds):,} matches with pre-match odds: xGenius {odds_rows['xgenius']:.4f}, "
+          f"pre-match odds {odds_rows['market_pre']:.4f}, Pinnacle closing {odds_rows['market_close']:.4f}")
 
     by_league = {name: df.groupby("league").apply(lambda g: score_frame(g)["log_loss"], include_groups=False)
                  for name, df in {**test, "market": mkt}.items()}
@@ -150,17 +210,18 @@ def run():
     season = {k: period(v, TEST[1], end) for k, v in preds.items()}
     season = {k: v[[is_shown(l, h, a, cov) for l, h, a in zip(v.league, v.home_id, v.away_id)]]
               for k, v in season.items()}
-    season_board = [_row(k, labels[k], score_frame(season[k])) for k in ("ensemble", "base_rate")
+    season_board = [_row(k, labels[k], score_frame(season[k])) for k in ("ensemble", "ensemble_stats", "base_rate")
                     if len(season[k])]
     if season_board:
         print(f"\nThis season so far ({len(season['ensemble'])} shown matches): "
-              f"ensemble log loss {season_board[0]['log_loss']:.4f}, accuracy {season_board[0]['accuracy']:.1%}")
+              f"xGenius log loss {season_board[0]['log_loss']:.4f}, accuracy {season_board[0]['accuracy']:.1%}")
 
     WEB_DATA.mkdir(parents=True, exist_ok=True)
     perf = {
         "generated_at": dt.datetime.now(dt.timezone.utc).isoformat(timespec="seconds"),
         "test": {"from": f"{TEST[0]:%Y-%m-%d}", "to": f"{TEST[1]:%Y-%m-%d}", "matches": n,
-                 "leagues": int(mkt.league.nunique()), "leaderboard": board,
+                 "leagues": int(mkt.league.nunique()), "share_with_odds": round(share, 3),
+                 "leaderboard": board, "with_odds": odds_rows,
                  "by_league": [{"league": lg, **{k: round(float(v), 4) for k, v in row.items()}}
                                for lg, row in by_league.iterrows()],
                  "calibration": calibration(test["ensemble"])},
@@ -170,24 +231,7 @@ def run():
                    "matches": len(season["ensemble"]), "leaderboard": season_board},
     }
     (WEB_DATA / "performance.json").write_text(json.dumps(perf, indent=1))
-    print(f"\nwrote {WEB_DATA / 'performance.json'}")
-
-
-def fit_ensemble():
-    matches = load_matches()
-    elo = walk_forward(Elo(), matches, *VALIDATION)
-    dc = walk_forward(DixonColes(), matches, *VALIDATION)
-    elo, dc = scored(elo), scored(dc)
-    y = outcome(dc.home_goals, dc.away_goals)
-    params = fit_pool(elo[P].to_numpy(), dc[P].to_numpy(), y)
-    ens = pooled(elo, dc, params)
-    for name, df in (("elo", elo), ("dixon_coles", dc), ("ensemble", ens)):
-        print(f"validation {name:<12} log loss {score_frame(df)['log_loss']:.5f}")
-    PARAMS_PATH.write_text(json.dumps({
-        "_comment": "w_elo, w_dc, b_draw, b_away. Fitted on 2016/17-2017/18 by "
-                    "`python -m predictor.backtest --fit-ensemble`.",
-        "params": [round(float(x), 5) for x in params]}, indent=1) + "\n")
-    print("params", [round(float(x), 4) for x in params], "->", PARAMS_PATH)
+    print(f"\nwrote {WEB_DATA / 'performance.json'} and {PARAMS_PATH}")
 
 
 def tune():
@@ -226,7 +270,5 @@ if __name__ == "__main__":
         tune()
     elif "--tune-dc" in sys.argv:
         tune_dc()
-    elif "--fit-ensemble" in sys.argv:
-        fit_ensemble()
     else:
         run()
