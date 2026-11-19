@@ -13,7 +13,7 @@ Public football fans who find the site: they follow the Premier League, the Cham
 xGenius forecasts football matches with statistical models: home/draw/away probabilities, likely scorelines, expected goals, over/under 2.5 goals and both-teams-to-score. Success: a fan can see the next fixtures at a glance, open any match and understand why the model leans the way it does, and trust the numbers because the model's track record is shown openly.
 
 ## Positioning
-Model-driven and honest: every number comes from models backtested out of sample over eight seasons and 32,000 matches, the track record (including misses) is public, and the site says plainly that bookmakers' closing odds are still more accurate. It is a stats project, not a betting tool: no tips, no odds, no affiliate links.
+Model-driven and honest: every number comes from models backtested out of sample over eight seasons and 32,000 matches, and the track record (including misses) is public. Where bookmakers' pre-match odds are published, they are blended in as an input (and the match says so), which makes forecasts more accurate than the pre-match market on its own. It is a stats project, not a betting tool: no odds shown, no tips, no affiliate links.
 
 ## Operating Context
 - Fans check before a matchday, often on a phone.
