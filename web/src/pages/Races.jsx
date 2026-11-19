@@ -1,35 +1,62 @@
 import { useState } from 'react';
+import ScrollRow from '../components/ScrollRow.jsx';
+import Shirt from '../components/Shirt.jsx';
 import { Empty, ErrorState, Loading } from '../components/State.jsx';
 import { LEAGUE_ORDER, fmtStamp, useData } from '../lib/data.js';
 import { luminance } from '../lib/kit.js';
 
-/** Current total in the club's colour, projected rest of season as a lighter
- *  extension, and the likely range (10th–90th percentile) as a whisker. */
-function RaceBar({ now, projected, range, max, kit }) {
+const clubColour = (kit) => (kit ? (luminance(kit[0]) > 0.75 ? kit[1] : kit[0]) : 'var(--ink-2)');
+
+/** Solid: so far. Lighter: projected rest of season, ending in the projected
+ *  total. Whisker: the likely range (8 in 10 simulated seasons). */
+function RaceBar({ now, projected, range, max, kit, unit }) {
   const pc = (v) => `${Math.min(100, (v / max) * 100)}%`;
-  const main = kit ? (luminance(kit[0]) > 0.75 ? kit[1] : kit[0]) : 'var(--ink-2)';
   return (
-    <span className="racebar" aria-hidden="true" style={{ '--club': main }}>
-      <span className="racebar__proj" style={{ width: pc(projected) }} />
-      <span className="racebar__now" style={{ width: pc(now) }} />
-      <span className="racebar__range" style={{ left: pc(range[0]), width: `calc(${pc(range[1])} - ${pc(range[0])})` }} />
+    <span
+      className="racebar"
+      style={{ '--club': clubColour(kit) }}
+      role="img"
+      aria-label={`${now} so far, projected ${Math.round(projected)} ${unit} (likely ${range[0]} to ${range[1]})`}
+    >
+      <span className="racebar__track">
+        <span className="racebar__proj" style={{ width: pc(projected) }} />
+        <span className="racebar__now" style={{ width: pc(now) }} />
+      </span>
+      <span
+        className="racebar__range"
+        style={{ left: pc(range[0]), width: `calc(${pc(range[1])} - ${pc(range[0])})` }}
+        title={`Likely ${range[0]}–${range[1]}`}
+      />
+      <span className="racebar__label" style={{ left: pc(projected) }}>
+        {Math.round(projected)}
+      </span>
     </span>
   );
 }
 
-function Swatch({ kit }) {
+function Legend() {
   return (
-    <span
-      className="swatch swatch--sm"
-      style={kit ? { '--main': kit[0], '--trim': kit[1] } : undefined}
-      aria-hidden="true"
-    />
+    <ul className="legend" aria-label="How to read the bars">
+      <li>
+        <span className="legend__key legend__key--now" aria-hidden="true" /> So far
+      </li>
+      <li>
+        <span className="legend__key legend__key--proj" aria-hidden="true" /> Projected by season end (number at the end of the bar)
+      </li>
+      <li>
+        <span className="legend__key legend__key--range" aria-hidden="true" /> Likely range (line under the bar): 8 in 10 simulated seasons land here
+      </li>
+    </ul>
   );
 }
 
-function RaceTable({ rows, stat, unit, who }) {
+function pctLabel(p) {
+  return p >= 0.995 ? '>99%' : p < 0.005 ? '<1%' : `${Math.round(p * 100)}%`;
+}
+
+function RaceTable({ rows, stat, unit, who, chance }) {
   if (!rows.length) return <Empty title="No data yet for this race." />;
-  const max = Math.max(...rows.map((r) => r.range[1]), 1);
+  const max = Math.max(...rows.map((r) => r.range[1]), 1) * 1.08; // room for the label
   return (
     <div className="table-wrap">
       <table className="table race">
@@ -38,12 +65,9 @@ function RaceTable({ rows, stat, unit, who }) {
             <th scope="col" className="num">#</th>
             <th scope="col">{who}</th>
             <th scope="col" className="num">Now</th>
-            <th scope="col" className="race__barcol hide-sm">
-              <span className="sr-only">Projection chart</span>
-            </th>
-            <th scope="col" className="num">Projected</th>
-            <th scope="col" className="num" title="Chance of finishing the season top of this list (shared first place counts as a share)">
-              Top
+            <th scope="col">Projection</th>
+            <th scope="col" className="num race__chance-h" title={`Chance of finishing the season ${chance.toLowerCase()} (a shared first place counts as a share)`}>
+              {chance}
             </th>
           </tr>
         </thead>
@@ -55,29 +79,20 @@ function RaceTable({ rows, stat, unit, who }) {
                 <td className="num rank">{i + 1}</td>
                 <th scope="row">
                   <span className="teamcell">
-                    <Swatch kit={r.team.kit} />
+                    <Shirt kit={r.team.kit} size={18} />
                     <span>
                       {name}
-                      {r.player && <span className="teamcell__league teamcell__league--always">{r.team.short}</span>}
-                      {!r.player && (
-                        <span className="teamcell__league teamcell__league--always">
-                          {r.played} played · {r.remaining} to go
-                        </span>
-                      )}
+                      <span className="teamcell__league teamcell__league--always">
+                        {r.player ? r.team.short : `${r.played} played · ${r.remaining} to go`}
+                      </span>
                     </span>
                   </span>
                 </th>
                 <td className="num race__now">{r[stat]}</td>
-                <td className="race__barcol hide-sm">
-                  <RaceBar now={r[stat]} projected={r.projected} range={r.range} max={max} kit={r.team.kit} />
+                <td className="race__barcol">
+                  <RaceBar now={r[stat]} projected={r.projected} range={r.range} max={max} kit={r.team.kit} unit={unit} />
                 </td>
-                <td className="num">
-                  <span className="race__proj">{Math.round(r.projected)}</span>
-                  <span className="race__range" aria-label={`likely ${r.range[0]} to ${r.range[1]} ${unit}`}>
-                    {r.range[0]}–{r.range[1]}
-                  </span>
-                </td>
-                <td className="num race__top">{r.p_top >= 0.995 ? '>99%' : r.p_top < 0.005 ? '<1%' : `${Math.round(r.p_top * 100)}%`}</td>
+                <td className="num race__chance">{pctLabel(r.p_top)}</td>
               </tr>
             );
           })}
@@ -126,13 +141,15 @@ export default function Races() {
         </p>
       </header>
 
-      <div className="chips chips--page" role="group" aria-label="Competition">
+      <ScrollRow label="Competition" className="chips">
         {comps.map((x) => (
           <button key={x.league} type="button" className="chipbtn" aria-pressed={x.league === c.league} onClick={() => choose(x.league)}>
             {x.name}
           </button>
         ))}
-      </div>
+      </ScrollRow>
+
+      <Legend />
 
       {isCL && (
         <p className="notice notice--inline">
@@ -143,36 +160,37 @@ export default function Races() {
 
       <section className="panel" aria-labelledby="g-h">
         <h2 id="g-h">Top scorers</h2>
-        <RaceTable rows={c.scorers} stat="goals" unit="goals" who="Player" />
+        <RaceTable rows={c.scorers} stat="goals" unit="goals" who="Player" chance="Golden Boot" />
         <p className="panel__note">
-          A player keeps their share of their team’s goals so far (eased back a little for small samples), applied to
-          the goals the model expects the team to score from here. It can’t see minutes, injuries, suspensions,
-          transfers or penalty duty.
+          <strong>Assumes every player stays fit and keeps their role.</strong> A player keeps their share of their
+          team’s goals so far (eased back a little for small samples), applied to the goals the model expects the team
+          to score from here. The data has no minutes or injury news, so an injured or dropped player is projected as
+          if they’ll play every game, and a mid-season transfer is measured against their new club’s goals.
         </p>
       </section>
 
       <section className="panel" aria-labelledby="a-h">
         <h2 id="a-h">Top assists</h2>
-        <RaceTable rows={c.assists} stat="assists" unit="assists" who="Player" />
+        <RaceTable rows={c.assists} stat="assists" unit="assists" who="Player" chance="Top assister" />
         <p className="panel__note">
-          <strong>Incomplete list:</strong> our free data only includes players who have scored at least once, so
-          creators who haven’t scored yet are missing.
+          <strong>Assumes they stay fit. Incomplete list:</strong> our data only includes players who have scored at
+          least once, so creators who haven’t scored yet are missing.
         </p>
       </section>
 
       <section className="panel" aria-labelledby="cs-h">
         <h2 id="cs-h">Clean sheets</h2>
-        <RaceTable rows={c.clean_sheets} stat="cs" unit="clean sheets" who="Team" />
+        <RaceTable rows={c.clean_sheets} stat="cs" unit="clean sheets" who="Team" chance="Most clean sheets" />
         <p className="panel__note">
           By team, not goalkeeper (we don’t have lineups). Each remaining match adds the model’s chance that the
-          opponent doesn’t score. Tested on last season from this point: the model was off by about 2 clean sheets
-          per team over the rest of the season, against 3.3 for simply extending each team’s pace.
+          opponent doesn’t score. Tested on last season from this point: off by about 2 clean sheets per team over the
+          rest of the season, against 3.3 for simply extending each team’s pace.
         </p>
       </section>
 
-      <p className="panel__note">
-        <strong>Now</strong>: so far this season. <strong>Projected</strong>: expected final total, with the likely
-        range (8 in 10 simulated seasons land inside it). <strong>Top</strong>: chance of finishing first.
+      <p className="panel__note page__source">
+        Player goals, assists and appearances: football-data.org’s top-100 scorer list for each competition, refreshed
+        every 6 hours. Team results and fixtures: football-data.co.uk and football-data.org.
       </p>
     </div>
   );

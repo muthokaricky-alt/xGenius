@@ -1,5 +1,6 @@
 import { ArrowDown, ArrowUp, Search } from 'lucide-react';
 import { useMemo, useState } from 'react';
+import Shirt from '../components/Shirt.jsx';
 import { ErrorState, Empty, Loading } from '../components/State.jsx';
 import { fmtStamp, useData } from '../lib/data.js';
 
@@ -111,11 +112,7 @@ export default function Ratings() {
                   <td className="num rank">{t.rank}</td>
                   <td>
                     <span className="teamcell">
-                      <span
-                        className="swatch swatch--sm"
-                        style={t.kit ? { '--main': t.kit[0], '--trim': t.kit[1] } : undefined}
-                        aria-hidden="true"
-                      />
+                      <Shirt kit={t.kit} size={18} />
                       <span>
                         {t.name}
                         <span className="teamcell__league">{t.league_name}</span>

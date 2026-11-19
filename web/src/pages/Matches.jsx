@@ -1,6 +1,7 @@
 import { Search, X } from 'lucide-react';
 import { useEffect, useMemo, useState } from 'react';
 import MatchDetail from '../components/MatchDetail.jsx';
+import ScrollRow from '../components/ScrollRow.jsx';
 import { FixtureRow, ResultRow } from '../components/MatchRow.jsx';
 import { Empty, ErrorState, Loading } from '../components/State.jsx';
 import { LEAGUE_ORDER, LEAGUE_SHORT, fmtShort, fmtStamp, groupByDay, useData } from '../lib/data.js';
@@ -28,7 +29,7 @@ function readFilter() {
 function Filters({ leagues, league, setLeague, query, setQuery }) {
   return (
     <div className="filters">
-      <div className="chips" role="group" aria-label="Competition">
+      <ScrollRow label="Competition" className="chips">
         {['all', ...leagues].map((lg) => (
           <button
             key={lg}
@@ -40,7 +41,7 @@ function Filters({ leagues, league, setLeague, query, setQuery }) {
             {lg === 'all' ? 'All' : LEAGUE_SHORT[lg]}
           </button>
         ))}
-      </div>
+      </ScrollRow>
       <label className="search">
         <Search aria-hidden="true" size={16} />
         <span className="sr-only">Find a team</span>

@@ -3,6 +3,7 @@ import { LEAGUE_SHORT, OUTCOME, dayOf, favourite, fmtShort, fmtTime, pct, pctNum
 import { fixtureKits, inkOn, luminance } from '../lib/kit.js';
 import { href } from '../lib/router.js';
 import KitBar from './KitBar.jsx';
+import Shirt from './Shirt.jsx';
 
 const CONFIDENCE = {
   high: 'Plenty of recent matches behind both teams’ ratings.',
@@ -10,9 +11,6 @@ const CONFIDENCE = {
   low: 'At least one team has played few matches we can see recently (e.g. a newly promoted side or a club from a league we don’t track), so this forecast leans on assumptions.',
 };
 
-function Swatch({ kit }) {
-  return <span className="swatch" style={{ '--main': kit[0], '--trim': kit[1] }} aria-hidden="true" />;
-}
 
 function ScoreGrid({ m, kits }) {
   const max = Math.max(...m.grid.flat());
@@ -127,13 +125,13 @@ export default function MatchDetail({ m, backHref = href('/') }) {
 
       <h1 id="detail-title" className="halves">
         <span className="halves__side">
-          <Swatch kit={kits.home} />
+          <Shirt kit={kits.home} size={40} className="halves__shirt" />
           <span className="halves__name">{m.home.name}</span>
           <span className="halves__role">Home</span>
         </span>
         <span className="sr-only"> v </span>
         <span className="halves__side halves__side--away">
-          <Swatch kit={kits.away} />
+          <Shirt kit={kits.away} size={40} className="halves__shirt" />
           <span className="halves__name">{m.away.name}</span>
           <span className="halves__role">Away{kits.changed ? ' · change colours' : ''}</span>
         </span>
