@@ -226,6 +226,13 @@ export default function MatchDetail({ m, backHref = href('/') }) {
           <strong className="conf">{m.confidence[0].toUpperCase() + m.confidence.slice(1)} data confidence.</strong>{' '}
           {CONFIDENCE[m.confidence]}
         </p>
+        <p>
+          {m.market
+            ? 'This forecast blends our models with the betting market’s pre-match odds, which carry news we can’t see (injuries, team news). That makes it more accurate.'
+            : m.league === 'champions_league'
+              ? 'Pure statistics: no betting odds are available to us for Champions League matches.'
+              : 'Pure statistics for now. Once bookmakers’ odds for this match are published (usually a few days before kickoff), they’re blended in.'}
+        </p>
         <p className="panel__note">
           Probabilities, not certainties: a 70% favourite still fails to win 3 times in 10. <a href={href('/record')}>See how accurate the model has been.</a>
         </p>

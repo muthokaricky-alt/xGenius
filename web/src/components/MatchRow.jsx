@@ -43,6 +43,11 @@ export function FixtureRow({ m, selected, showLeague }) {
       <div className="fx__meta">
         <time dateTime={m.kickoff}>{fmtTime(m.kickoff)}</time>
         <Competition m={m} showLeague={showLeague} />
+        {m.market && (
+          <span className="tag" title="Blended with the betting market's pre-match odds">
+            + odds
+          </span>
+        )}
         {m.confidence === 'low' && <span className="tag" title="Little recent data behind at least one team">Low data</span>}
       </div>
       <div className="fx__teams">

@@ -150,9 +150,16 @@ export default function Record() {
         <h2 id="lb-h">Eight seasons, {t.matches.toLocaleString()} matches</h2>
         <p>
           We tested the model on every match in {t.leagues} European leagues from {t.from.slice(0, 4)} to {t.to.slice(0, 4)},
-          predicting each matchday using only what was known before it. The bookmakers’ closing odds are shown as a
-          benchmark: they are still better than us, as they are better than almost every public model.
+          predicting each matchday using only what was known before it. Where bookmakers’ pre-match odds were already
+          published ({Math.round(t.share_with_odds * 100)}% of matches) they are blended in, as they are on the site.
         </p>
+        {t.with_odds && (
+          <p>
+            On those {t.with_odds.matches.toLocaleString()} matches xGenius scores {t.with_odds.xgenius.toFixed(4)}, better than
+            the pre-match odds on their own ({t.with_odds.market_pre.toFixed(4)}) and close to the sharpest bookmaker’s
+            closing line ({t.with_odds.market_close.toFixed(4)}), which only exists at kickoff.
+          </p>
+        )}
         <div className="table-wrap">
           <table className="table">
             <thead>
@@ -165,11 +172,10 @@ export default function Record() {
             </thead>
             <tbody>
               {lb.map((r) => (
-                <tr key={r.key} className={r.key === 'ensemble' ? 'row--ours' : r.key === 'market' ? 'row--bench' : ''}>
+                <tr key={r.key} className={r.key === 'ensemble' ? 'row--ours' : r.key.startsWith('market') ? 'row--bench' : ''}>
                   <th scope="row">
-                    {r.key === 'ensemble' ? 'xGenius (Elo + Dixon-Coles)' : r.model}
-                    {r.key === 'market' && <span className="teamcell__league">Closing odds, benchmark only</span>}
-                    {r.key === 'base_rate' && <span className="teamcell__league">League averages, ignores teams</span>}
+                    {r.model}
+                    {r.note && <span className="teamcell__league teamcell__league--always">{r.note}</span>}
                   </th>
                   <td className="num">{r.log_loss.toFixed(4)}</td>
                   <td className="num hide-sm">{r.brier.toFixed(4)}</td>
@@ -181,7 +187,7 @@ export default function Record() {
         </div>
         <p className="panel__note">
           {llNote} We close {Math.round(((base.log_loss - ens.log_loss) / (base.log_loss - mkt.log_loss)) * 100)}% of the
-          gap between knowing nothing about the teams and the betting market.
+          gap between knowing nothing about the teams and the closing betting market.
         </p>
       </section>
 
@@ -198,6 +204,7 @@ export default function Record() {
               <tr>
                 <th scope="col">League</th>
                 <th scope="col" className="num">xGenius</th>
+                <th scope="col" className="num hide-sm">Stats only</th>
                 <th scope="col" className="num">Market</th>
                 <th scope="col" className="num hide-sm">League averages</th>
               </tr>
@@ -207,6 +214,7 @@ export default function Record() {
                 <tr key={r.league}>
                   <th scope="row">{LEAGUE_SHORT[r.league] || r.league}</th>
                   <td className="num">{r.ensemble.toFixed(3)}</td>
+                  <td className="num hide-sm">{r.ensemble_stats.toFixed(3)}</td>
                   <td className="num muted">{r.market.toFixed(3)}</td>
                   <td className="num muted hide-sm">{r.base_rate.toFixed(3)}</td>
                 </tr>
@@ -214,7 +222,10 @@ export default function Record() {
             </tbody>
           </table>
         </div>
-        <p className="panel__note">Log loss per league, 2018–2026. Lower is better.</p>
+        <p className="panel__note">
+          Log loss per league, 2018–2026. Lower is better. Market: closing odds. Leagues where xGenius and stats-only
+          match had no pre-match odds in our data.
+        </p>
       </section>
 
       <section className="panel" aria-labelledby="cl-h">
