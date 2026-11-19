@@ -1302,6 +1302,136 @@ main > .detail {
   stroke-width: 1.5;
 }
 
+/* ---------- season races ---------- */
+.chips--page {
+  margin-bottom: 18px;
+}
+.teamcell__league--always {
+  display: block !important;
+}
+.race {
+  table-layout: fixed;
+}
+.race thead th:nth-child(1) {
+  width: 52px;
+}
+.race thead th:nth-child(2) {
+  width: 30%;
+}
+.race thead th:nth-child(3) {
+  width: 64px;
+}
+.race thead th:nth-child(5) {
+  width: 100px;
+}
+.race thead th:nth-child(6) {
+  width: 72px;
+}
+.race th[scope='row'] {
+  font-weight: 600;
+  overflow-wrap: anywhere;
+}
+@media (max-width: 719px) {
+  .race thead th:nth-child(1) {
+    width: 34px;
+  }
+  .race thead th:nth-child(2) {
+    width: auto;
+  }
+  .race thead th:nth-child(3) {
+    width: 40px;
+  }
+  .race thead th:nth-child(5) {
+    width: 62px;
+  }
+  .race thead th:nth-child(6) {
+    width: 48px;
+  }
+  .race th,
+  .race td {
+    padding-left: 5px;
+    padding-right: 5px;
+  }
+  .race .teamcell {
+    gap: 7px;
+    font-size: 14px;
+  }
+  .page .panel:has(.race) {
+    padding-left: 12px;
+    padding-right: 12px;
+  }
+}
+.race__now {
+  font: 800 20px/1 var(--font-num);
+  color: var(--ink-2);
+}
+.race__barcol {
+  min-width: 140px;
+}
+.race__proj {
+  display: block;
+  font: 800 22px/1 var(--font-num);
+}
+.race__range {
+  display: block;
+  font-size: 11.5px;
+  color: var(--ink-3);
+  margin-top: 2px;
+}
+.race__top {
+  font: 800 18px/1 var(--font-num);
+}
+.racebar {
+  position: relative;
+  display: block;
+  height: 12px;
+  border-radius: 3px;
+  background: var(--sunk);
+}
+.racebar__proj,
+.racebar__now {
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  border-radius: 3px;
+}
+.racebar__proj {
+  background: color-mix(in srgb, var(--club) 32%, var(--surface));
+  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--club) 45%, transparent);
+}
+.racebar__now {
+  background: var(--club);
+  box-shadow: inset 0 0 0 1px var(--kit-edge);
+}
+.racebar__range {
+  position: absolute;
+  top: 50%;
+  height: 2px;
+  margin-top: -1px;
+  background: var(--ink);
+}
+.racebar__range::before,
+.racebar__range::after {
+  content: '';
+  position: absolute;
+  top: -5px;
+  width: 2px;
+  height: 12px;
+  background: var(--ink);
+}
+.racebar__range::before {
+  left: 0;
+}
+.racebar__range::after {
+  right: 0;
+}
+.notice--inline {
+  display: block;
+  margin-bottom: 18px;
+  font-size: 14px;
+}
+
 /* ---------- buttons, notices, skeleton ---------- */
 .btn {
   display: inline-flex;

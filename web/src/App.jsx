@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import Header from './components/Header.jsx';
 import About from './pages/About.jsx';
 import Matches from './pages/Matches.jsx';
+import Races from './pages/Races.jsx';
 import Ratings from './pages/Ratings.jsx';
 import Record from './pages/Record.jsx';
 import { href, useRoute } from './lib/router.js';
@@ -10,6 +11,7 @@ const TITLES = {
   matches: 'Upcoming matches',
   results: 'Recent results',
   match: 'Match forecast',
+  races: 'Season races',
   ratings: 'Power ratings',
   record: 'Track record',
   about: 'How it works',
@@ -51,6 +53,9 @@ export default function App() {
     case 'results':
     case 'match':
       body = <Matches page={route.page} id={route.id} />;
+      break;
+    case 'races':
+      body = <Races />;
       break;
     case 'ratings':
       body = <Ratings />;

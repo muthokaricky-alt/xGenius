@@ -3,6 +3,7 @@ import { href } from '../lib/router.js';
 
 const TABS = [
   { page: 'matches', path: '/', label: 'Matches', also: ['results', 'match'] },
+  { page: 'races', path: '/races', label: 'Races' },
   { page: 'ratings', path: '/ratings', label: 'Ratings' },
   { page: 'record', path: '/record', label: 'Track record' },
   { page: 'about', path: '/about', label: 'How it works' },

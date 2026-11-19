@@ -43,6 +43,14 @@ export default function About() {
           calibration: when the blend says 60%, that outcome should happen about 60% of the time.
         </p>
 
+        <h2>Season races</h2>
+        <p>
+          The <a href={href('/races')}>races</a> page projects who finishes the season with the most goals, assists
+          and clean sheets in each competition: the total so far plus what the model expects from each remaining
+          fixture. A player is assumed to keep their current share of their team’s goals, which is the weakest
+          assumption on the site: it can’t see injuries, rotation or a new signing taking over.
+        </p>
+
         <h2>Comparing leagues</h2>
         <p>
           A Premier League side and a Bundesliga side almost never play each other, so how do we compare them? Through
