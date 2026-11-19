@@ -1,0 +1,438 @@
+team_id,name,country,aliases
+a-klagenfurt,A. Klagenfurt,Austria,
+a-lustenau,A. Lustenau,Austria,
+admira,Admira,Austria,
+altach,Altach,Austria,
+austria-vienna,Austria Vienna,Austria,
+bw-linz,BW Linz,Austria,
+grazer-ak,Grazer AK,Austria,
+grodig,Grodig,Austria,
+hartberg,Hartberg,Austria,
+lask,LASK,Austria,
+mattersburg,Mattersburg,Austria,
+neustadt,Neustadt,Austria,
+rapid-vienna,Rapid Vienna,Austria,SK Rapid
+red-bull-salzburg,Red Bull Salzburg,Austria,RB Salzburg|Salzburg
+ried,Ried,Austria,
+st-polten,St. Polten,Austria,
+sturm-graz,Sturm Graz,Austria,
+tirol,Tirol,Austria,
+wacker-innsbruck,Wacker Innsbruck,Austria,
+wolfsberger,Wolfsberger AC,Austria,
+anderlecht,Anderlecht,Belgium,
+antwerp,Antwerp,Belgium,
+beerschot-va,Beerschot VA,Belgium,
+beveren,Beveren,Belgium,Waasland-Beveren
+cercle-brugge,Cercle Brugge,Belgium,
+charleroi,Charleroi,Belgium,
+brugge,Club Brugge,Belgium,
+dender,Dender,Belgium,
+eupen,Eupen,Belgium,
+genk,Genk,Belgium,
+gent,Gent,Belgium,
+kortrijk,Kortrijk,Belgium,
+lierse,Lierse,Belgium,
+lokeren,Lokeren,Belgium,
+lommel,Lommel SK,Belgium,
+mechelen,Mechelen,Belgium,
+mouscron,Mouscron,Belgium,Mouscron-Peruwelz
+oostende,Oostende,Belgium,
+oud-heverlee-leuven,Oud-Heverlee Leuven,Belgium,
+raal-la-louviere,RAAL La Louviere,Belgium,
+rwd-molenbeek,RWD Molenbeek,Belgium,
+seraing,Seraing,Belgium,
+sint-truiden,Sint-Truiden,Belgium,St Truiden
+standard-liege,Standard Liege,Belgium,Standard
+union-saint-gilloise,Union Saint-Gilloise,Belgium,Royale Union Saint-Gilloise|St. Gilloise|Union SG
+waregem,Waregem,Belgium,
+westerlo,Westerlo,Belgium,
+aalborg,Aalborg,Denmark,
+aarhus,Aarhus,Denmark,
+brondby,Brondby,Denmark,
+esbjerg,Esbjerg,Denmark,
+copenhagen,FC Copenhagen,Denmark,FC Kobenhavn
+fredericia,Fredericia,Denmark,
+helsingor,Helsingor,Denmark,
+hobro,Hobro,Denmark,
+horsens,Horsens,Denmark,
+hvidovre,Hvidovre IF,Denmark,
+lyngby,Lyngby,Denmark,
+midtjylland,Midtjylland,Denmark,
+nordsjaelland,Nordsjaelland,Denmark,
+odense,Odense,Denmark,
+randers,Randers FC,Denmark,
+silkeborg,Silkeborg,Denmark,
+sonderjyske,Sonderjyske,Denmark,
+vejle,Vejle,Denmark,
+vendsyssel,Vendsyssel,Denmark,
+vestsjaelland,Vestsjaelland,Denmark,
+viborg,Viborg,Denmark,
+arsenal,Arsenal,England,
+aston-villa,Aston Villa,England,
+bournemouth,Bournemouth,England,
+brentford,Brentford,England,
+brighton-and-hove-albion,Brighton & Hove Albion,England,Brighton
+burnley,Burnley,England,
+cardiff-city,Cardiff City,England,Cardiff
+chelsea,Chelsea,England,
+coventry-city,Coventry City,England,Coventry
+crystal-palace,Crystal Palace,England,
+everton,Everton,England,
+fulham,Fulham,England,
+huddersfield-town,Huddersfield Town,England,Huddersfield
+hull-city,Hull City,England,Hull
+ipswich-town,Ipswich Town,England,Ipswich
+leeds-united,Leeds United,England,Leeds
+leicester-city,Leicester City,England,Leicester
+liverpool,Liverpool,England,
+luton-town,Luton Town,England,Luton
+manchester-city,Manchester City,England,Man City
+manchester-united,Manchester United,England,Man U|Man United|Man Utd
+middlesbrough,Middlesbrough,England,
+newcastle-united,Newcastle United,England,Newcastle|Toon
+norwich-city,Norwich City,England,Norwich
+nottingham-forest,Nottingham Forest,England,Forest|Nott'm Forest|Nottm Forest
+queens-park-rangers,Queens Park Rangers,England,QPR
+sheffield-united,Sheffield United,England,
+southampton,Southampton,England,
+stoke-city,Stoke City,England,Stoke
+sunderland,Sunderland,England,
+swansea-city,Swansea City,England,Swansea
+tottenham-hotspur,Tottenham Hotspur,England,Spurs|Tottenham
+watford,Watford,England,
+west-bromwich-albion,West Bromwich Albion,England,West Brom
+west-ham-united,West Ham United,England,West Ham
+wolverhampton-wanderers,Wolverhampton Wanderers,England,Wolves
+ajaccio,AC Ajaccio,France,
+amiens,Amiens,France,
+angers,Angers,France,
+auxerre,Auxerre,France,
+bastia,Bastia,France,
+bordeaux,Bordeaux,France,
+brest,Brest,France,Stade Brestois 29
+caen,Caen,France,
+clermont,Clermont,France,
+dijon,Dijon,France,
+evian-tg,Evian TG,France,Evian Thonon Gaillard
+gfc-ajaccio,GFC Ajaccio,France,Ajaccio GFCO
+guingamp,Guingamp,France,
+le-havre,Le Havre,France,
+le-mans,Le Mans,France,
+lens,Lens,France,Racing Club de Lens
+lille,Lille,France,
+lorient,Lorient,France,
+lyon,Lyon,France,OL|Olympique Lyonnais
+marseille,Marseille,France,OM|Olympique de Marseille
+metz,Metz,France,
+monaco,Monaco,France,
+montpellier,Montpellier,France,
+nancy,Nancy,France,
+nantes,Nantes,France,
+nice,Nice,France,
+nimes,Nimes,France,
+paris,Paris FC,France,
+paris-saint-germain,Paris Saint-Germain,France,PSG|Paris SG
+reims,Reims,France,Stade de Reims
+rennes,Rennes,France,Stade Rennais FC 1901
+saint-etienne,Saint-Etienne,France,St Etienne
+strasbourg,Strasbourg,France,RC Strasbourg Alsace
+toulouse,Toulouse,France,
+troyes,Troyes,France,
+arminia-bielefeld,Arminia Bielefeld,Germany,Bielefeld
+augsburg,Augsburg,Germany,
+bayer-leverkusen,Bayer Leverkusen,Germany,Leverkusen
+bayern-munich,Bayern Munich,Germany,Bayern|Bayern Munchen|FC Bayern Munchen|FCB
+bochum,Bochum,Germany,
+borussia-dortmund,Borussia Dortmund,Germany,BVB|Dortmund
+borussia-monchengladbach,Borussia Monchengladbach,Germany,Gladbach|M'gladbach
+darmstadt,Darmstadt,Germany,
+eintracht-frankfurt,Eintracht Frankfurt,Germany,Ein Frankfurt
+elversberg,Elversberg,Germany,
+koln,FC Koln,Germany,
+nurnberg,FC Nurnberg,Germany,
+fortuna-dusseldorf,Fortuna Dusseldorf,Germany,
+freiburg,Freiburg,Germany,
+greuther-furth,Greuther Furth,Germany,
+hamburger,Hamburger SV,Germany,HSV|Hamburg
+hannover,Hannover,Germany,
+heidenheim,Heidenheim,Germany,
+hertha,Hertha BSC,Germany,
+hoffenheim,Hoffenheim,Germany,
+holstein-kiel,Holstein Kiel,Germany,
+ingolstadt,Ingolstadt,Germany,
+mainz,Mainz,Germany,
+paderborn,Paderborn,Germany,
+rb-leipzig,RB Leipzig,Germany,
+schalke,Schalke 04,Germany,
+st-pauli,St Pauli,Germany,
+stuttgart,Stuttgart,Germany,
+union-berlin,Union Berlin,Germany,
+werder-bremen,Werder Bremen,Germany,Bremen
+wolfsburg,Wolfsburg,Germany,
+aek-athens,AEK Athens,Greece,AEK
+apollon,Apollon,Greece,
+aris,Aris,Greece,
+asteras-tripolis,Asteras Tripolis,Greece,
+athens-kallithea,Athens Kallithea,Greece,
+atromitos,Atromitos,Greece,
+ergotelis,Ergotelis,Greece,
+giannina,Giannina,Greece,
+ionikos,Ionikos,Greece,
+iraklis,Iraklis,Greece,
+kalamata,Kalamata,Greece,
+kallonis,Kallonis,Greece,
+kerkyra,Kerkyra,Greece,
+kifisia,Kifisia,Greece,
+lamia,Lamia,Greece,
+larisa,Larisa,Greece,
+levadeiakos,Levadeiakos,Greece,
+niki-volos,Niki Volos,Greece,
+ofi,OFI,Greece,OFI Crete
+olympiacos,Olympiacos,Greece,Olympiakos|Olympiakos Piraeus
+paok,PAOK,Greece,
+panathinaikos,Panathinaikos,Greece,
+panetolikos,Panetolikos,Greece,
+panionios,Panionios,Greece,
+panserraikos,Panserraikos,Greece,
+panthrakikos,Panthrakikos,Greece,
+platanias,Platanias,Greece,
+veria,Veria,Greece,
+volos-nfc,Volos NFC,Greece,
+xanthi,Xanthi,Greece,
+milan,AC Milan,Italy,
+atalanta,Atalanta,Italy,
+benevento,Benevento,Italy,
+bologna,Bologna,Italy,
+brescia,Brescia,Italy,
+cagliari,Cagliari,Italy,
+carpi,Carpi,Italy,
+cesena,Cesena,Italy,
+chievo-verona,Chievo Verona,Italy,Chievo
+como,Como,Italy,
+cremonese,Cremonese,Italy,
+crotone,Crotone,Italy,
+empoli,Empoli,Italy,
+fiorentina,Fiorentina,Italy,
+frosinone,Frosinone,Italy,
+genoa,Genoa,Italy,
+hellas-verona,Hellas Verona,Italy,Verona
+inter,Inter,Italy,FC Internazionale Milano|Inter Milan|Internazionale
+juventus,Juventus,Italy,Juve
+lazio,Lazio,Italy,
+lecce,Lecce,Italy,
+monza,Monza,Italy,
+napoli,Napoli,Italy,
+palermo,Palermo,Italy,
+parma,Parma,Italy,
+pescara,Pescara,Italy,
+pisa,Pisa,Italy,
+roma,Roma,Italy,
+spal,SPAL,Italy,
+salernitana,Salernitana,Italy,
+sampdoria,Sampdoria,Italy,
+sassuolo,Sassuolo,Italy,
+spezia,Spezia,Italy,
+torino,Torino,Italy,
+udinese,Udinese,Italy,
+venezia,Venezia,Italy,
+ado-den-haag,ADO Den Haag,Netherlands,Den Haag
+az,AZ,Netherlands,AZ Alkmaar
+ajax,Ajax,Netherlands,
+almere-city,Almere City,Netherlands,
+cambuur,Cambuur,Netherlands,
+graafschap,De Graafschap,Netherlands,
+dordrecht,Dordrecht,Netherlands,
+excelsior,Excelsior,Netherlands,
+emmen,FC Emmen,Netherlands,
+feyenoord,Feyenoord,Netherlands,Feyenoord Rotterdam
+fortuna-sittard,Fortuna Sittard,Netherlands,For Sittard
+go-ahead-eagles,Go Ahead Eagles,Netherlands,
+groningen,Groningen,Netherlands,
+heerenveen,Heerenveen,Netherlands,
+heracles,Heracles,Netherlands,
+nac-breda,NAC Breda,Netherlands,
+nec,NEC,Netherlands,Nijmegen
+pec-zwolle,PEC Zwolle,Netherlands,Zwolle
+psv,PSV,Netherlands,PSV Eindhoven
+rkc-waalwijk,RKC Waalwijk,Netherlands,Waalwijk
+roda,Roda,Netherlands,
+sparta-rotterdam,Sparta Rotterdam,Netherlands,
+telstar,Telstar,Netherlands,
+twente,Twente,Netherlands,
+utrecht,Utrecht,Netherlands,
+vvv-venlo,VVV Venlo,Netherlands,
+vitesse,Vitesse,Netherlands,
+volendam,Volendam,Netherlands,
+willem-ii,Willem II,Netherlands,
+aalesund,Aalesund,Norway,
+bodo-glimt,Bodo/Glimt,Norway,
+brann,Brann,Norway,
+bryne,Bryne,Norway,
+fredrikstad,Fredrikstad,Norway,
+ham-kam,Ham-Kam,Norway,HamKam
+haugesund,Haugesund,Norway,
+jerv,Jerv,Norway,
+kfum-oslo,KFUM Oslo,Norway,
+kongsvinger,Kongsvinger,Norway,
+kristiansund,Kristiansund,Norway,
+lillestrom,Lillestrom,Norway,
+mjondalen,Mjondalen,Norway,
+molde,Molde,Norway,
+moss,Moss,Norway,
+odd,Odd,Norway,
+ranheim,Ranheim,Norway,
+rosenborg,Rosenborg,Norway,
+sandefjord,Sandefjord,Norway,
+sandnes,Sandnes,Norway,
+sarpsborg,Sarpsborg 08,Norway,
+sogndal,Sogndal,Norway,
+stabaek,Stabaek,Norway,
+start,Start,Norway,
+stromsgodset,Stromsgodset,Norway,
+tromso,Tromso,Norway,
+valerenga,Valerenga,Norway,
+viking,Viking,Norway,
+avs,AVS,Portugal,
+academica,Academica,Portugal,
+academico-viseu,Academico Viseu,Portugal,
+alverca,Alverca,Portugal,
+arouca,Arouca,Portugal,
+aves,Aves,Portugal,
+belenenses,Belenenses,Portugal,
+benfica,Benfica,Portugal,SL Benfica
+boavista,Boavista,Portugal,
+braga,Braga,Portugal,Sp Braga|Sporting Clube de Braga
+casa-pia,Casa Pia,Portugal,
+chaves,Chaves,Portugal,
+estoril,Estoril,Portugal,
+estrela,Estrela,Portugal,
+famalicao,Famalicao,Portugal,
+farense,Farense,Portugal,
+feirense,Feirense,Portugal,
+gil-vicente,Gil Vicente,Portugal,
+maritimo,Maritimo,Portugal,
+moreirense,Moreirense,Portugal,
+nacional,Nacional,Portugal,
+pacos-ferreira,Pacos de Ferreira,Portugal,
+penafiel,Penafiel,Portugal,
+portimonense,Portimonense,Portugal,
+porto,Porto,Portugal,
+rio-ave,Rio Ave,Portugal,
+santa-clara,Santa Clara,Portugal,
+sporting-cp,Sporting CP,Portugal,Sp Lisbon|Sporting Clube de Portugal|Sporting Lisbon
+tondela,Tondela,Portugal,
+uniao-madeira,Uniao Madeira,Portugal,
+vitoria-guimaraes,Vitoria Guimaraes,Portugal,Guimaraes
+vitoria-setubal,Vitoria Setubal,Portugal,Setubal
+vizela,Vizela,Portugal,
+aberdeen,Aberdeen,Scotland,
+celtic,Celtic,Scotland,
+dundee,Dundee,Scotland,
+dundee-united,Dundee United,Scotland,
+falkirk,Falkirk,Scotland,
+hamilton,Hamilton,Scotland,
+hearts,Hearts,Scotland,
+hibernian,Hibernian,Scotland,
+inverness-ct,Inverness CT,Scotland,Inverness C
+kilmarnock,Kilmarnock,Scotland,
+livingston,Livingston,Scotland,
+motherwell,Motherwell,Scotland,
+partick,Partick,Scotland,
+rangers,Rangers,Scotland,
+ross-county,Ross County,Scotland,
+st-johnstone,St Johnstone,Scotland,
+st-mirren,St Mirren,Scotland,
+alaves,Alaves,Spain,Deportivo Alaves
+almeria,Almeria,Spain,
+athletic-bilbao,Athletic Bilbao,Spain,Ath Bilbao|Athletic Club
+atletico-madrid,Atletico Madrid,Spain,Ath Madrid|Atleti|Atletico
+barcelona,Barcelona,Spain,Barca|Barsa
+cadiz,Cadiz,Spain,
+celta-vigo,Celta Vigo,Spain,Celta|RC Celta de Vigo
+cordoba,Cordoba,Spain,
+deportivo-la-coruna,Deportivo La Coruna,Spain,Deportivo|La Coruna|RC Deportivo La Coruna
+eibar,Eibar,Spain,
+elche,Elche,Spain,
+espanyol,Espanyol,Spain,Espanol|RCD Espanyol de Barcelona
+getafe,Getafe,Spain,
+girona,Girona,Spain,
+granada,Granada,Spain,
+huesca,Huesca,Spain,
+las-palmas,Las Palmas,Spain,
+leganes,Leganes,Spain,
+levante,Levante,Spain,
+malaga,Malaga,Spain,
+mallorca,Mallorca,Spain,
+osasuna,Osasuna,Spain,
+racing-santander,Racing Santander,Spain,Santander
+rayo-vallecano,Rayo Vallecano,Spain,Rayo|Rayo Vallecano de Madrid|Vallecano
+real-betis,Real Betis,Spain,Betis|Real Betis Balompie
+real-madrid,Real Madrid,Spain,
+real-oviedo,Real Oviedo,Spain,Oviedo
+real-sociedad,Real Sociedad,Spain,Sociedad
+real-valladolid,Real Valladolid,Spain,Valladolid
+sevilla,Sevilla,Spain,
+sporting-gijon,Sporting Gijon,Spain,Sp Gijon
+valencia,Valencia,Spain,
+villarreal,Villarreal,Spain,
+aarau,Aarau,Switzerland,
+basel,Basel,Switzerland,
+grasshoppers,Grasshoppers,Switzerland,
+lausanne,Lausanne,Switzerland,
+lausanne-ouchy,Lausanne Ouchy,Switzerland,
+lugano,Lugano,Switzerland,
+luzern,Luzern,Switzerland,
+schaffhausen,Schaffhausen,Switzerland,
+servette,Servette,Switzerland,
+sion,Sion,Switzerland,
+st-gallen,St. Gallen,Switzerland,
+thun,Thun,Switzerland,
+vaduz,Vaduz,Switzerland,
+winterthur,Winterthur,Switzerland,
+xamax,Xamax,Switzerland,
+young-boys,Young Boys,Switzerland,
+yverdon,Yverdon,Switzerland,
+zurich,Zurich,Switzerland,
+ad-demirspor,Ad. Demirspor,Turkey,
+adanaspor,Adanaspor,Turkey,
+akhisar-belediyespor,Akhisar Belediyespor,Turkey,
+alanyaspor,Alanyaspor,Turkey,
+altay,Altay,Turkey,
+amedspor,Amedspor,Turkey,
+ankaragucu,Ankaragucu,Turkey,
+antalyaspor,Antalyaspor,Turkey,
+balikesirspor,Balikesirspor,Turkey,
+besiktas,Besiktas,Turkey,Besiktas JK
+bodrumspor,Bodrumspor,Turkey,
+bursaspor,Bursaspor,Turkey,
+corum,Corum,Turkey,
+denizlispor,Denizlispor,Turkey,
+erciyesspor,Erciyesspor,Turkey,
+erzurumspor,Erzurumspor,Turkey,Erzurum BB
+eskisehirspor,Eskisehirspor,Turkey,
+eyupspor,Eyupspor,Turkey,
+fenerbahce,Fenerbahce,Turkey,
+galatasaray,Galatasaray,Turkey,
+gaziantep,Gaziantep,Turkey,
+gaziantepspor,Gaziantepspor,Turkey,
+genclerbirligi,Genclerbirligi,Turkey,
+giresunspor,Giresunspor,Turkey,
+goztepe,Goztepe,Turkey,Goztep
+hatayspor,Hatayspor,Turkey,
+istanbul-basaksehir,Istanbul Basaksehir,Turkey,Buyuksehyr
+istanbulspor,Istanbulspor,Turkey,
+karabukspor,Karabukspor,Turkey,
+karagumruk,Karagumruk,Turkey,
+kasimpasa,Kasimpasa,Turkey,
+kayserispor,Kayserispor,Turkey,
+kocaelispor,Kocaelispor,Turkey,
+konyaspor,Konyaspor,Turkey,
+mersin-idman-yurdu,Mersin Idman Yurdu,Turkey,
+osmanlispor,Osmanlispor,Turkey,
+pendikspor,Pendikspor,Turkey,
+rizespor,Rizespor,Turkey,
+samsunspor,Samsunspor,Turkey,
+sivasspor,Sivasspor,Turkey,
+trabzonspor,Trabzonspor,Turkey,
+umraniyespor,Umraniyespor,Turkey,
+yeni-malatyaspor,Yeni Malatyaspor,Turkey,

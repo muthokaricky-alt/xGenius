@@ -13,3 +13,4 @@ __pycache__/
 
 # Downloaded/scraped data cache (re-fetchable; keeps the repo small)
 data/raw/
+data/processed/

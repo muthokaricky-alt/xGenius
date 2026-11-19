@@ -22,11 +22,37 @@ No always-on server, no database, no cold starts. Training runs offline in Pytho
 
 | Path | What |
 |---|---|
-| `config/coverage.json` | Which leagues/teams are shown. JSON so Python and JS both read it natively. |
-| `predictor/` | Python package: ingestion, models, backtesting |
+| `config/coverage.json` | Which leagues/teams are shown. JSON so Python and JS both read it natively. Team names can be any alias. |
+| `config/teams.csv` | Team-name mapping: `team_id, name, country, aliases`. Edit by hand. |
+| `predictor/leagues.py` | Leagues ingested and their code in each source |
+| `predictor/ingest/` | Downloaders (cached) + `python -m predictor.ingest` |
+| `predictor/teams.py` | Name normalisation and alias lookup |
 | `tests/` | Python tests (pytest) |
-| `data/raw/` | Downloaded data cache (gitignored, re-fetchable) |
+| `data/raw/` | Download cache (gitignored, re-fetchable) |
+| `data/processed/` | Clean tables built by ingestion (gitignored, rebuildable) |
 | `web/` | React + Vite frontend |
+
+## Data
+
+| Source | Gives us | Notes |
+|---|---|---|
+| [football-data.co.uk](https://football-data.co.uk) | Results + bookmaker odds, 2014/15 onwards, 15 leagues | Free CSVs. xG only from 2026/27. |
+| [football-data.org](https://www.football-data.org) | Fixtures, Champions League | Free API key, 10 requests/min |
+
+We ingest 10 leagues beyond the 5 we show (Netherlands, Portugal, Belgium, Scotland, Turkey, Greece, Austria, Switzerland, Denmark, Norway). Their clubs play in the Champions League, so we need ratings for them.
+
+Odds columns: `odds_pre_*` (known before kickoff, allowed as a feature), `odds_close_*` and `pin_close_*` (closing odds, **evaluation benchmark only**, never a feature: that would be leakage).
+
+Knockout matches use the **90-minute** score; extra time and penalties would distort a goals model.
+
+**Team names:** every spelling is normalised (accents, punctuation, "FC"/"CF"/etc. stripped), then looked up in `config/teams.csv`. A test fails if one alias points at two teams (e.g. "Paris" would match PSG and Paris FC).
+
+```powershell
+python -m predictor.ingest
+```
+```powershell
+python -m predictor.teams check
+```
 
 ## Setup (Windows / PowerShell)
 
@@ -70,7 +96,7 @@ Walk-forward backtest; lower log loss is better. A change only goes in if it bea
 ## Roadmap
 
 1. [x] Repo restructure
-2. [ ] Data ingestion + team-name mapping
+2. [x] Data ingestion + team-name mapping
 3. [ ] Backtest harness + Elo baseline
 4. [ ] Dixon-Coles Poisson
 5. [ ] xG features
