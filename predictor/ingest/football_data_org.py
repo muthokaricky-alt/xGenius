@@ -185,9 +185,11 @@ def parse_scorers(payload: dict, league: str) -> pd.DataFrame:
     return pd.DataFrame(rows)
 
 
-def load_scorers() -> pd.DataFrame:
-    """This season's top 100 scorers for every competition on the API."""
-    season = current_season()
+def load_scorers(season: int | None = None) -> pd.DataFrame:
+    """Top 100 scorers for every shown competition. Defaults to this season;
+    finished seasons are cached for good."""
+    season = current_season() if season is None else season
+    max_age = REFRESH_HOURS if season == current_season() else None
     frames = []
     for lg, meta in LEAGUES.items():
         if not meta["fdorg"]:
@@ -196,6 +198,6 @@ def load_scorers() -> pd.DataFrame:
         if lg not in ("premier_league", "champions_league", "la_liga", "bundesliga", "serie_a", "ligue_1"):
             continue  # races are only published for the competitions the site shows
         dest = RAW_DIR / f"{code}_{season}_scorers.json"
-        payload = _get(f"/competitions/{code}/scorers?season={season}&limit=100", dest, REFRESH_HOURS)
-        frames.append(parse_scorers(payload, lg))
+        payload = _get(f"/competitions/{code}/scorers?season={season}&limit=100", dest, max_age)
+        frames.append(parse_scorers(payload, lg).assign(season=season))
     return pd.concat(frames, ignore_index=True) if frames else pd.DataFrame()

@@ -281,7 +281,9 @@ def main():
     scorers = pd.read_csv(scorers_path) if scorers_path.exists() else pd.DataFrame()
     race_leagues = [lg for lg in LEAGUE_NAMES if lg in ("premier_league", "champions_league", "la_liga",
                                                          "bundesliga", "serie_a", "ligue_1")]
-    races = build_races(train, fx, scorers, dc, now, race_leagues, team_info)
+    prev_path = DATA_PROCESSED / "scorers_prev.csv"
+    scorers_prev = pd.read_csv(prev_path) if prev_path.exists() else None
+    races = build_races(train, fx, scorers, dc, now, race_leagues, team_info, scorers_prev=scorers_prev)
     for r in races:
         r["name"] = LEAGUE_NAMES[r["league"]]
     _write("races.json", {"generated_at": now.isoformat(timespec="seconds"),
