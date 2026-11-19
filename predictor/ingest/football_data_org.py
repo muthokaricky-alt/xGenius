@@ -161,3 +161,41 @@ def load_cl_history() -> pd.DataFrame:
     if denied:
         print(f"  ! Champions League seasons not on free tier: {denied}")
     return pd.concat(frames, ignore_index=True) if frames else pd.DataFrame()
+
+
+def parse_scorers(payload: dict, league: str) -> pd.DataFrame:
+    """Top scorers of one competition. The API lists only players with at
+    least one goal, and gives null (not 0) for missing assists/penalties."""
+    country = LEAGUES[league]["country"]
+    rows = []
+    for s in payload.get("scorers", []):
+        team = s.get("team", {}).get("name") or ""
+        player = s.get("player", {})
+        rows.append({
+            "league": league,
+            "player_id": player.get("id"),
+            "player": player.get("name"),
+            "team_raw": team,
+            "team_id": resolve(team, country),
+            "goals": s.get("goals") or 0,
+            "assists": s.get("assists") or 0,
+            "penalties": s.get("penalties") or 0,
+            "played": s.get("playedMatches") or 0,
+        })
+    return pd.DataFrame(rows)
+
+
+def load_scorers() -> pd.DataFrame:
+    """This season's top 100 scorers for every competition on the API."""
+    season = current_season()
+    frames = []
+    for lg, meta in LEAGUES.items():
+        if not meta["fdorg"]:
+            continue
+        code = meta["fdorg"]
+        if lg not in ("premier_league", "champions_league", "la_liga", "bundesliga", "serie_a", "ligue_1"):
+            continue  # races are only published for the competitions the site shows
+        dest = RAW_DIR / f"{code}_{season}_scorers.json"
+        payload = _get(f"/competitions/{code}/scorers?season={season}&limit=100", dest, REFRESH_HOURS)
+        frames.append(parse_scorers(payload, lg))
+    return pd.concat(frames, ignore_index=True) if frames else pd.DataFrame()

@@ -6,6 +6,7 @@
 Outputs:
   matches.csv   played domestic matches (football-data.co.uk, with odds)
   fixtures.csv  this season's fixtures + CL results (football-data.org; needs API key)
+  scorers.csv   this season's top 100 scorers per shown competition (football-data.org)
 """
 import sys
 
@@ -53,6 +54,13 @@ def main(refresh: bool = True):
         print(f"  ! unmapped domestic names (add to config/teams.csv): {bad}")
     if cl_bad:
         print(f"  ! unmapped CL teams ({len(cl_bad)}): {cl_bad}")
+
+    sc = football_data_org.load_scorers()
+    sc.to_csv(DATA_PROCESSED / "scorers.csv", index=False)
+    missing = sorted(set(sc.team_raw[sc.team_id.isna()]))
+    print(f"scorers.csv: {len(sc):,} players in {sc.league.nunique()} competitions")
+    if missing:
+        print(f"  ! scorers with unmapped teams: {missing}")
 
 
 if __name__ == "__main__":
