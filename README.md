@@ -96,15 +96,19 @@ npm run dev
 
 Walk-forward backtest; lower log loss is better. A change only goes in if it beats the current best.
 
+Test period 2018/19 to 2025/26 (8 seasons, 15 leagues, 32,123 matches with Pinnacle closing odds). Hyperparameters are tuned on 2016/17 to 2017/18 only. Reproduce with `python -m predictor.backtest`.
+
 | Model | Log loss | Brier | RPS | Accuracy | Notes |
 |---|---|---|---|---|---|
-| _none yet_ | | | | | Milestone 3 |
+| Elo | 0.9845 | 0.5865 | 0.2004 | 52.3% | k=12, regress 0.1, promoted −50; ordered-logit draw model |
+| Base rate | 1.0735 | 0.6497 | 0.2306 | 43.5% | league H/D/A frequencies; the floor |
+| _Market (Pinnacle closing)_ | _0.9646_ | _0.5730_ | _0.1941_ | _53.6%_ | _benchmark only, not known at publish time_ |
 
 ## Roadmap
 
 1. [x] Repo restructure
 2. [x] Data ingestion + team-name mapping
-3. [ ] Backtest harness + Elo baseline
+3. [x] Backtest harness + Elo baseline
 4. [ ] Dixon-Coles Poisson
 5. [ ] xG features
 6. [ ] Gradient boosting + ensemble + calibration
