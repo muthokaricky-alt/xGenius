@@ -104,3 +104,38 @@ def load_all(refresh: bool = True) -> pd.DataFrame:
             print(f"football-data.co.uk: {league}")
             frames.append(load_league(league, refresh))
     return pd.concat(frames, ignore_index=True)
+
+
+def load_upcoming_odds(refresh: bool = True) -> pd.DataFrame:
+    """Market-average pre-match odds for upcoming matches (fixtures.csv, posted a
+    few days before each round). Same odds_pre_* columns as the history, so the
+    model sees exactly the kind of input it was fitted on."""
+    dest = RAW_DIR / "fixtures.csv"
+    fetch(f"{BASE}/fixtures.csv", dest, REFRESH_HOURS / 4 if refresh else None)
+    return parse_upcoming_odds(_read_csv(dest))
+
+
+def parse_upcoming_odds(df: pd.DataFrame) -> pd.DataFrame:
+    from predictor.teams import resolve
+
+    by_code = {m["fduk"]: lg for lg, m in LEAGUES.items() if m["fduk_format"] == "main"}
+    df = df[df["Div"].isin(by_code)].dropna(subset=["HomeTeam", "AwayTeam"])
+    if df.empty:
+        return pd.DataFrame(columns=["date", "league", "home_id", "away_id", "odds_pre_h", "odds_pre_d", "odds_pre_a"])
+    league = df["Div"].map(by_code)
+    country = league.map(lambda lg: LEAGUES[lg]["country"])
+    out = pd.DataFrame({
+        "date": pd.to_datetime(df["Date"], dayfirst=True, format="mixed"),
+        "league": league,
+        "home_id": [resolve(n.strip(), c) for n, c in zip(df["HomeTeam"], country)],
+        "away_id": [resolve(n.strip(), c) for n, c in zip(df["AwayTeam"], country)],
+    })
+    for col, names in [("odds_pre", ODDS_SOURCES["odds_pre"][0]), ("b365", ("B365H", "B365D", "B365A"))]:
+        if all(n in df for n in names):
+            for suffix, n in zip("hda", names):
+                out[f"{col}_{suffix}"] = pd.to_numeric(df[n], errors="coerce")
+    for suffix in "hda":  # fall back to Bet365 where the average is missing
+        if f"b365_{suffix}" in out:
+            out[f"odds_pre_{suffix}"] = out.get(f"odds_pre_{suffix}", out[f"b365_{suffix}"]).fillna(out[f"b365_{suffix}"])
+    return out[["date", "league", "home_id", "away_id", "odds_pre_h", "odds_pre_d", "odds_pre_a"]].dropna(
+        subset=["home_id", "away_id"])
