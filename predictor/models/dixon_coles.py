@@ -228,19 +228,20 @@ class DixonColes(Model):
         """Weighted number of recent matches behind a team's rating."""
         return float(self.p["n_eff"].get(team, 0.0))
 
-    def ratings(self) -> pd.DataFrame:
+    def ratings(self, reference=None) -> pd.DataFrame:
         """Overall strength on one cross-league scale: expected goal difference
-        per match against an average team, on a neutral ground."""
+        per match on neutral ground against an average `reference` team (e.g.
+        this season's Champions League clubs; default: every team)."""
         p = self.p
         rows = []
         for t in p["a"]:
             g = team_group(t)
-            att, dfn = p["A"].get(g, 0) + p["a"][t], p["D"].get(g, 0) + p["d"][t]
-            rows.append({"team_id": t, "attack": att, "defence": dfn,
-                         "experience": p["n_eff"][t]})
+            rows.append({"team_id": t, "attack": p["A"].get(g, 0) + p["a"][t],
+                         "defence": p["D"].get(g, 0) + p["d"][t], "experience": p["n_eff"][t]})
         df = pd.DataFrame(rows)
+        ref = df[df.team_id.isin(reference)] if reference else df
         base = p["base"].get(CL, float(np.mean(list(p["base"].values()))))
-        df["xg_for"] = np.exp(base + df.attack)
-        df["xg_against"] = np.exp(base - df.defence)
+        df["xg_for"] = np.exp(base + df.attack - ref.defence.mean())
+        df["xg_against"] = np.exp(base + ref.attack.mean() - df.defence)
         df["rating"] = df.xg_for - df.xg_against
         return df.sort_values("rating", ascending=False).reset_index(drop=True)
