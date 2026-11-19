@@ -52,3 +52,5 @@ def test_ids_unique():
 def test_normalise():
     assert normalise("Brighton & Hove Albion FC") == "brighton and hove albion"
     assert normalise("TSG 1899 Hoffenheim") == "hoffenheim"
+    assert normalise("FC København") == "kobenhavn"
+    assert normalise("FK Bodø/Glimt") == "bodo glimt"

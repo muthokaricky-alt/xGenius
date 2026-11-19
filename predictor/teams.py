@@ -27,8 +27,13 @@ _NOISE = {
 }
 
 
+# Letters NFKD can't split into base + accent; without this "København" -> "kbenhavn"
+_TRANSLIT = str.maketrans({"ø": "o", "Ø": "O", "æ": "ae", "Æ": "Ae", "ß": "ss", "đ": "d",
+                           "Đ": "D", "ł": "l", "Ł": "L", "ı": "i", "œ": "oe", "Œ": "Oe"})
+
+
 def normalise(name: str) -> str:
-    s = unicodedata.normalize("NFKD", name).encode("ascii", "ignore").decode()
+    s = unicodedata.normalize("NFKD", name.translate(_TRANSLIT)).encode("ascii", "ignore").decode()
     s = s.lower().replace("&", " and ")
     s = re.sub(r"[^a-z0-9]+", " ", s)
     return " ".join(t for t in s.split() if t not in _NOISE and not t.isdigit())
