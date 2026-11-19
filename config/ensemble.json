@@ -1,0 +1,9 @@
+{
+ "_comment": "w_elo, w_dc, b_draw, b_away. Fitted on 2016/17-2017/18 by `python -m predictor.backtest --fit-ensemble`.",
+ "params": [
+  0.50495,
+  0.51256,
+  -0.03034,
+  -0.05366
+ ]
+}
