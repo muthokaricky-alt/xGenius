@@ -28,35 +28,35 @@ colors:
   miss-home: "#B3261E"
 typography:
   numerals:
-    fontFamily: "Big Shoulders Display Variable, Arial Narrow, sans-serif"
-    fontSize: "26px"
-    fontWeight: 700
+    fontFamily: "Big Shoulders Display, Arial Narrow, sans-serif"
+    fontSize: "32px"
+    fontWeight: 800
     lineHeight: 1
     letterSpacing: "0em"
   numerals-hero:
-    fontFamily: "Big Shoulders Display Variable, Arial Narrow, sans-serif"
+    fontFamily: "Big Shoulders Display, Arial Narrow, sans-serif"
     fontSize: "clamp(44px, 6vw, 64px)"
     fontWeight: 800
     lineHeight: 0.95
   heading:
-    fontFamily: "Big Shoulders Display Variable, Arial Narrow, sans-serif"
+    fontFamily: "Big Shoulders Display, Arial Narrow, sans-serif"
     fontSize: "clamp(30px, 4.2vw, 42px)"
     fontWeight: 800
     lineHeight: 1
     letterSpacing: "0.005em"
   section:
-    fontFamily: "Big Shoulders Display Variable, Arial Narrow, sans-serif"
-    fontSize: "19px"
+    fontFamily: "Big Shoulders Display, Arial Narrow, sans-serif"
+    fontSize: "22px"
     fontWeight: 800
     lineHeight: 1.1
-    letterSpacing: "0.03em"
+    letterSpacing: "0.01em"
   body:
-    fontFamily: "Archivo Variable, system-ui, sans-serif"
-    fontSize: "15.5px"
+    fontFamily: "Barlow, Arial, sans-serif"
+    fontSize: "16px"
     fontWeight: 400
     lineHeight: 1.5
   label:
-    fontFamily: "Archivo Variable, system-ui, sans-serif"
+    fontFamily: "Barlow, Arial, sans-serif"
     fontSize: "12.5px"
     fontWeight: 600
     lineHeight: 1.3
@@ -119,14 +119,17 @@ Cool shirt-white ground `#EEF1F5` with white surfaces (home kit); deep navy grou
 
 ## Typography
 
-Big Shoulders Display (self-hosted, variable) is the squad-number voice: every probability, score, rank and page/section heading (uppercase, slight tracking). Archivo (self-hosted, variable) carries all reading text and controls. Tabular numerals everywhere.
+Big Shoulders Display is the squad-number voice: page titles (uppercase), section titles (normal case), and stand-alone hero numbers (the favourite's percentage, scores, expected goals, race projections). Its digits are proportional, so it never sets a column. Barlow carries all reading text, controls and every number that sits in a column, with tabular figures (`tnum`), so ranks, counts and percentages align. Both are self-hosted from `web/public/fonts/`, the above-the-fold faces are preloaded, and metric-matched fallbacks (size-adjust, ascent/descent overrides) keep the swap from shifting layout.
 
 ### Hierarchy
-Page heading 30–42px · detail percentages 44–64px · row percentages 26px · section headings 19–24px · body 15.5px · labels 12.5–13.5px.
+Page title 30–42px caps · section title 22–27px · detail percentages 44–64px · card hero percentage 32px (the other two 16px, softened) · body 16px · labels 11–13.5px.
+
+### Named Rules
+**The Hero Number Rule.** On a fixture card only the most likely outcome is set large; the other two step back in size and colour.
 
 ## Layout
 
-Fixed-scale fixture rows (132px min) on one baseline so a matchday compares at a glance; hairline rules between rows inside one rounded group per day. Breakpoints: < 720px single column, tabs wrap under the wordmark, match detail is its own screen; 720–1079px two-column rows; ≥ 1080px master–detail (list left, sticky detail pane right). Results use the full width (2–3 columns). Max content width 1320px; reading pages 760–980px.
+One page width (1200px) for header, content and footer on every page. Fixed-scale fixture rows (146px min) on one baseline so a matchday compares at a glance; hairline rules between rows inside one rounded group per day. Breakpoints: < 720px single column, tabs wrap under the wordmark, match detail is its own screen; 720–1079px two-column rows; ≥ 1080px master–detail (list left, sticky detail pane right). Results use the full width (2–3 columns). Max content width 1320px; reading pages 760–980px.
 
 ## Elevation & Depth
 
@@ -141,14 +144,29 @@ Card radius 14px; controls 10px; filter chips and the kit toggle are pills; kit 
 ### Kit bar (signature)
 Three flex panels (home / draw / away) whose `flex-grow` is the probability. Club panels: main colour with a 3px (5px large) trim band in the second colour along the top, like a collar; draw panel is the neutral draw grey. On first view panels open from an even three-way split to the forecast (900ms, expo-out); instant under reduced motion. Always paired with the three numbers and an aria-label.
 
+### Shirt icon
+Each club is identified by a small shirt drawn in its colours (body in the main colour, collar and cuffs in the trim); light shirts get a darker outline.
+
 ### Fixture row
-Time · competition/stage · optional "Low data" tag; home name, "v", away name (favourite in heavier ink); kit bar; three squad-number percentages aligned home-left / draw-centre / away-right with the favourite in full ink.
+Competition/stage and tags; home shirt + name, kickoff time centred in a small chip, away name + shirt (favourite in heavier ink); kit bar; the three percentages with labels, the favourite's as the hero. Hover stretches the kit bar slightly; press squashes the row (scale 0.985) and it springs back; both are off under reduced motion.
+
+### Kit bar texture
+Club panels carry the collar-trim band and a faint pinstripe in the trim colour (16%, 7% on light shirts); light shirts (luminance > 0.6) get a firm 1.5px outline in both themes.
+
+### Race bar
+Solid = so far, lighter = projected rest of season with the projected total at its end, thin whisker under the bar = likely range. A legend sits above the tables.
+
+### Filter chips
+One scrollable row; only the edge with more content beyond it fades.
 
 ### Result row
 As fixture row with the 90-minute score in place of "v" and a verdict line: check/cross icon, "Called it" / "Missed", and the chance we gave what happened. Back-filled forecasts carry a "Replay" tag.
 
 ### Navigation
 Collar header: wordmark, text tabs with a 3px gold underline for the current page, kit toggle (shirt icon). Segmented control for Upcoming / Results.
+
+### Explanations (site-wide rule)
+Every chart, number and visual explains itself. Charts carry a visible key or direct labels (the reading key above the match list, the score-grid key, the form key, the race legend, the calibration chart's labels and key, the goal-edge key). Every stat has a plain-words explanation behind an (i) button that opens on hover, keyboard focus and tap; Escape, tapping elsewhere or scrolling closes it. Explanations live in one place (`web/src/lib/explain.js`) so a stat is described the same way everywhere. Column headers name what they measure ("Golden Boot chance", "Goal edge", "Log loss ↓"); no bare "Top" or "Rating".
 
 ## Do's and Don'ts
 

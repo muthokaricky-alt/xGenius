@@ -1,4 +1,6 @@
 import { ErrorState, Loading } from '../components/State.jsx';
+import Tip from '../components/Tip.jsx';
+import { EXPLAIN } from '../lib/explain.js';
 import { LEAGUE_ORDER, LEAGUE_SHORT, favourite, fmtShort, logLoss, outcomeIndex, useData } from '../lib/data.js';
 import { href } from '../lib/router.js';
 
@@ -18,11 +20,11 @@ function settle(matches) {
   return { n, hit: hits / n, ll: ll / n, given: given / n, from: done[0].kickoff, to: done[n - 1].kickoff };
 }
 
-function Stat({ value, label }) {
+function Stat({ value, label, tip }) {
   return (
     <div className="stat">
       <dd className="stat__v">{value}</dd>
-      <dt className="stat__l">{label}</dt>
+      <dt className="stat__l">{tip ? <Tip text={tip} label={label}>{label}</Tip> : label}</dt>
     </div>
   );
 }
@@ -59,13 +61,35 @@ function Calibration({ points }) {
           It happened (%)
         </text>
         <polyline className="calib__line" points={points.map((p) => `${s(p.forecast)},${y(p.observed)}`).join(' ')} />
+        <text x={s(0.97)} y={y(0.97) - 10} textAnchor="end" className="calib__label calib__label--ideal">
+          perfect
+        </text>
+        <text
+          x={s(points[Math.floor(points.length / 2)].forecast) + 12}
+          y={y(points[Math.floor(points.length / 2)].observed) + 16}
+          textAnchor="start"
+          className="calib__label"
+        >
+          xGenius
+        </text>
         {points.map((p, i) => (
           <circle key={i} cx={s(p.forecast)} cy={y(p.observed)} r={3 + 5 * Math.sqrt(p.n / maxN)} className="calib__dot" />
         ))}
       </svg>
       <figcaption>
-        Every forecast from the 2018–2026 test seasons, grouped by the chance we gave. A dot on the dashed line means
-        that when we said 60%, it happened 60% of the time. Bigger dots stand for more forecasts.
+        <ul className="calib__key">
+          <li>
+            <span className="calib__k calib__k--line" aria-hidden="true" /> xGenius: what happened, for each band of forecasts
+          </li>
+          <li>
+            <span className="calib__k calib__k--ideal" aria-hidden="true" /> Perfect: “we said 60%, it happened 60%”
+          </li>
+          <li>
+            <span className="calib__k calib__k--dot" aria-hidden="true" /> Dot size: how many forecasts are in that band
+          </li>
+        </ul>
+        Every forecast from the 2018–2026 test seasons. The closer the solid line follows the dashed one, the more you
+        can take our percentages at face value. <Tip text={EXPLAIN.calibration} label="calibration" />
       </figcaption>
     </figure>
   );
@@ -108,10 +132,10 @@ export default function Record() {
           <>
             <h3>Published live</h3>
             <dl className="stats">
-              <Stat value={live.n} label="forecasts settled" />
-              <Stat value={`${Math.round(live.hit * 100)}%`} label="favourite won" />
-              <Stat value={`${Math.round(live.given * 100)}%`} label="average chance we gave the actual result" />
-              <Stat value={live.ll.toFixed(3)} label="log loss" />
+              <Stat value={live.n} label="forecasts settled" tip={EXPLAIN.settled} />
+              <Stat value={`${Math.round(live.hit * 100)}%`} label="favourite won" tip={EXPLAIN.favouriteWon} />
+              <Stat value={`${Math.round(live.given * 100)}%`} label="average chance we gave the actual result" tip={EXPLAIN.avgChance} />
+              <Stat value={live.ll.toFixed(3)} label="log loss (lower is better)" tip={EXPLAIN.logLoss} />
             </dl>
           </>
         ) : (
@@ -129,10 +153,10 @@ export default function Record() {
               </span>
             </h3>
             <dl className="stats">
-              <Stat value={replay.n} label="matches" />
-              <Stat value={`${Math.round(replay.hit * 100)}%`} label="favourite won" />
-              <Stat value={`${Math.round(replay.given * 100)}%`} label="average chance we gave the actual result" />
-              <Stat value={replay.ll.toFixed(3)} label="log loss" />
+              <Stat value={replay.n} label="matches" tip={EXPLAIN.replay} />
+              <Stat value={`${Math.round(replay.hit * 100)}%`} label="favourite won" tip={EXPLAIN.favouriteWon} />
+              <Stat value={`${Math.round(replay.given * 100)}%`} label="average chance we gave the actual result" tip={EXPLAIN.avgChance} />
+              <Stat value={replay.ll.toFixed(3)} label="log loss (lower is better)" tip={EXPLAIN.logLoss} />
             </dl>
             <p className="panel__note">
               Before the site went live we replayed the season match by match, refitting the model as results came in,
@@ -165,9 +189,21 @@ export default function Record() {
             <thead>
               <tr>
                 <th scope="col">Model</th>
-                <th scope="col" className="num" title="Lower is better">Log loss</th>
-                <th scope="col" className="num hide-sm" title="Lower is better">Brier</th>
-                <th scope="col" className="num">Favourite won</th>
+                <th scope="col" className="num">
+                  <Tip text={EXPLAIN.logLoss} label="log loss">
+                    Log loss ↓
+                  </Tip>
+                </th>
+                <th scope="col" className="num hide-sm">
+                  <Tip text={EXPLAIN.brier} label="Brier score">
+                    Brier ↓
+                  </Tip>
+                </th>
+                <th scope="col" className="num">
+                  <Tip text={EXPLAIN.favouriteWon} label="favourite won">
+                    Favourite won
+                  </Tip>
+                </th>
               </tr>
             </thead>
             <tbody>
@@ -186,7 +222,7 @@ export default function Record() {
           </table>
         </div>
         <p className="panel__note">
-          {llNote} We close {Math.round(((base.log_loss - ens.log_loss) / (base.log_loss - mkt.log_loss)) * 100)}% of the
+          ↓ marks columns where lower is better. {llNote} We close {Math.round(((base.log_loss - ens.log_loss) / (base.log_loss - mkt.log_loss)) * 100)}% of the
           gap between knowing nothing about the teams and the closing betting market.
         </p>
       </section>
@@ -198,15 +234,18 @@ export default function Record() {
 
       <section className="panel" aria-labelledby="league-h">
         <h2 id="league-h">By league</h2>
+        <p>
+          Log loss per league (lower is better) <Tip text={EXPLAIN.byLeague} label="these numbers" />
+        </p>
         <div className="table-wrap">
           <table className="table">
             <thead>
               <tr>
                 <th scope="col">League</th>
                 <th scope="col" className="num">xGenius</th>
-                <th scope="col" className="num hide-sm">Stats only</th>
-                <th scope="col" className="num">Market</th>
-                <th scope="col" className="num hide-sm">League averages</th>
+                <th scope="col" className="num hide-sm">xGenius, stats only</th>
+                <th scope="col" className="num">Closing odds</th>
+                <th scope="col" className="num hide-sm">League averages only</th>
               </tr>
             </thead>
             <tbody>
@@ -240,7 +279,8 @@ export default function Record() {
             <Stat
               key={r.key}
               value={r.log_loss.toFixed(3)}
-              label={`${r.key === 'ensemble' ? 'xGenius' : r.model} log loss (favourite won ${Math.round(r.accuracy * 100)}%)`}
+              label={`${r.key === 'ensemble' ? 'xGenius' : r.model} log loss, lower is better (favourite won ${Math.round(r.accuracy * 100)}%)`}
+              tip={EXPLAIN.logLoss}
             />
           ))}
         </dl>

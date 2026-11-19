@@ -1,6 +1,9 @@
 import { Search, X } from 'lucide-react';
 import { useEffect, useMemo, useState } from 'react';
 import MatchDetail from '../components/MatchDetail.jsx';
+import ScrollRow from '../components/ScrollRow.jsx';
+import Tip from '../components/Tip.jsx';
+import { EXPLAIN } from '../lib/explain.js';
 import { FixtureRow, ResultRow } from '../components/MatchRow.jsx';
 import { Empty, ErrorState, Loading } from '../components/State.jsx';
 import { LEAGUE_ORDER, LEAGUE_SHORT, fmtShort, fmtStamp, groupByDay, useData } from '../lib/data.js';
@@ -28,7 +31,7 @@ function readFilter() {
 function Filters({ leagues, league, setLeague, query, setQuery }) {
   return (
     <div className="filters">
-      <div className="chips" role="group" aria-label="Competition">
+      <ScrollRow label="Competition" className="chips">
         {['all', ...leagues].map((lg) => (
           <button
             key={lg}
@@ -40,7 +43,7 @@ function Filters({ leagues, league, setLeague, query, setQuery }) {
             {lg === 'all' ? 'All' : LEAGUE_SHORT[lg]}
           </button>
         ))}
-      </div>
+      </ScrollRow>
       <label className="search">
         <Search aria-hidden="true" size={16} />
         <span className="sr-only">Find a team</span>
@@ -57,6 +60,33 @@ function Filters({ leagues, league, setLeague, query, setQuery }) {
           </button>
         )}
       </label>
+    </div>
+  );
+}
+
+/** One key above the list, so every card's bar and numbers explain themselves. */
+function ReadingKey({ results }) {
+  return (
+    <div className="readkey">
+      <span className="readkey__bar" aria-hidden="true">
+        <span className="readkey__home" />
+        <span className="readkey__draw" />
+        <span className="readkey__away" />
+      </span>
+      <p>
+        {results ? (
+          <>
+            The bar is our forecast <strong>before kickoff</strong>: home win · draw · away win, in the clubs’ colours.
+            ✓ Called it / ✕ Missed says whether our most likely result happened.
+          </>
+        ) : (
+          <>
+            Chance of a <strong>home win · draw · away win</strong>, in the clubs’ colours. The big number is the most
+            likely result.
+          </>
+        )}
+      </p>
+      <Tip text={results ? EXPLAIN.calledIt : `${EXPLAIN.kitBar} ${EXPLAIN.chances}`} label="these forecasts" />
     </div>
   );
 }
@@ -137,6 +167,7 @@ export default function Matches({ page, id }) {
           </a>
         </div>
         <Filters leagues={leagues} league={activeLeague} setLeague={setLeague} query={query} setQuery={setQuery} />
+        <ReadingKey results={showResults} />
 
         {groups.length === 0 ? (
           <Empty title={query ? `No matches for “${query}”.` : 'Nothing here right now.'}>

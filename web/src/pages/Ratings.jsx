@@ -1,5 +1,8 @@
 import { ArrowDown, ArrowUp, Search } from 'lucide-react';
 import { useMemo, useState } from 'react';
+import Shirt from '../components/Shirt.jsx';
+import Tip from '../components/Tip.jsx';
+import { EXPLAIN } from '../lib/explain.js';
 import { ErrorState, Empty, Loading } from '../components/State.jsx';
 import { fmtStamp, useData } from '../lib/data.js';
 
@@ -7,12 +10,13 @@ const COLS = [
   { key: 'rank', label: 'Rank', numeric: true, asc: true },
   { key: 'name', label: 'Team', asc: true },
   { key: 'league_name', label: 'League', asc: true, hide: 'sm' },
-  { key: 'rating', label: 'Rating', numeric: true, title: 'Expected goal difference per match against an average Champions League side' },
-  { key: 'xg_for', label: 'Attack', numeric: true, hide: 'sm', title: 'Expected goals scored against an average Champions League side' },
-  { key: 'xg_against', label: 'Defence', numeric: true, asc: true, hide: 'sm', title: 'Expected goals conceded against an average Champions League side (lower is better)' },
+  { key: 'rating', label: 'Goal edge', numeric: true, tip: EXPLAIN.rating },
+  { key: 'xg_for', label: 'Goals for', numeric: true, hide: 'sm', tip: EXPLAIN.goalsFor },
+  { key: 'xg_against', label: 'Goals against', numeric: true, asc: true, hide: 'sm', tip: EXPLAIN.goalsAgainst },
 ];
 
 const PAGE = 60;
+const SCALE = 2; // goal edge at which a bar reaches the end of its half
 
 const norm = (s) =>
   (s || '')
@@ -45,8 +49,6 @@ export default function Ratings() {
       return sort.asc ? c : -c;
     });
   const shown = all || q || league !== 'all' ? rows : rows.slice(0, PAGE);
-  const best = Math.max(...data.teams.map((t) => t.rating));
-  const worst = Math.min(...data.teams.map((t) => t.rating));
 
   const onSort = (col) =>
     setSort((s) => (s.key === col.key ? { key: col.key, asc: !s.asc } : { key: col.key, asc: !!col.asc }));
@@ -82,6 +84,18 @@ export default function Ratings() {
         </label>
       </div>
 
+      <div className="readkey">
+        <span className="readkey__diverge" aria-hidden="true">
+          <span className="readkey__neg" />
+          <span className="readkey__pos" />
+        </span>
+        <p>
+          <strong>Goal edge</strong>: goals per match better (right of centre) or worse (left) than an average Champions
+          League side. Sort by any column.
+        </p>
+        <Tip text={`${EXPLAIN.rating} ${EXPLAIN.ratingBar}`} label="goal edge" />
+      </div>
+
       {shown.length === 0 ? (
         <Empty title={`No teams match “${query}”.`} />
       ) : (
@@ -96,11 +110,14 @@ export default function Ratings() {
                     className={`${c.numeric ? 'num' : ''} ${c.hide ? `hide-${c.hide}` : ''}`}
                     aria-sort={sort.key === c.key ? (sort.asc ? 'ascending' : 'descending') : 'none'}
                   >
-                    <button type="button" className="th-btn" onClick={() => onSort(c)} title={c.title}>
-                      {c.label}
-                      {sort.key === c.key &&
-                        (sort.asc ? <ArrowUp aria-hidden="true" size={13} /> : <ArrowDown aria-hidden="true" size={13} />)}
-                    </button>
+                    <span className="th-wrap">
+                      <button type="button" className="th-btn" onClick={() => onSort(c)}>
+                        {c.label}
+                        {sort.key === c.key &&
+                          (sort.asc ? <ArrowUp aria-hidden="true" size={13} /> : <ArrowDown aria-hidden="true" size={13} />)}
+                      </button>
+                      {c.tip && <Tip text={c.tip} label={c.label} />}
+                    </span>
                   </th>
                 ))}
               </tr>
@@ -111,11 +128,7 @@ export default function Ratings() {
                   <td className="num rank">{t.rank}</td>
                   <td>
                     <span className="teamcell">
-                      <span
-                        className="swatch swatch--sm"
-                        style={t.kit ? { '--main': t.kit[0], '--trim': t.kit[1] } : undefined}
-                        aria-hidden="true"
-                      />
+                      <Shirt kit={t.kit} size={18} />
                       <span>
                         {t.name}
                         <span className="teamcell__league">{t.league_name}</span>
@@ -129,7 +142,7 @@ export default function Ratings() {
                         <span
                           className={t.rating >= 0 ? 'pos' : 'neg'}
                           style={{
-                            width: `${(Math.abs(t.rating) / Math.max(best, -worst)) * 50}%`,
+                            width: `${Math.min(1, Math.abs(t.rating) / SCALE) * 50}%`,
                           }}
                         />
                       </span>
