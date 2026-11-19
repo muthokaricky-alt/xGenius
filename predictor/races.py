@@ -29,6 +29,11 @@ from predictor.leagues import current_season
 from predictor.models.dixon_coles import score_matrix
 
 SHRINK = 3.0      # pseudo team-goals added to the denominator of a player's share
+# Dixon-Coles puts slightly too much mass on "opponent scores 0": rest-of-season
+# clean sheets projected from 19 Nov ran 1.9%, 10.9%, 7.9% and 8.5% high in
+# 2022-2025 while projected goals were unbiased. Scale by 1 / mean(2022-24) = 1 / 1.069
+# (on 2025 this cut the over-projection from 8.5% to 1.5%).
+CS_CALIBRATION = 0.935
 N_SIMS = 20000
 TOP = 15
 
@@ -52,8 +57,8 @@ def team_outlook(dc, remaining: pd.DataFrame) -> pd.DataFrame:
     rows = []
     for r, l, m in zip(blind.itertuples(index=False), lam, mu):
         mat = score_matrix(l, m, dc.p["rho"])
-        rows.append({"league": r.league, "team_id": r.home_id, "xg": l, "p_cs": mat[:, 0].sum()})
-        rows.append({"league": r.league, "team_id": r.away_id, "xg": m, "p_cs": mat[0, :].sum()})
+        rows.append({"league": r.league, "team_id": r.home_id, "xg": l, "p_cs": CS_CALIBRATION * mat[:, 0].sum()})
+        rows.append({"league": r.league, "team_id": r.away_id, "xg": m, "p_cs": CS_CALIBRATION * mat[0, :].sum()})
     return pd.DataFrame(rows)
 
 
