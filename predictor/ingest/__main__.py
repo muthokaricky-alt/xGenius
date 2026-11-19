@@ -56,4 +56,6 @@ def main(refresh: bool = True):
 
 
 if __name__ == "__main__":
+    # Windows consoles default to cp1252, which can't print names like "Fenerbahçe"/"Galatasaray A.Ş."
+    sys.stdout.reconfigure(encoding="utf-8", errors="replace")
     main(refresh="--offline" not in sys.argv)
