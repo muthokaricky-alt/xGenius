@@ -32,3 +32,19 @@ def test_training_includes_all_big_club_leagues():
         "premier_league", "champions_league",
         "bundesliga", "serie_a", "ligue_1", "la_liga",
     }
+
+
+def test_kit_colours_reference_known_teams():
+    import csv
+    import re
+
+    from predictor.config import ROOT
+    from predictor.teams import load_teams
+    teams, _ = load_teams()
+    with open(ROOT / "config" / "kit_colours.csv", encoding="utf-8", newline="") as f:
+        rows = list(csv.DictReader(f))
+    assert rows
+    for r in rows:
+        assert r["team_id"] in teams, r["team_id"]
+        assert re.fullmatch(r"#[0-9A-Fa-f]{6}", r["primary"]) and re.fullmatch(r"#[0-9A-Fa-f]{6}", r["secondary"])
+    assert len({r["team_id"] for r in rows}) == len(rows)

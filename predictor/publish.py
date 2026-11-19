@@ -12,8 +12,10 @@ A forecast is only ever updated before kickoff, so history.json is an honest
 record of what the site said. Entries marked "replay" were back-filled from the
 walk-forward backtest for matches played before the site went live.
 """
+import csv
 import datetime as dt
 import json
+from functools import lru_cache
 import sys
 
 import numpy as np
@@ -21,7 +23,7 @@ import pandas as pd
 
 from predictor.backtest import OUT_DIR as BACKTEST_DIR
 from predictor.backtest import WEB_DATA
-from predictor.config import is_shown, load_coverage
+from predictor.config import ROOT, is_shown, load_coverage
 from predictor.data import CL, load_fixtures, load_training
 from predictor.leagues import current_season
 from predictor.models.dixon_coles import DixonColes, outcome_probs, team_group
@@ -60,11 +62,19 @@ def _r(x, n=4):
     return round(float(x), n)
 
 
+@lru_cache(maxsize=1)
+def kit_colours() -> dict:
+    """config/kit_colours.csv: each club's shirt colour and its second colour."""
+    with open(ROOT / "config" / "kit_colours.csv", encoding="utf-8", newline="") as f:
+        return {r["team_id"]: [r["primary"].upper(), r["secondary"].upper()] for r in csv.DictReader(f)}
+
+
 def team_info(tid: str) -> dict:
     teams, _ = load_teams()
     t = teams.get(tid, {})
     name = t.get("name", tid)
-    return {"id": tid, "name": name, "short": SHORT.get(tid, name), "country": t.get("country")}
+    return {"id": tid, "name": name, "short": SHORT.get(tid, name), "country": t.get("country"),
+            "kit": kit_colours().get(tid)}
 
 
 def adjust(matrix: np.ndarray, target: np.ndarray) -> np.ndarray:
