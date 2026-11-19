@@ -8,7 +8,7 @@ bw-linz,BW Linz,Austria,
 grazer-ak,Grazer AK,Austria,
 grodig,Grodig,Austria,
 hartberg,Hartberg,Austria,
-lask,LASK,Austria,
+lask,LASK,Austria,LASK Linz
 mattersburg,Mattersburg,Austria,
 neustadt,Neustadt,Austria,
 rapid-vienna,Rapid Vienna,Austria,SK Rapid
@@ -20,7 +20,7 @@ tirol,Tirol,Austria,
 wacker-innsbruck,Wacker Innsbruck,Austria,
 wolfsberger,Wolfsberger AC,Austria,
 anderlecht,Anderlecht,Belgium,
-antwerp,Antwerp,Belgium,
+antwerp,Antwerp,Belgium,Royal Antwerp
 beerschot-va,Beerschot VA,Belgium,
 beveren,Beveren,Belgium,Waasland-Beveren
 cercle-brugge,Cercle Brugge,Belgium,
@@ -105,8 +105,8 @@ west-ham-united,West Ham United,England,West Ham
 wolverhampton-wanderers,Wolverhampton Wanderers,England,Wolves
 ajaccio,AC Ajaccio,France,
 amiens,Amiens,France,
-angers,Angers,France,
-auxerre,Auxerre,France,
+angers,Angers,France,Angers SCO
+auxerre,Auxerre,France,AJ Auxerre
 bastia,Bastia,France,
 bordeaux,Bordeaux,France,
 brest,Brest,France,Stade Brestois 29
@@ -137,7 +137,7 @@ rennes,Rennes,France,Stade Rennais FC 1901
 saint-etienne,Saint-Etienne,France,St Etienne
 strasbourg,Strasbourg,France,RC Strasbourg Alsace
 toulouse,Toulouse,France,
-troyes,Troyes,France,
+troyes,Troyes,France,ES Troyes AC
 arminia-bielefeld,Arminia Bielefeld,Germany,Bielefeld
 augsburg,Augsburg,Germany,
 bayer-leverkusen,Bayer Leverkusen,Germany,Leverkusen
@@ -169,7 +169,7 @@ stuttgart,Stuttgart,Germany,
 union-berlin,Union Berlin,Germany,
 werder-bremen,Werder Bremen,Germany,Bremen
 wolfsburg,Wolfsburg,Germany,
-aek-athens,AEK Athens,Greece,AEK
+aek-athens,AEK Athens,Greece,AEK|PAE AEK
 apollon,Apollon,Greece,
 aris,Aris,Greece,
 asteras-tripolis,Asteras Tripolis,Greece,
@@ -188,7 +188,7 @@ larisa,Larisa,Greece,
 levadeiakos,Levadeiakos,Greece,
 niki-volos,Niki Volos,Greece,
 ofi,OFI,Greece,OFI Crete
-olympiacos,Olympiacos,Greece,Olympiakos|Olympiakos Piraeus
+olympiacos,Olympiacos,Greece,Olympiakos|Olympiakos Piraeus|PAE Olympiakos SFP
 paok,PAOK,Greece,
 panathinaikos,Panathinaikos,Greece,
 panetolikos,Panetolikos,Greece,
@@ -200,7 +200,7 @@ veria,Veria,Greece,
 volos-nfc,Volos NFC,Greece,
 xanthi,Xanthi,Greece,
 milan,AC Milan,Italy,
-atalanta,Atalanta,Italy,
+atalanta,Atalanta,Italy,Atalanta BC
 benevento,Benevento,Italy,
 bologna,Bologna,Italy,
 brescia,Brescia,Italy,
@@ -212,9 +212,9 @@ como,Como,Italy,
 cremonese,Cremonese,Italy,
 crotone,Crotone,Italy,
 empoli,Empoli,Italy,
-fiorentina,Fiorentina,Italy,
+fiorentina,Fiorentina,Italy,ACF Fiorentina
 frosinone,Frosinone,Italy,
-genoa,Genoa,Italy,
+genoa,Genoa,Italy,Genoa CFC
 hellas-verona,Hellas Verona,Italy,Verona
 inter,Inter,Italy,FC Internazionale Milano|Inter Milan|Internazionale
 juventus,Juventus,Italy,Juve
@@ -239,10 +239,10 @@ ado-den-haag,ADO Den Haag,Netherlands,Den Haag
 az,AZ,Netherlands,AZ Alkmaar
 ajax,Ajax,Netherlands,
 almere-city,Almere City,Netherlands,
-cambuur,Cambuur,Netherlands,
+cambuur,Cambuur,Netherlands,SC Cambuur-Leeuwarden
 graafschap,De Graafschap,Netherlands,
 dordrecht,Dordrecht,Netherlands,
-excelsior,Excelsior,Netherlands,
+excelsior,Excelsior,Netherlands,SBV Excelsior
 emmen,FC Emmen,Netherlands,
 feyenoord,Feyenoord,Netherlands,Feyenoord Rotterdam
 fortuna-sittard,Fortuna Sittard,Netherlands,For Sittard
@@ -263,7 +263,7 @@ utrecht,Utrecht,Netherlands,
 vvv-venlo,VVV Venlo,Netherlands,
 vitesse,Vitesse,Netherlands,
 volendam,Volendam,Netherlands,
-willem-ii,Willem II,Netherlands,
+willem-ii,Willem II,Netherlands,Willem II Tilburg
 aalesund,Aalesund,Norway,
 bodo-glimt,Bodo/Glimt,Norway,
 brann,Brann,Norway,
@@ -299,18 +299,18 @@ alverca,Alverca,Portugal,
 arouca,Arouca,Portugal,
 aves,Aves,Portugal,
 belenenses,Belenenses,Portugal,
-benfica,Benfica,Portugal,SL Benfica
+benfica,Benfica,Portugal,SL Benfica|Sport Lisboa e Benfica
 boavista,Boavista,Portugal,
 braga,Braga,Portugal,Sp Braga|Sporting Clube de Braga
 casa-pia,Casa Pia,Portugal,
 chaves,Chaves,Portugal,
-estoril,Estoril,Portugal,
-estrela,Estrela,Portugal,
+estoril,Estoril,Portugal,GD Estoril Praia
+estrela,Estrela,Portugal,CF Estrela da Amadora
 famalicao,Famalicao,Portugal,
 farense,Farense,Portugal,
 feirense,Feirense,Portugal,
 gil-vicente,Gil Vicente,Portugal,
-maritimo,Maritimo,Portugal,
+maritimo,Maritimo,Portugal,CS Marítimo
 moreirense,Moreirense,Portugal,
 nacional,Nacional,Portugal,
 pacos-ferreira,Pacos de Ferreira,Portugal,
@@ -322,7 +322,7 @@ santa-clara,Santa Clara,Portugal,
 sporting-cp,Sporting CP,Portugal,Sp Lisbon|Sporting Clube de Portugal|Sporting Lisbon
 tondela,Tondela,Portugal,
 uniao-madeira,Uniao Madeira,Portugal,
-vitoria-guimaraes,Vitoria Guimaraes,Portugal,Guimaraes
+vitoria-guimaraes,Vitoria Guimaraes,Portugal,Guimaraes|Vitória SC
 vitoria-setubal,Vitoria Setubal,Portugal,Setubal
 vizela,Vizela,Portugal,
 aberdeen,Aberdeen,Scotland,
@@ -364,12 +364,12 @@ levante,Levante,Spain,
 malaga,Malaga,Spain,
 mallorca,Mallorca,Spain,
 osasuna,Osasuna,Spain,
-racing-santander,Racing Santander,Spain,Santander
+racing-santander,Racing Santander,Spain,Santander|Real Racing Club de Santander
 rayo-vallecano,Rayo Vallecano,Spain,Rayo|Rayo Vallecano de Madrid|Vallecano
 real-betis,Real Betis,Spain,Betis|Real Betis Balompie
 real-madrid,Real Madrid,Spain,
 real-oviedo,Real Oviedo,Spain,Oviedo
-real-sociedad,Real Sociedad,Spain,Sociedad
+real-sociedad,Real Sociedad,Spain,Sociedad|Real Sociedad de Fútbol
 real-valladolid,Real Valladolid,Spain,Valladolid
 sevilla,Sevilla,Spain,
 sporting-gijon,Sporting Gijon,Spain,Sp Gijon
