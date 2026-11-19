@@ -118,3 +118,16 @@ Test period 2018/19 to 2025/26 (8 seasons, 15 leagues, 32,123 matches with Pinna
 10. [ ] Deployment (Cloudflare Pages)
 
 **Parked:** user predictions + leaderboard, to come back later as "beat the model".
+
+### Milestone 7 plan: Champions League teams from leagues we don't ingest
+
+Clubs such as Slavia/Sparta Praha (Czechia), Pafos (Cyprus), Qarabağ/Sabah (Azerbaijan), Kairat (Kazakhstan), Crvena Zvezda (Serbia), Dinamo Zagreb, Slovan Bratislava and Shakhtar have no domestic data here. They get a **fallback rating from the UEFA country coefficient**:
+
+1. Once milestone 7 has put the 15 ingested leagues on one cross-league scale, take each country's **average rating of its CL participants** (not the league average: CL clubs are the top of their league).
+2. Fit `rating ≈ a + b · log(5-year UEFA country coefficient)` across those 15 countries. Use the log because coefficients are skewed: the top countries score several times the mid-ranked ones, and the playing gap doesn't grow that fast.
+3. An uncovered club starts at the fitted value for its country, with a wider uncertainty.
+4. Every CL match it plays updates the rating like any other team's, so the prior matters less as the season goes on. Predictions involving a team still mostly on its prior are flagged "low confidence".
+
+Why the country coefficient: we don't have these leagues' matches, so "league strength" has to come from outside, and the country coefficient is UEFA's own published, cross-league measure of exactly that (5 seasons of European results). It's also stable and one number per country. Club coefficients were considered but rejected as the default: they lag (5-year window), and under UEFA's rules small clubs' values have been floored at a share of the country coefficient, so they largely repeat it (check the current rule before relying on this). They can be tried as a refinement if they beat the country version in the backtest.
+
+Data: `config/uefa_country_coefficients.csv`, edited by hand once a year (UEFA has no free API; scraping is fragile). Validation: pretend Austria, Switzerland, Denmark and Norway aren't ingested, rate their clubs from coefficients alone, and compare those CL predictions with the full-data ones. Limits: free-tier CL history only starts in 2023/24, and qualifying rounds aren't covered, so these clubs have few matches to learn from.
