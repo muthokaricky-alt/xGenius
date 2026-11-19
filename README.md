@@ -37,9 +37,11 @@ No always-on server, no database, no cold starts. Training runs offline in Pytho
 | Source | Gives us | Notes |
 |---|---|---|
 | [football-data.co.uk](https://football-data.co.uk) | Results + bookmaker odds, 2014/15 onwards, 15 leagues | Free CSVs. xG only from 2026/27. |
-| [football-data.org](https://www.football-data.org) | Fixtures, Champions League | Free API key, 10 requests/min |
+| [football-data.org](https://www.football-data.org) | Fixtures, Champions League | Free API key, 10 requests/min. Champions League results only from 2023/24 on the free tier. |
 
 We ingest 10 leagues beyond the 5 we show (Netherlands, Portugal, Belgium, Scotland, Turkey, Greece, Austria, Switzerland, Denmark, Norway). Their clubs play in the Champions League, so we need ratings for them.
+
+**API rate limit:** the client follows football-data.org's `X-Requests-Available-Minute` / `X-RequestCounter-Reset` headers, falls back to 6.5 s between calls if they're missing, and on a 429 waits for the reset and retries once.
 
 Odds columns: `odds_pre_*` (known before kickoff, allowed as a feature), `odds_close_*` and `pin_close_*` (closing odds, **evaluation benchmark only**, never a feature: that would be leakage).
 

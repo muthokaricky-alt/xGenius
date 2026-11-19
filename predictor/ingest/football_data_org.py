@@ -1,7 +1,12 @@
 """football-data.org API (free tier): upcoming fixtures + Champions League results.
 
-Free tier = 10 requests/minute, so we throttle and cache. Finished seasons are
-cached forever; the current season is refreshed every few hours.
+Rate limiting follows the API's own headers rather than a fixed delay:
+  X-Requests-Available-Minute  calls left in the current window
+  X-RequestCounter-Reset       seconds until that window resets
+If a response lacks them we fall back to spacing calls 6.5 s apart (10/min with
+margin). A 429 waits until the reset time and retries once.
+
+Finished seasons are cached forever; the current season every few hours.
 """
 import json
 import os
@@ -12,35 +17,91 @@ import pandas as pd
 
 from predictor.config import DATA_RAW
 from predictor.env import load_env
-from predictor.ingest.cache import fetch
+from predictor.ingest.cache import fetch, is_fresh
 from predictor.leagues import FIRST_SEASON, LEAGUES, current_season
 from predictor.teams import resolve
 
 BASE = "https://api.football-data.org/v4"
 RAW_DIR = DATA_RAW / "football-data-org"
 REFRESH_HOURS = 3
-MIN_SECONDS_BETWEEN_CALLS = 6.5  # 10/min limit, with margin
-_last_call = 0.0
 
 
 class NoApiKey(RuntimeError):
     pass
 
 
-def _get(path: str, dest, max_age_hours):
-    global _last_call
-    load_env()
-    key = os.environ.get("FOOTBALL_DATA_API_KEY")
-    if not key:
-        raise NoApiKey("FOOTBALL_DATA_API_KEY not set (see .env.example)")
-    if not dest.exists() or max_age_hours is not None:
-        wait = MIN_SECONDS_BETWEEN_CALLS - (time.time() - _last_call)
-        if wait > 0:
-            time.sleep(wait)
-    before = dest.stat().st_mtime if dest.exists() else None
-    fetch(f"{BASE}{path}", dest, max_age_hours, headers={"X-Auth-Token": key})
-    if dest.stat().st_mtime != before:
-        _last_call = time.time()
+def _header_int(headers, name):
+    try:
+        return int(headers.get(name))
+    except (TypeError, ValueError):
+        return None
+
+
+class Throttle:
+    """Waits only when the API says we're out of calls for this minute."""
+    FALLBACK_SPACING = 6.5   # seconds between calls when headers are missing
+    DEFAULT_RESET = 60       # 429 without a reset header: wait a full window
+    MAX_WAIT = 120           # never trust a reset value beyond this
+    MARGIN = 1.0             # reset header is whole seconds; don't arrive early
+
+    def __init__(self, clock=time.monotonic, sleep=time.sleep):
+        self.clock, self.sleep = clock, sleep
+        self.last_call = None
+        self.remaining = None   # None = no header info: use fallback spacing
+        self.reset_at = None
+
+    def _wait_until(self, t):
+        delay = min(t - self.clock(), self.MAX_WAIT)
+        if delay > 0:
+            self.sleep(delay)
+
+    def before_call(self):
+        if self.remaining is not None:
+            if self.remaining <= 0:
+                self._wait_until(self.reset_at)
+        elif self.last_call is not None:
+            self._wait_until(self.last_call + self.FALLBACK_SPACING)
+
+    def after_response(self, headers):
+        self.last_call = self.clock()
+        remaining = _header_int(headers, "X-Requests-Available-Minute")
+        reset = _header_int(headers, "X-RequestCounter-Reset")
+        if remaining is None or reset is None:
+            self.remaining = self.reset_at = None
+        else:
+            self.remaining = remaining
+            self.reset_at = self.last_call + reset + self.MARGIN
+
+    def on_429(self, headers):
+        reset = _header_int(headers, "X-RequestCounter-Reset")
+        self.last_call = self.clock()
+        self._wait_until(self.last_call + (self.DEFAULT_RESET if reset is None else reset) + self.MARGIN)
+        self.remaining = self.reset_at = None  # unknown until the retry answers
+
+
+_throttle = Throttle()
+
+
+def _get(path: str, dest, max_age_hours, throttle: Throttle = None, fetch_fn=fetch):
+    throttle = throttle or _throttle
+    if not is_fresh(dest, max_age_hours):
+        load_env()
+        key = os.environ.get("FOOTBALL_DATA_API_KEY")
+        if not key:
+            raise NoApiKey("FOOTBALL_DATA_API_KEY not set (see .env.example)")
+        for attempt in (1, 2):
+            throttle.before_call()
+            try:
+                fetch_fn(f"{BASE}{path}", dest, max_age_hours, headers={"X-Auth-Token": key},
+                         on_response=throttle.after_response)
+                break
+            except urllib.error.HTTPError as e:
+                if e.code == 429 and attempt == 1:
+                    print(f"  rate-limited on {path}; waiting for reset, then retrying once")
+                    throttle.on_429(e.headers)
+                    continue
+                throttle.after_response(e.headers or {})
+                raise
     return json.loads(dest.read_text(encoding="utf-8"))
 
 
