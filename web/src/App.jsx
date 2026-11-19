@@ -1,43 +1,110 @@
+import { useEffect, useState } from 'react';
+import Header from './components/Header.jsx';
+import About from './pages/About.jsx';
+import Matches from './pages/Matches.jsx';
+import Races from './pages/Races.jsx';
+import Ratings from './pages/Ratings.jsx';
+import Record from './pages/Record.jsx';
+import { href, useRoute } from './lib/router.js';
 
-import { useState, useEffect } from 'react';
-import { motion } from 'framer-motion';
+const TITLES = {
+  matches: 'Upcoming matches',
+  results: 'Recent results',
+  match: 'Match forecast',
+  races: 'Season races',
+  ratings: 'Power ratings',
+  record: 'Track record',
+  about: 'How it works',
+};
 
-const matches = [
-  { home:'Liverpool', away:'Arsenal', date:'16 Aug • 3:00 PM', homeLogo:'https://upload.wikimedia.org/wikipedia/en/0/0c/Liverpool_FC.svg', awayLogo:'https://upload.wikimedia.org/wikipedia/en/5/53/Arsenal_FC.svg' },
-  { home:'Chelsea', away:'West Ham', date:'16 Aug • 5:30 PM', homeLogo:'https://upload.wikimedia.org/wikipedia/en/c/cc/Chelsea_FC.svg', awayLogo:'https://upload.wikimedia.org/wikipedia/en/c/c2/West_Ham_United_FC_logo.svg' },
-  { home:'Man City', away:'Man United', date:'17 Aug • 2:00 PM', homeLogo:'https://upload.wikimedia.org/wikipedia/en/e/eb/Manchester_City_FC_badge.svg', awayLogo:'https://upload.wikimedia.org/wikipedia/en/7/7a/Manchester_United_FC_crest.svg' }
-];
+function initialKit() {
+  const set = document.documentElement.dataset.kit;
+  if (set === 'home' || set === 'away') return set;
+  return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'away' : 'home';
+}
 
-export default function App(){
-  const [dark,setDark]=useState(false);
-  useEffect(()=>{document.body.className=dark?'dark':'light';},[dark]);
-  return (
-    <div className="app">
-      <nav className="nav">
-        <div className="brand">⚽ <span>xG</span>enius</div>
-        <div className="links"><a className="active">Discover</a><a>My Predictions</a><a>Leaderboard</a><a>Schedule</a></div>
-        <div className="right"><input placeholder="Search teams..."/><button onClick={()=>setDark(!dark)}>{dark?'☀️':'🌙'}</button><div className="avatar">RK</div></div>
-      </nav>
-      <main className="wrap">
-        <section className="hero">
-          <div><span className="pill">🏆 Premier League</span><h1>Find your <span>match</span></h1><p>Predict matches, earn points, and climb the leaderboard.</p></div>
-          <motion.div initial={{opacity:0,y:20}} animate={{opacity:1,y:0}} className="cta"><h3>Make your predictions</h3><p>Think you know football? Prove it.</p></motion.div>
-        </section>
-        <div className="grid">
-          {matches.map((m,i)=>(
-            <motion.div key={i} className="card" initial={{opacity:0,y:30}} animate={{opacity:1,y:0}} transition={{delay:i*0.1}}>
-              <div className="top"><span className="league">Premier League</span><small>{m.date}</small></div>
-              <div className="teams">
-                <div><img src={m.homeLogo}/><h3>{m.home}</h3></div>
-                <b>VS</b>
-                <div><img src={m.awayLogo}/><h3>{m.away}</h3></div>
-              </div>
-              <div className="score"><input defaultValue="2"/><span>-</span><input defaultValue="1"/></div>
-              <button className="save">Save Prediction</button>
-            </motion.div>
-          ))}
+export default function App() {
+  const route = useRoute();
+  const [kit, setKit] = useState(initialKit);
+
+  const chooseKit = (k) => {
+    setKit(k);
+    document.documentElement.dataset.kit = k;
+    try {
+      localStorage.setItem('xg-kit', k);
+    } catch {
+      /* storage unavailable: the choice lasts this visit */
+    }
+  };
+
+  useEffect(() => {
+    document.documentElement.dataset.kit = kit;
+    document.querySelector('meta[name="theme-color"]')?.setAttribute('content', kit === 'away' ? '#050B1D' : '#0B1733');
+  }, [kit]);
+
+  useEffect(() => {
+    document.title = `${TITLES[route.page] || 'Not found'} · xGenius`;
+    if (route.page !== 'match') window.scrollTo(0, 0);
+  }, [route.page, route.id]);
+
+  let body;
+  switch (route.page) {
+    case 'matches':
+    case 'results':
+    case 'match':
+      body = <Matches page={route.page} id={route.id} />;
+      break;
+    case 'races':
+      body = <Races />;
+      break;
+    case 'ratings':
+      body = <Ratings />;
+      break;
+    case 'record':
+      body = <Record />;
+      break;
+    case 'about':
+      body = <About />;
+      break;
+    default:
+      body = (
+        <div className="page">
+          <h1>Page not found</h1>
+          <p>
+            <a href={href('/')}>Go to upcoming matches</a>
+          </p>
         </div>
+      );
+  }
+
+  return (
+    <>
+      <a
+        className="skip"
+        href="#main"
+        onClick={(e) => {
+          e.preventDefault(); // the hash belongs to the router
+          document.getElementById('main')?.focus();
+        }}
+      >
+        Skip to content
+      </a>
+      <Header page={route.page} kit={kit} onKit={chooseKit} />
+      <main id="main" tabIndex={-1}>
+        {body}
       </main>
-    </div>
+      <footer className="foot">
+        <p>
+          <strong>
+            <span className="foot__xg">xG</span>enius
+          </strong>{' '}
+          · Statistical forecasts, not betting advice. Data: football-data.co.uk and football-data.org.
+        </p>
+        <p>
+          <a href="https://github.com/muthokaricky-alt/xGenius" rel="noopener">Source code</a> ·{' '}
+          <a href={href('/about')}>How it works</a>
+        </p>
+      </footer>
+    </>
   );
 }

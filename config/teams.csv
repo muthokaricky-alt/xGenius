@@ -129,12 +129,12 @@ montpellier,Montpellier,France,
 nancy,Nancy,France,
 nantes,Nantes,France,
 nice,Nice,France,
-nimes,Nimes,France,
+nimes,Nîmes,France,
 paris,Paris FC,France,
 paris-saint-germain,Paris Saint-Germain,France,PSG|Paris SG
 reims,Reims,France,Stade de Reims
 rennes,Rennes,France,Stade Rennais FC 1901
-saint-etienne,Saint-Etienne,France,St Etienne
+saint-etienne,Saint-Étienne,France,St Etienne
 strasbourg,Strasbourg,France,RC Strasbourg Alsace
 toulouse,Toulouse,France,
 troyes,Troyes,France,ES Troyes AC
@@ -144,15 +144,15 @@ bayer-leverkusen,Bayer Leverkusen,Germany,Leverkusen
 bayern-munich,Bayern Munich,Germany,Bayern|Bayern Munchen|FC Bayern Munchen|FCB
 bochum,Bochum,Germany,
 borussia-dortmund,Borussia Dortmund,Germany,BVB|Dortmund
-borussia-monchengladbach,Borussia Monchengladbach,Germany,Gladbach|M'gladbach
+borussia-monchengladbach,Borussia Mönchengladbach,Germany,Gladbach|M'gladbach
 darmstadt,Darmstadt,Germany,
 eintracht-frankfurt,Eintracht Frankfurt,Germany,Ein Frankfurt
 elversberg,Elversberg,Germany,
-koln,FC Koln,Germany,
-nurnberg,FC Nurnberg,Germany,
+koln,1. FC Köln,Germany,
+nurnberg,1. FC Nürnberg,Germany,
 fortuna-dusseldorf,Fortuna Dusseldorf,Germany,
 freiburg,Freiburg,Germany,
-greuther-furth,Greuther Furth,Germany,
+greuther-furth,Greuther Fürth,Germany,
 hamburger,Hamburger SV,Germany,HSV|Hamburg
 hannover,Hannover,Germany,
 heidenheim,Heidenheim,Germany,
@@ -265,7 +265,7 @@ vitesse,Vitesse,Netherlands,
 volendam,Volendam,Netherlands,
 willem-ii,Willem II,Netherlands,Willem II Tilburg
 aalesund,Aalesund,Norway,
-bodo-glimt,Bodo/Glimt,Norway,
+bodo-glimt,Bodø/Glimt,Norway,
 brann,Brann,Norway,
 bryne,Bryne,Norway,
 fredrikstad,Fredrikstad,Norway,
@@ -275,7 +275,7 @@ jerv,Jerv,Norway,
 kfum-oslo,KFUM Oslo,Norway,
 kongsvinger,Kongsvinger,Norway,
 kristiansund,Kristiansund,Norway,
-lillestrom,Lillestrom,Norway,
+lillestrom,Lillestrøm,Norway,
 mjondalen,Mjondalen,Norway,
 molde,Molde,Norway,
 moss,Moss,Norway,
@@ -306,11 +306,11 @@ casa-pia,Casa Pia,Portugal,
 chaves,Chaves,Portugal,
 estoril,Estoril,Portugal,GD Estoril Praia
 estrela,Estrela,Portugal,CF Estrela da Amadora
-famalicao,Famalicao,Portugal,
+famalicao,Famalicão,Portugal,
 farense,Farense,Portugal,
 feirense,Feirense,Portugal,
 gil-vicente,Gil Vicente,Portugal,
-maritimo,Maritimo,Portugal,CS Marítimo
+maritimo,Marítimo,Portugal,CS Marítimo
 moreirense,Moreirense,Portugal,
 nacional,Nacional,Portugal,
 pacos-ferreira,Pacos de Ferreira,Portugal,
@@ -342,12 +342,12 @@ rangers,Rangers,Scotland,
 ross-county,Ross County,Scotland,
 st-johnstone,St Johnstone,Scotland,
 st-mirren,St Mirren,Scotland,
-alaves,Alaves,Spain,Deportivo Alaves
-almeria,Almeria,Spain,
+alaves,Alavés,Spain,Deportivo Alaves
+almeria,Almería,Spain,
 athletic-bilbao,Athletic Bilbao,Spain,Ath Bilbao|Athletic Club
-atletico-madrid,Atletico Madrid,Spain,Ath Madrid|Atleti|Atletico
+atletico-madrid,Atlético Madrid,Spain,Ath Madrid|Atleti|Atletico
 barcelona,Barcelona,Spain,Barca|Barsa
-cadiz,Cadiz,Spain,
+cadiz,Cádiz,Spain,
 celta-vigo,Celta Vigo,Spain,Celta|RC Celta de Vigo
 cordoba,Cordoba,Spain,
 deportivo-la-coruna,Deportivo La Coruna,Spain,Deportivo|La Coruna|RC Deportivo La Coruna
@@ -359,9 +359,9 @@ girona,Girona,Spain,
 granada,Granada,Spain,
 huesca,Huesca,Spain,
 las-palmas,Las Palmas,Spain,
-leganes,Leganes,Spain,
+leganes,Leganés,Spain,
 levante,Levante,Spain,
-malaga,Malaga,Spain,
+malaga,Málaga,Spain,
 mallorca,Mallorca,Spain,
 osasuna,Osasuna,Spain,
 racing-santander,Racing Santander,Spain,Santander|Real Racing Club de Santander
@@ -372,7 +372,7 @@ real-oviedo,Real Oviedo,Spain,Oviedo
 real-sociedad,Real Sociedad,Spain,Sociedad|Real Sociedad de Fútbol
 real-valladolid,Real Valladolid,Spain,Valladolid
 sevilla,Sevilla,Spain,
-sporting-gijon,Sporting Gijon,Spain,Sp Gijon
+sporting-gijon,Sporting Gijón,Spain,Sp Gijon
 valencia,Valencia,Spain,
 villarreal,Villarreal,Spain,
 aarau,Aarau,Switzerland,
@@ -402,7 +402,7 @@ amedspor,Amedspor,Turkey,
 ankaragucu,Ankaragucu,Turkey,
 antalyaspor,Antalyaspor,Turkey,
 balikesirspor,Balikesirspor,Turkey,
-besiktas,Besiktas,Turkey,Besiktas JK
+besiktas,Beşiktaş,Turkey,Besiktas JK
 bodrumspor,Bodrumspor,Turkey,
 bursaspor,Bursaspor,Turkey,
 corum,Corum,Turkey,
@@ -411,7 +411,7 @@ erciyesspor,Erciyesspor,Turkey,
 erzurumspor,Erzurumspor,Turkey,Erzurum BB
 eskisehirspor,Eskisehirspor,Turkey,
 eyupspor,Eyupspor,Turkey,
-fenerbahce,Fenerbahce,Turkey,
+fenerbahce,Fenerbahçe,Turkey,
 galatasaray,Galatasaray,Turkey,
 gaziantep,Gaziantep,Turkey,
 gaziantepspor,Gaziantepspor,Turkey,
@@ -436,3 +436,13 @@ sivasspor,Sivasspor,Turkey,
 trabzonspor,Trabzonspor,Turkey,
 umraniyespor,Umraniyespor,Turkey,
 yeni-malatyaspor,Yeni Malatyaspor,Turkey,
+qarabag,Qarabag,Azerbaijan,Qarabağ Ağdam FK
+sabah,Sabah,Azerbaijan,
+dinamo-zagreb,Dinamo Zagreb,Croatia,GNK Dinamo Zagreb
+pafos,Pafos,Cyprus,Paphos FC
+slavia-praha,Slavia Praha,Czechia,Slavia Prague
+sparta-praha,Sparta Praha,Czechia,Sparta Prague
+kairat,Kairat,Kazakhstan,Kairat Almaty
+crvena-zvezda,Crvena Zvezda,Serbia,Red Star Belgrade
+slovan-bratislava,Slovan Bratislava,Slovakia,
+shakhtar-donetsk,Shakhtar Donetsk,Ukraine,

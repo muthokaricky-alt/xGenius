@@ -1,12 +1,23 @@
 <!doctype html>
-<html>
-<head>
-  <meta charset='UTF-8'>
-  <meta name='viewport' content='width=device-width, initial-scale=1.0'>
-  <title>xGenius</title>
-</head>
-<body>
-  <div id='root'></div>
-  <script type='module' src='/src/main.jsx'></script>
-</body>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <title>xGenius · Football match forecasts</title>
+    <meta name="description" content="Statistical forecasts for Premier League, Champions League and big-club matches: win/draw/loss chances, likely scores, expected goals, with an open track record." />
+    <meta name="theme-color" content="#0B1733" />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <script>
+      // Apply the saved kit (theme) before first paint to avoid a flash.
+      try {
+        var k = localStorage.getItem('xg-kit');
+        if (k === 'home' || k === 'away') document.documentElement.dataset.kit = k;
+      } catch (e) {}
+    </script>
+  </head>
+  <body>
+    <div id="root"></div>
+    <noscript>xGenius needs JavaScript to show its forecasts.</noscript>
+    <script type="module" src="/src/main.jsx"></script>
+  </body>
 </html>

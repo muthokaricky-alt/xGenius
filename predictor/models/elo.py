@@ -11,8 +11,8 @@ Ratings
     starts PROMOTED_GAP points below its league's mean.
 
 Ratings are per league: no domestic match links two leagues, so a 1600 in
-Austria isn't comparable to a 1600 in England. Cross-league strength is
-milestone 7.
+Austria isn't comparable to a 1600 in England. Champions League matches are
+skipped here; cross-league strength comes from the Dixon-Coles model.
 
 Probabilities
   Elo only gives an expected score, not a draw probability. We map the rating
@@ -28,6 +28,7 @@ import pandas as pd
 from scipy.optimize import minimize
 from scipy.special import expit
 
+from predictor.data import CL
 from predictor.metrics import outcome
 from predictor.models import Model
 
@@ -102,6 +103,8 @@ class Elo(Model):
         return (self.rating[row.home_id] + self.home_adv - self.rating[row.away_id]) / 400
 
     def _play(self, row):
+        if row.league == CL:
+            return
         x = self._gap(row)
         expected = 1 / (1 + 10 ** (-x))
         gd = row.home_goals - row.away_goals
@@ -141,7 +144,11 @@ class Elo(Model):
             self._refit(now)
 
     def predict(self, matches):
-        x = [self._gap(row) for row in matches.itertuples(index=False)]
+        # CL: ratings from different leagues aren't comparable, so this is only a
+        # rough fallback (the ensemble uses Dixon-Coles there). Don't _prepare():
+        # it would treat the CL as the team's new league.
+        x = [(self.rating.get(r.home_id, 1450.0) + self.home_adv - self.rating.get(r.away_id, 1450.0)) / 400
+             if r.league == CL else self._gap(r) for r in matches.itertuples(index=False)]
         return ordered_logit_probs(x, self.params)
 
     def ratings(self) -> pd.Series:

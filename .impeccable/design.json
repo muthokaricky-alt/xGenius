@@ -1,0 +1,59 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-11-19T08:30:00Z",
+  "title": "Design System: xGenius",
+  "extensions": {
+    "colorMeta": {
+      "collar": { "role": "primary", "displayName": "Collar Navy" },
+      "gold-trim": { "role": "accent", "displayName": "Gold Trim" },
+      "sky-trim": { "role": "accent", "displayName": "Sky Trim" },
+      "ground-home": { "role": "neutral", "displayName": "Shirt White (home kit)" },
+      "ground-away": { "role": "neutral", "displayName": "Away Navy (away kit)" },
+      "draw-home": { "role": "data", "displayName": "Draw Grey" }
+    },
+    "typographyMeta": {
+      "numerals": { "displayName": "Squad numerals", "purpose": "Every probability, score and rank." },
+      "body": { "displayName": "Archivo", "purpose": "Reading text and controls." }
+    },
+    "shadows": [
+      { "name": "panel", "value": "0 1px 2px rgba(11,23,51,0.06), 0 8px 24px -12px rgba(11,23,51,0.18)", "purpose": "The only elevation: day groups, panels, detail pane." }
+    ],
+    "motion": [
+      { "name": "kit-open", "value": "flex-grow 900ms cubic-bezier(0.16, 1, 0.3, 1)", "purpose": "Kit bar panels open from an even split to the forecast, once." },
+      { "name": "state", "value": "140-160ms ease-out", "purpose": "Hover and selection colour changes." }
+    ],
+    "breakpoints": [
+      { "name": "sm", "value": "720px" },
+      { "name": "split", "value": "1080px" }
+    ]
+  },
+  "components": [
+    {
+      "name": "Kit bar",
+      "kind": "custom",
+      "refersTo": "fixture-row",
+      "description": "Home/draw/away split as shirt panels in club colours with a collar-trim band.",
+      "html": "<div class=\"ds-kitbar\"><span style=\"flex-grow:.69;--m:#6CABDD;--t:#1C2C5B\"></span><span class=\"d\" style=\"flex-grow:.19\"></span><span style=\"flex-grow:.12;--m:#FFFFFF;--t:#000000\"></span></div>",
+      "css": ".ds-kitbar{display:flex;gap:2px;height:14px;width:280px}.ds-kitbar span{flex-basis:0;background:linear-gradient(var(--t) 0 3px,transparent 3px) no-repeat,var(--m);box-shadow:inset 0 0 0 1px rgba(11,23,51,.16)}.ds-kitbar .d{background:#A9B2C3;box-shadow:none}.ds-kitbar span:first-child{border-radius:4px 0 0 4px}.ds-kitbar span:last-child{border-radius:0 4px 4px 0}"
+    },
+    {
+      "name": "Filter chip",
+      "kind": "chip",
+      "refersTo": "chip-filter",
+      "description": "Competition filter; pressed state inverts to navy.",
+      "html": "<button class=\"ds-chip\" aria-pressed=\"true\">All</button> <button class=\"ds-chip\">Premier League</button>",
+      "css": ".ds-chip{border:1px solid #B9C2D2;background:#fff;border-radius:999px;padding:6px 13px;font:600 13.5px Archivo,system-ui;color:#3C4864}.ds-chip[aria-pressed=true]{background:#0B1733;border-color:#0B1733;color:#EEF1F5}"
+    }
+  ],
+  "narrative": {
+    "northStar": "Kit room",
+    "overview": "A forecast read like a team sheet: every probability wears the clubs' own shirt colours, inside a navy collar-band shell with a gold and sky trim. Home kit is light, away kit is dark.",
+    "keyCharacteristics": ["Club colours only in data", "Squad-number numerals", "Fixed-scale fixture rows", "Kit-clash rule"],
+    "rules": [
+      { "name": "The Club Colour Rule", "body": "Club colours appear only in data, never in chrome.", "section": "colors" },
+      { "name": "The Kit-Clash Rule", "body": "Clashing away sides switch to their second colour.", "section": "colors" }
+    ],
+    "dos": ["Pair every coloured element with its number", "Explain each stat in one plain sentence"],
+    "donts": ["No crests, odds or betting language", "No eyebrow labels, gradient text or glass"]
+  }
+}

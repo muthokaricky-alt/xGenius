@@ -41,7 +41,8 @@ def test_renamed_club_merged():
 
 def test_country_free_lookup_for_champions_league():
     assert resolve("Real Madrid CF") == "real-madrid"
-    assert resolve("Shakhtar Donetsk") is None  # league we don't ingest
+    assert resolve("FK Shakhtar Donetsk") == "shakhtar-donetsk"  # CL-only club
+    assert resolve("Some Unknown Club") is None
 
 
 def test_ids_unique():
