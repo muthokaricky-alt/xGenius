@@ -14,7 +14,7 @@ export default function App(){
   return (
     <div className="app">
       <nav className="nav">
-        <div className="brand">⚽ xGenius</div>
+        <div className="brand">⚽ <span>xG</span>enius</div>
         <div className="links"><a className="active">Discover</a><a>My Predictions</a><a>Leaderboard</a><a>Schedule</a></div>
         <div className="right"><input placeholder="Search teams..."/><button onClick={()=>setDark(!dark)}>{dark?'☀️':'🌙'}</button><div className="avatar">RK</div></div>
       </nav>
