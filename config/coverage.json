@@ -1,0 +1,13 @@
+{
+  "_comment": "What the app SHOWS. Models always train on every match in these leagues. Team names are canonical names (see the team-name mapping table, milestone 2).",
+  "full_coverage": [
+    "premier_league",
+    "champions_league"
+  ],
+  "big_clubs": {
+    "bundesliga": ["Bayern Munich", "Borussia Dortmund"],
+    "serie_a": ["Juventus", "Inter", "AC Milan", "Napoli", "Roma", "Lazio"],
+    "ligue_1": ["Paris Saint-Germain"],
+    "la_liga": ["Barcelona", "Real Madrid", "Atletico Madrid"]
+  }
+}
