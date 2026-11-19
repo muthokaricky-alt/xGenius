@@ -1,0 +1,299 @@
+{
+ "generated_at": "2026-11-19T04:24:16+00:00",
+ "test": {
+  "from": "2018-07-01",
+  "to": "2026-07-01",
+  "matches": 32123,
+  "leagues": 15,
+  "leaderboard": [
+   {
+    "key": "ensemble",
+    "model": "Ensemble (Elo + Dixon-Coles)",
+    "note": "",
+    "log_loss": 0.9834,
+    "brier": 0.5858,
+    "rps": 0.2001,
+    "accuracy": 0.5219,
+    "n": 32123
+   },
+   {
+    "key": "dixon_coles",
+    "model": "Dixon-Coles",
+    "note": "",
+    "log_loss": 0.9858,
+    "brier": 0.5873,
+    "rps": 0.2007,
+    "accuracy": 0.5205,
+    "n": 32123
+   },
+   {
+    "key": "elo",
+    "model": "Elo",
+    "note": "",
+    "log_loss": 0.9845,
+    "brier": 0.5865,
+    "rps": 0.2004,
+    "accuracy": 0.5231,
+    "n": 32123
+   },
+   {
+    "key": "base_rate",
+    "model": "Base rate",
+    "note": "",
+    "log_loss": 1.0735,
+    "brier": 0.6497,
+    "rps": 0.2306,
+    "accuracy": 0.435,
+    "n": 32123
+   },
+   {
+    "key": "market",
+    "model": "Market (Pinnacle closing)",
+    "note": "benchmark only",
+    "log_loss": 0.9646,
+    "brier": 0.573,
+    "rps": 0.1941,
+    "accuracy": 0.5358,
+    "n": 32123
+   }
+  ],
+  "by_league": [
+   {
+    "league": "austrian_bl",
+    "base_rate": 1.0922,
+    "elo": 1.0157,
+    "dixon_coles": 1.0114,
+    "ensemble": 1.0131,
+    "market": 0.993
+   },
+   {
+    "league": "belgian_pro",
+    "base_rate": 1.0717,
+    "elo": 1.0031,
+    "dixon_coles": 1.0015,
+    "ensemble": 1.0007,
+    "market": 0.9787
+   },
+   {
+    "league": "bundesliga",
+    "base_rate": 1.0728,
+    "elo": 0.9937,
+    "dixon_coles": 0.9955,
+    "ensemble": 0.9935,
+    "market": 0.9726
+   },
+   {
+    "league": "danish_super",
+    "base_rate": 1.0794,
+    "elo": 1.0238,
+    "dixon_coles": 1.0247,
+    "ensemble": 1.023,
+    "market": 1.0072
+   },
+   {
+    "league": "eliteserien",
+    "base_rate": 1.0623,
+    "elo": 1.0015,
+    "dixon_coles": 1.0038,
+    "ensemble": 1.0006,
+    "market": 0.9837
+   },
+   {
+    "league": "eredivisie",
+    "base_rate": 1.0618,
+    "elo": 0.9402,
+    "dixon_coles": 0.9443,
+    "ensemble": 0.9404,
+    "market": 0.919
+   },
+   {
+    "league": "greek_super",
+    "base_rate": 1.0823,
+    "elo": 0.9484,
+    "dixon_coles": 0.9472,
+    "ensemble": 0.9458,
+    "market": 0.9247
+   },
+   {
+    "league": "la_liga",
+    "base_rate": 1.0731,
+    "elo": 0.9892,
+    "dixon_coles": 0.9906,
+    "ensemble": 0.9875,
+    "market": 0.9725
+   },
+   {
+    "league": "ligue_1",
+    "base_rate": 1.0756,
+    "elo": 1.009,
+    "dixon_coles": 1.0088,
+    "ensemble": 1.0078,
+    "market": 0.9874
+   },
+   {
+    "league": "premier_league",
+    "base_rate": 1.0649,
+    "elo": 0.9709,
+    "dixon_coles": 0.9651,
+    "ensemble": 0.9659,
+    "market": 0.9494
+   },
+   {
+    "league": "primeira_liga",
+    "base_rate": 1.073,
+    "elo": 0.9298,
+    "dixon_coles": 0.9377,
+    "ensemble": 0.9313,
+    "market": 0.9177
+   },
+   {
+    "league": "scottish_prem",
+    "base_rate": 1.068,
+    "elo": 0.9467,
+    "dixon_coles": 0.95,
+    "ensemble": 0.9467,
+    "market": 0.9308
+   },
+   {
+    "league": "serie_a",
+    "base_rate": 1.0846,
+    "elo": 0.9811,
+    "dixon_coles": 0.9802,
+    "ensemble": 0.9791,
+    "market": 0.9594
+   },
+   {
+    "league": "super_lig",
+    "base_rate": 1.0716,
+    "elo": 1.0016,
+    "dixon_coles": 1.0106,
+    "ensemble": 1.0042,
+    "market": 0.9807
+   },
+   {
+    "league": "swiss_super",
+    "base_rate": 1.076,
+    "elo": 1.0402,
+    "dixon_coles": 1.0429,
+    "ensemble": 1.0398,
+    "market": 1.02
+   }
+  ],
+  "calibration": [
+   {
+    "forecast": 0.0711,
+    "observed": 0.0731,
+    "n": 3763
+   },
+   {
+    "forecast": 0.1569,
+    "observed": 0.1591,
+    "n": 13968
+   },
+   {
+    "forecast": 0.2563,
+    "observed": 0.2663,
+    "n": 38190
+   },
+   {
+    "forecast": 0.3462,
+    "observed": 0.3418,
+    "n": 13209
+   },
+   {
+    "forecast": 0.4482,
+    "observed": 0.4326,
+    "n": 10693
+   },
+   {
+    "forecast": 0.5462,
+    "observed": 0.5236,
+    "n": 7466
+   },
+   {
+    "forecast": 0.6456,
+    "observed": 0.6416,
+    "n": 4768
+   },
+   {
+    "forecast": 0.7458,
+    "observed": 0.7458,
+    "n": 2931
+   },
+   {
+    "forecast": 0.8396,
+    "observed": 0.8339,
+    "n": 1282
+   },
+   {
+    "forecast": 0.9132,
+    "observed": 0.9091,
+    "n": 99
+   }
+  ]
+ },
+ "champions_league": {
+  "from": "2024-07-01",
+  "to": "2026-07-01",
+  "matches": 378,
+  "leaderboard": [
+   {
+    "key": "ensemble",
+    "model": "Ensemble (Elo + Dixon-Coles)",
+    "note": "",
+    "log_loss": 0.9215,
+    "brier": 0.5434,
+    "rps": 0.2028,
+    "accuracy": 0.5661,
+    "n": 378
+   },
+   {
+    "key": "dixon_coles",
+    "model": "Dixon-Coles",
+    "note": "",
+    "log_loss": 0.9221,
+    "brier": 0.5438,
+    "rps": 0.2028,
+    "accuracy": 0.5714,
+    "n": 378
+   },
+   {
+    "key": "base_rate",
+    "model": "Base rate",
+    "note": "",
+    "log_loss": 1.0121,
+    "brier": 0.6114,
+    "rps": 0.2374,
+    "accuracy": 0.5026,
+    "n": 378
+   }
+  ]
+ },
+ "season": {
+  "from": "2026-07-01",
+  "to": "2026-11-19",
+  "matches": 289,
+  "leaderboard": [
+   {
+    "key": "ensemble",
+    "model": "Ensemble (Elo + Dixon-Coles)",
+    "note": "",
+    "log_loss": 0.8476,
+    "brier": 0.4896,
+    "rps": 0.1727,
+    "accuracy": 0.654,
+    "n": 289
+   },
+   {
+    "key": "base_rate",
+    "model": "Base rate",
+    "note": "",
+    "log_loss": 1.0371,
+    "brier": 0.6276,
+    "rps": 0.2393,
+    "accuracy": 0.4671,
+    "n": 289
+   }
+  ]
+ }
+}
