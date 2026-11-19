@@ -2,127 +2,103 @@
 name: xGenius
 description: Football match forecasts read like a team sheet, in the clubs' own colours.
 colors:
-  collar: "#0B1733"
-  collar-away: "#050B1D"
-  gold-trim: "#F2B705"
-  sky-trim: "#5FB4E5"
-  ground-home: "#EEF1F5"
-  surface-home: "#FFFFFF"
-  sunk-home: "#F5F7FA"
-  ink-home: "#0B1733"
-  ink-2-home: "#3C4864"
-  ink-3-home: "#5B6682"
-  rule-home: "#D8DEE8"
-  rule-strong-home: "#B9C2D2"
-  select-home: "#E6ECF7"
-  draw-home: "#A9B2C3"
-  ground-away: "#08112A"
-  surface-away: "#0E1A3A"
-  sunk-away: "#0B1531"
-  ink-away: "#F1F4FA"
-  ink-2-away: "#C3CBDD"
-  ink-3-away: "#95A1BC"
-  rule-away: "#213058"
-  draw-away: "#6C7894"
-  hit-home: "#17784A"
-  miss-home: "#B3261E"
+  ink: "#111111"
+  ink-2: "#3B3B39"
+  ink-3: "#66655F"
+  ground: "#F4F4F1"
+  surface: "#FBFBF9"
+  sunk: "#ECECE8"
+  rule: "#D9D8D2"
+  rule-strong: "#B3B2AB"
+  draw: "#B2B1AA"
+  gold: "#F2B705"
+  collar: "#111111"
+  ground-dark: "#0C0C0D"
+  surface-dark: "#131314"
+  ink-dark: "#F2F1EC"
+  rule-dark: "#2B2B2C"
 typography:
-  numerals:
-    fontFamily: "Big Shoulders Display, Arial Narrow, sans-serif"
-    fontSize: "32px"
-    fontWeight: 800
-    lineHeight: 1
-    letterSpacing: "0em"
-  numerals-hero:
-    fontFamily: "Big Shoulders Display, Arial Narrow, sans-serif"
-    fontSize: "clamp(44px, 6vw, 64px)"
-    fontWeight: 800
-    lineHeight: 0.95
-  heading:
-    fontFamily: "Big Shoulders Display, Arial Narrow, sans-serif"
-    fontSize: "clamp(30px, 4.2vw, 42px)"
-    fontWeight: 800
-    lineHeight: 1
-    letterSpacing: "0.005em"
-  section:
-    fontFamily: "Big Shoulders Display, Arial Narrow, sans-serif"
-    fontSize: "22px"
+  page-title:
+    fontFamily: "Archivo, Arial, sans-serif"
+    fontSize: "clamp(32px, 4.2vw, 52px)"
+    fontWeight: 900
+    lineHeight: 0.92
+    letterSpacing: "-0.04em"
+  headline:
+    fontFamily: "Archivo, Arial, sans-serif"
+    fontSize: "21-27px"
     fontWeight: 800
     lineHeight: 1.1
-    letterSpacing: "0.01em"
+    letterSpacing: "-0.03em"
+  number:
+    fontFamily: "Archivo, Arial Narrow, sans-serif"
+    fontSize: "17-64px"
+    fontWeight: 900
+    lineHeight: 0.95
+    letterSpacing: "0em"
+  label:
+    fontFamily: "Space Grotesk, Arial, sans-serif"
+    fontSize: "10.5-12px"
+    fontWeight: 600
+    lineHeight: 1.2
+    letterSpacing: "0.1em"
   body:
     fontFamily: "Barlow, Arial, sans-serif"
     fontSize: "16px"
     fontWeight: 400
     lineHeight: 1.5
-  label:
-    fontFamily: "Barlow, Arial, sans-serif"
-    fontSize: "12.5px"
-    fontWeight: 600
-    lineHeight: 1.3
 rounded:
-  bar: "4px"
-  chip: "6px"
-  control: "10px"
-  card: "14px"
-  pill: "999px"
+  all: "2px"
 spacing:
   xs: "4px"
   sm: "8px"
   md: "14px"
   lg: "18px"
-  xl: "28px"
+  xl: "30px"
 components:
   chip-filter:
-    backgroundColor: "{colors.surface-home}"
-    textColor: "{colors.ink-2-home}"
-    rounded: "{rounded.pill}"
-    padding: "6px 13px"
+    backgroundColor: "{colors.surface}"
+    textColor: "{colors.ink-2}"
+    rounded: "{rounded.all}"
+    padding: "8px 13px"
   chip-filter-active:
-    backgroundColor: "{colors.ink-home}"
-    textColor: "{colors.ground-home}"
-    rounded: "{rounded.pill}"
-  button:
-    backgroundColor: "{colors.surface-home}"
-    textColor: "{colors.ink-home}"
-    rounded: "{rounded.control}"
-    padding: "9px 16px"
+    backgroundColor: "{colors.ink}"
+    textColor: "{colors.ground}"
+    rounded: "{rounded.all}"
   header:
     backgroundColor: "{colors.collar}"
-    textColor: "#FFFFFF"
+    textColor: "{colors.ground}"
     height: "60px"
   fixture-row:
-    backgroundColor: "{colors.surface-home}"
-    textColor: "{colors.ink-home}"
+    backgroundColor: "{colors.surface}"
+    textColor: "{colors.ink}"
     padding: "13px 16px 12px"
-    height: "132px"
+    height: "146px"
 ---
 
 # Design System: xGenius
 
 ## Overview
 
-**Kit room.** A forecast reads like a team sheet: every probability wears the clubs' own shirt colours. The shell is a navy collar band with a three-stripe trim (gold, sky, white); club colour appears only inside data. Light theme is the **home kit**, dark theme the **away kit**; the toggle names them so. It refuses the neon betting dashboard and the grey card-stack sports app.
+**Kit room.** A forecast reads like a team sheet: every probability wears the clubs' own shirt colours. The typographic system follows AniTrack (expanded heavy Archivo headlines, narrow Archivo numbers, Space Grotesk small-caps labels, Barlow for reading, square corners, hairlines, no shadows) while the identity stays xGenius: a near-black collar band with a gold trim, gold as the single accent, club colours only in kit stripes and shirt icons. Light theme is the **home kit**, dark theme the **away kit**. It refuses the neon betting dashboard and the grey card-stack sports app.
 
 ## Colors
 
-### Primary
-Collar navy `#0B1733` carries the header, ink and the selected filter chip. Gold trim `#F2B705` is the only shell accent: the "xG" in the wordmark, the active tab underline, focus rings on navy, text selection, calibration dots.
-
-### Neutral
-Cool shirt-white ground `#EEF1F5` with white surfaces (home kit); deep navy ground `#08112A` with `#0E1A3A` surfaces (away kit). Three ink steps (ink, ink-2, ink-3) all pass AA on their ground.
+Neutral: near-black ink `#111111` on off-white `#F4F4F1` (home kit); off-white on `#0C0C0D` (away kit). Gold `#F2B705` is the only accent: the "xG" in the wordmark, the collar trim, active tab, focus, selection, the selected fixture and "our" row. Form chips and hit/miss marks are neutral (filled, grey, outlined) with letters and icons, never colour alone.
 
 ### Named Rules
-**The Club Colour Rule.** Club colours (`config/kit_colours.csv`) appear only in data: kit bars, swatches, score-grid tints. Never in chrome.
-**The Kit-Clash Rule.** When two clubs' main colours are perceptually close (redmean distance < 150), the away side switches to its second colour; if that still clashes, a neutral kit. The detail view says "change colours".
-**The White-Shirt Rule.** A near-white shirt (luminance > 0.75) tints score-grid cells with its trim colour instead; kit panels always carry a 1px inset edge so white shirts read on white.
+**The Club Colour Rule.** Club colours (`config/kit_colours.csv`) appear only in kit stripes and shirt icons (and the tints derived from them in the score grid and race bars). Never in chrome.
+**The Kit-Clash Rule.** When two clubs' main colours are perceptually close (redmean distance < 150), the away side switches to its second colour; the score grid applies the same rule to its tints.
+**The White-Shirt Rule.** A near-white shirt (luminance > 0.6) gets a firm outline in both themes, and tints with its trim colour where it would vanish on white.
 
 ## Typography
 
-Big Shoulders Display is the squad-number voice: page titles (uppercase), section titles (normal case), and stand-alone hero numbers (the favourite's percentage, scores, expected goals, race projections). Its digits are proportional, so it never sets a column. Barlow carries all reading text, controls and every number that sits in a column, with tabular figures (`tnum`), so ranks, counts and percentages align. Both are self-hosted from `web/public/fonts/`, the above-the-fold faces are preloaded, and metric-matched fallbacks (size-adjust, ascent/descent overrides) keep the swap from shifting layout.
+Four roles, each self-hosted and trimmed to the ranges used (Archivo wght 600–900 × wdth 75–125%, Space Grotesk 500–700, Barlow 400/600), latin preloaded, metric-matched fallbacks so the swap doesn't move layout.
 
-### Hierarchy
-Page title 30–42px caps · section title 22–27px · detail percentages 44–64px · card hero percentage 32px (the other two 16px, softened) · body 16px · labels 11–13.5px.
+- **Headlines:** Archivo 800–900, stretched 112–125%, tracking −0.02 to −0.04em, sentence case. Page titles alone are uppercase.
+- **Numbers:** Archivo at 78% width, heavy, tabular figures, like squad numbers: the hero percentage, scores, xG, race projections and every table column.
+- **Labels:** Space Grotesk 10.5–12px, uppercase, 0.1–0.12em tracking: nav, chips, buttons, tags, column headers, keys, captions.
+- **Reading:** Barlow 16px for paragraphs and explanations.
 
 ### Named Rules
 **The Hero Number Rule.** On a fixture card only the most likely outcome is set large; the other two step back in size and colour.
@@ -133,11 +109,11 @@ One page width (1200px) for header, content and footer on every page. Fixed-scal
 
 ## Elevation & Depth
 
-One elevation: `0 1px 2px` + `0 8px 24px -12px` soft navy shadow on day groups, panels and the detail pane. No borders on elevated containers; hairlines only inside them.
+None. Surfaces are separated by 1px hairlines (`--rule`), never soft shadows. Popovers are ink on ground with a 1px border.
 
 ## Shapes
 
-Card radius 14px; controls 10px; filter chips and the kit toggle are pills; kit bars 4px at the ends only; form chips 6px.
+Everything is square: 2px radius on cards, chips, inputs, buttons and tags; only the (i) buttons and calibration dots are round.
 
 ## Components
 
@@ -154,7 +130,7 @@ Competition/stage and tags; home shirt + name, kickoff time centred in a small c
 Club panels carry the collar-trim band and a faint pinstripe in the trim colour (16%, 7% on light shirts); light shirts (luminance > 0.6) get a firm 1.5px outline in both themes.
 
 ### Race bar
-Solid = so far, lighter = projected rest of season with the projected total at its end, thin whisker under the bar = likely range. A legend sits above the tables.
+Solid = so far; lighter = rest of season, ending at the projected total marked by a solid tick and its number; a soft translucent band over the bar = likely range (10th–90th percentile), labelled directly underneath ("likely 23–35"). A one-line key sits above each table.
 
 ### Filter chips
 One scrollable row; only the edge with more content beyond it fades.

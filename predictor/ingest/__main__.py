@@ -7,6 +7,7 @@ Outputs:
   matches.csv   played domestic matches (football-data.co.uk, with odds)
   fixtures.csv  this season's fixtures + CL results (football-data.org; needs API key)
   scorers.csv   this season's top 100 scorers per shown competition (football-data.org)
+  scorers_prev.csv  last season's, used as a prior for the season races
   odds_upcoming.csv  pre-match odds for upcoming domestic matches (football-data.co.uk)
 """
 import sys
@@ -62,6 +63,12 @@ def main(refresh: bool = True):
 
     sc = football_data_org.load_scorers()
     sc.to_csv(DATA_PROCESSED / "scorers.csv", index=False)
+    # Last season's scorers: the prior that stops a slow start (or a hot one)
+    # from dominating a player's season projection.
+    from predictor.leagues import current_season
+    prev = football_data_org.load_scorers(current_season() - 1)
+    prev.to_csv(DATA_PROCESSED / "scorers_prev.csv", index=False)
+    print(f"scorers_prev.csv: {len(prev):,} players from {current_season() - 1}/{current_season() % 100:02d}")
     missing = sorted(set(sc.team_raw[sc.team_id.isna()]))
     print(f"scorers.csv: {len(sc):,} players in {sc.league.nunique()} competitions")
     if missing:

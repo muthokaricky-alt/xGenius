@@ -14,7 +14,7 @@ export const EXPLAIN = {
   replay:
     'This forecast wasn’t published live: we rebuilt it afterwards by replaying the season match by match, using only results from before kickoff, exactly as the live model works.',
   calledIt: '“Called it” means the result we rated most likely is what happened. “Missed” means something else happened.',
-  xg: 'Expected goals (xG): how many goals each side would score on average if this match were played many times. 1.6 means “somewhere around one or two”, not a predicted score.',
+  xg: 'Expected goals (xG): how many goals each side would score on average if this match were played many times. 1.6 means “somewhere around one or two”, not a predicted score. Very high numbers are scaled back slightly, because dominant teams tend to ease off once they’re ahead.',
   scoreBars: 'Each bar is scaled to the likeliest score (the longest bar). The percentage is that exact score’s chance after 90 minutes.',
   scoreGrid:
     'Each square is the chance (%) of that exact score after 90 minutes. Rows are home goals, columns are away goals. Darker squares are more likely.',
@@ -29,9 +29,9 @@ export const EXPLAIN = {
 
   soFar: 'Goals (or assists, or clean sheets) so far this season in this competition.',
   projection:
-    'Solid part: so far. Lighter part: what we expect from the remaining fixtures; the number at its end is the projected season total. The thin line underneath is the likely range: 8 in 10 simulated seasons finish inside it.',
+    'Solid part: so far. Lighter part: what we expect from the remaining fixtures, ending at the projected season total (the tick and the number). The soft shaded band is the likely range: in 8 of 10 simulated seasons the final total lands inside it, e.g. “likely 20–31”.',
   goldenBoot:
-    'The chance this player ends the season as the competition’s top scorer, from 20,000 simulated rest-of-seasons. If players tie, they share the win.',
+    'The chance this player ends the season as the competition’s top scorer, from 20,000 simulated rest-of-seasons. Each player’s scoring rate blends this season with last season. If players tie, they share the win.',
   topAssister: 'The chance this player ends the season with the most assists, from 20,000 simulated rest-of-seasons.',
   mostCleanSheets: 'The chance this team ends the season with the most clean sheets, from 20,000 simulated rest-of-seasons.',
 

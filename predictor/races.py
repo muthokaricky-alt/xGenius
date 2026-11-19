@@ -6,8 +6,13 @@ Clean sheets (teams)
   the opponent scores 0 taken from the Dixon-Coles score matrix.
 
 Goals and assists (players)
-  A player's share of his team's goals in this competition so far, shrunk
-  toward zero for small samples:  share = goals / (team_goals + SHRINK).
+  A player's share of their team's goals in this competition. With last
+  season's numbers in the same competition as a prior worth PRIOR_TEAM_GOALS
+  team goals (roughly half a season):
+      share = (goals + PRIOR_TEAM_GOALS * last_share) / (team_goals + PRIOR_TEAM_GOALS)
+  so a slow start (Kane: 4 in 9 after 36 in 32) or a hot one doesn't dominate,
+  and this season takes over as it goes on. Without a prior (new to the
+  competition): share = goals / (team_goals + SHRINK).
   Projected extra goals ~ Poisson(share * expected team goals in the
   remaining fixtures). Assists use the same share logic on assists.
 
@@ -29,6 +34,8 @@ from predictor.leagues import current_season
 from predictor.models.dixon_coles import score_matrix
 
 SHRINK = 3.0      # pseudo team-goals added to the denominator of a player's share
+PRIOR_TEAM_GOALS = 40.0  # weight of last season's share, in team goals (not backtestable on free data)
+MAX_SHARE = 0.6
 # Dixon-Coles puts slightly too much mass on "opponent scores 0": rest-of-season
 # clean sheets projected from 19 Nov ran 1.9%, 10.9%, 7.9% and 8.5% high in
 # 2022-2025 while projected goals were unbiased. Scale by 1 / mean(2022-24) = 1 / 1.069
@@ -53,7 +60,7 @@ def team_outlook(dc, remaining: pd.DataFrame) -> pd.DataFrame:
     if remaining.empty:
         return pd.DataFrame(columns=["league", "team_id", "xg", "p_cs"])
     blind = remaining[["date", "season", "league", "home_id", "away_id", "neutral"]]
-    lam, mu = dc.rates(blind)
+    lam, mu = dc.goal_rates(blind)
     rows = []
     for r, l, m in zip(blind.itertuples(index=False), lam, mu):
         mat = score_matrix(l, m, dc.p["rho"])
@@ -82,15 +89,30 @@ def simulate(current: np.ndarray, draws: np.ndarray) -> dict:
             "hi": np.percentile(final, 90, axis=0), "p_top": p_top}
 
 
+def prior_shares(prev: pd.DataFrame, prev_so_far: pd.DataFrame, stat: str) -> pd.Series:
+    """Last season's share of team goals per player_id (same competition)."""
+    if prev is None or prev.empty or prev_so_far.empty:
+        return pd.Series(dtype=float)
+    p = prev[prev.team_id.notna()].copy()
+    team_gf = prev_so_far.set_index("team_id").gf
+    p["team_goals"] = p.team_id.map(team_gf)
+    p = p[p.team_goals > 0]
+    return (p[stat] / p.team_goals).clip(upper=MAX_SHARE).groupby(p.player_id).max()
+
+
 def player_race(scorers: pd.DataFrame, so_far: pd.DataFrame, outlook: pd.DataFrame,
-                stat: str, rng) -> pd.DataFrame:
+                stat: str, rng, prior: pd.Series | None = None) -> pd.DataFrame:
     s = scorers[scorers.team_id.notna() & (scorers[stat] > 0)].copy()
     if s.empty:
         return s
     future_xg = outlook.groupby("team_id").xg.sum()
     team_gf = so_far.set_index("team_id").gf
     s["team_goals"] = s.team_id.map(team_gf).fillna(0)
-    s["share"] = s[stat] / (s.team_goals.clip(lower=s[stat]) + SHRINK)
+    tg = s.team_goals.clip(lower=s[stat])
+    last = s.player_id.map(prior) if prior is not None and len(prior) else pd.Series(float("nan"), index=s.index)
+    s["prior_share"] = last
+    s["share"] = (s[stat] / (tg + SHRINK)).where(
+        last.isna(), (s[stat] + PRIOR_TEAM_GOALS * last) / (tg + PRIOR_TEAM_GOALS))
     s["future"] = s.share * s.team_id.map(future_xg).fillna(0)
     sim = simulate(s[stat].to_numpy(float), rng.poisson(s.future.to_numpy(), (N_SIMS, len(s))))
     return s.assign(projected=sim["mean"], lo=sim["lo"], hi=sim["hi"], p_top=sim["p_top"])
@@ -112,12 +134,13 @@ def clean_sheet_race(so_far: pd.DataFrame, outlook: pd.DataFrame, rng) -> pd.Dat
                          "lo": sim["lo"], "hi": sim["hi"], "p_top": sim["p_top"]})
 
 
-def build(train, fx, scorers, dc, now, leagues, team_info, seed=0) -> list[dict]:
+def build(train, fx, scorers, dc, now, leagues, team_info, seed=0, scorers_prev=None) -> list[dict]:
     rng = np.random.default_rng(seed)
     season = current_season(now.date())
     remaining = remaining_fixtures(fx, now)
     outlook_all = team_outlook(dc, remaining[remaining.league.isin(leagues)])
     so_far_all = team_so_far(train, season)
+    prev_so_far_all = team_so_far(train, season - 1)
     out = []
     for lg in leagues:
         outlook = outlook_all[outlook_all.league == lg]
@@ -126,13 +149,17 @@ def build(train, fx, scorers, dc, now, leagues, team_info, seed=0) -> list[dict]
         if so_far.empty and outlook.empty:
             continue
 
+        prev = scorers_prev[scorers_prev.league == lg] if scorers_prev is not None and not scorers_prev.empty else None
+        prev_so_far = prev_so_far_all[prev_so_far_all.league == lg]
+
         def players(stat):
-            r = player_race(sc, so_far, outlook, stat, rng)
+            r = player_race(sc, so_far, outlook, stat, rng, prior_shares(prev, prev_so_far, stat))
             if r.empty:
                 return []
             r = r.sort_values(["projected", stat], ascending=False).head(TOP)
             return [{"player": x.player, "team": team_info(x.team_id), stat: int(getattr(x, stat)),
                      "played": int(x.played), "projected": round(float(x.projected), 1),
+                     "uses_last_season": bool(pd.notna(x.prior_share)),
                      "range": [int(x.lo), int(x.hi)], "p_top": round(float(x.p_top), 3)}
                     for x in r.itertuples(index=False)]
 

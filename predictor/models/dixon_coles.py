@@ -41,6 +41,23 @@ from predictor.teams import load_teams
 LEAGUE_COUNTRIES = {m["country"] for m in LEAGUES.values() if m["country"]}
 MAX_GOALS = 10
 
+# Goal-count calibration. Above ~2 expected goals the Poisson rates run high:
+# in the 2018-2026 walk-forward, sides predicted 3.5+ scored ~12% fewer goals
+# than forecast (dominant teams ease off once ahead). Rates above GOAL_KNEE grow
+# at GOAL_SLOPE instead of 1. Fitted by maximum Poisson likelihood on 2018-07 to
+# 2023-06; on 2023-07 to 2026-06 it lifts goal-count likelihood (-0.84866 ->
+# -0.84847), exact-score log loss in big-favourite matches (3.0439 -> 3.0373)
+# and fixes the top bins (3.0-3.5: 3.20 -> 2.93 vs 2.97 actual), at a cost of
+# +0.0003 over-2.5 log loss. Applied to goal outputs (xG, score grid, goal
+# markets, season races), not to the 1X2 forecast, which was already calibrated.
+GOAL_KNEE = 2.0
+GOAL_SLOPE = 0.777
+
+
+def calibrate_rate(rate):
+    rate = np.asarray(rate, float)
+    return np.where(rate <= GOAL_KNEE, rate, GOAL_KNEE + GOAL_SLOPE * (rate - GOAL_KNEE))
+
 
 @lru_cache(maxsize=None)
 def team_group(team_id: str) -> str:
@@ -220,8 +237,13 @@ class DixonColes(Model):
         lam, mu = self.rates(matches)
         return np.array([outcome_probs(score_matrix(l, m, self.p["rho"])) for l, m in zip(lam, mu)])
 
-    def matrices(self, matches) -> list[np.ndarray]:
+    def goal_rates(self, matches) -> tuple[np.ndarray, np.ndarray]:
+        """Expected goals for the goal outputs, with the high-end calibration."""
         lam, mu = self.rates(matches)
+        return calibrate_rate(lam), calibrate_rate(mu)
+
+    def matrices(self, matches) -> list[np.ndarray]:
+        lam, mu = self.goal_rates(matches)
         return [score_matrix(l, m, self.p["rho"]) for l, m in zip(lam, mu)]
 
     def experience(self, team) -> float:

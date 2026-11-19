@@ -39,7 +39,7 @@ export default function App() {
 
   useEffect(() => {
     document.documentElement.dataset.kit = kit;
-    document.querySelector('meta[name="theme-color"]')?.setAttribute('content', kit === 'away' ? '#050B1D' : '#0B1733');
+    document.querySelector('meta[name="theme-color"]')?.setAttribute('content', kit === 'away' ? '#000000' : '#111111');
   }, [kit]);
 
   useEffect(() => {

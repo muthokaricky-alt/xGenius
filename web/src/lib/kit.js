@@ -29,7 +29,7 @@ export function luminance(hex) {
 }
 
 /** Ink that reads on a given background colour. */
-export const inkOn = (hex) => (luminance(hex) > 0.4 ? '#0B1733' : '#FFFFFF');
+export const inkOn = (hex) => (luminance(hex) > 0.4 ? '#111111' : '#FFFFFF');
 
 const CLASH = 150;
 

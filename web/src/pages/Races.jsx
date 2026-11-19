@@ -9,8 +9,9 @@ import { luminance } from '../lib/kit.js';
 
 const clubColour = (kit) => (kit ? (luminance(kit[0]) > 0.75 ? kit[1] : kit[0]) : 'var(--ink-2)');
 
-/** Solid: so far. Lighter: projected rest of season, ending in the projected
- *  total. Whisker: the likely range (8 in 10 simulated seasons). */
+/** Solid: so far. Lighter: the rest of the season, ending at the projected
+ *  total (solid tick + number). Soft shaded band: the likely range, labelled
+ *  directly underneath. */
 function RaceBar({ now, projected, range, max, kit, unit }) {
   const pc = (v) => `${Math.min(100, (v / max) * 100)}%`;
   return (
@@ -18,37 +19,42 @@ function RaceBar({ now, projected, range, max, kit, unit }) {
       className="racebar"
       style={{ '--club': clubColour(kit) }}
       role="img"
-      aria-label={`${now} so far, projected ${Math.round(projected)} ${unit} (likely ${range[0]} to ${range[1]})`}
+      aria-label={`${now} so far, projected ${Math.round(projected)} ${unit}, likely ${range[0]} to ${range[1]}`}
     >
       <span className="racebar__track">
         <span className="racebar__proj" style={{ width: pc(projected) }} />
         <span className="racebar__now" style={{ width: pc(now) }} />
       </span>
       <span
-        className="racebar__range"
+        className="racebar__band"
         style={{ left: pc(range[0]), width: `calc(${pc(range[1])} - ${pc(range[0])})` }}
-        title={`Likely ${range[0]}–${range[1]}`}
       />
+      <span className="racebar__tick" style={{ left: pc(projected) }} />
       <span className="racebar__label" style={{ left: pc(projected) }}>
         {Math.round(projected)}
+      </span>
+      <span className="race__rangelabel" style={{ left: pc(range[0]) }}>
+        likely {range[0]}–{range[1]}
       </span>
     </span>
   );
 }
 
-function Legend() {
+/** One-line key above each table. */
+function RaceKey() {
   return (
-    <ul className="legend" aria-label="How to read the bars">
-      <li>
-        <span className="legend__key legend__key--now" aria-hidden="true" /> So far
-      </li>
-      <li>
-        <span className="legend__key legend__key--proj" aria-hidden="true" /> Projected by season end (number at the end of the bar)
-      </li>
-      <li>
-        <span className="legend__key legend__key--range" aria-hidden="true" /> Likely range (line under the bar): 8 in 10 simulated seasons land here
-      </li>
-    </ul>
+    <p className="racekey">
+      <span className="racekey__item">
+        <span className="racekey__sw racekey__sw--now" aria-hidden="true" /> So far
+      </span>
+      <span className="racekey__item">
+        <span className="racekey__sw racekey__sw--proj" aria-hidden="true" /> Projected (tick + number)
+      </span>
+      <span className="racekey__item">
+        <span className="racekey__sw racekey__sw--band" aria-hidden="true" /> Likely range
+      </span>
+      <Tip text={EXPLAIN.projection} label="the bars" />
+    </p>
   );
 }
 
@@ -58,8 +64,10 @@ function pctLabel(p) {
 
 function RaceTable({ rows, stat, unit, who, chance, chanceTip }) {
   if (!rows.length) return <Empty title="No data yet for this race." />;
-  const max = Math.max(...rows.map((r) => r.range[1]), 1) * 1.08; // room for the label
+  const max = Math.max(...rows.map((r) => r.range[1]), 1) * 1.04;
   return (
+    <>
+    <RaceKey />
     <div className="table-wrap">
       <table className="table race">
         <thead>
@@ -111,6 +119,7 @@ function RaceTable({ rows, stat, unit, who, chance, chanceTip }) {
         </tbody>
       </table>
     </div>
+    </>
   );
 }
 
@@ -161,8 +170,6 @@ export default function Races() {
         ))}
       </ScrollRow>
 
-      <Legend />
-
       {isCL && (
         <p className="notice notice--inline">
           Champions League projections only count fixtures already scheduled. Knockout rounds join once they’re drawn,
@@ -174,10 +181,12 @@ export default function Races() {
         <h2 id="g-h">Top scorers</h2>
         <RaceTable rows={c.scorers} stat="goals" unit="goals" who="Player" chance="Golden Boot" chanceTip={EXPLAIN.goldenBoot} />
         <p className="panel__note">
-          <strong>Assumes every player stays fit and keeps their role.</strong> A player keeps their share of their
-          team’s goals so far (eased back a little for small samples), applied to the goals the model expects the team
-          to score from here. The data has no minutes or injury news, so an injured or dropped player is projected as
-          if they’ll play every game, and a mid-season transfer is measured against their new club’s goals.
+          <strong>Assumes every player stays fit and keeps their role.</strong> A player’s share of their team’s goals
+          blends this season with last season in the same competition (last season counts as much as about 40 team
+          goals, so a slow start like Harry Kane’s doesn’t sink a proven scorer, and this season takes over as it goes
+          on), applied to the goals the model expects the team to score from here. The data has no minutes or injury
+          news, so an injured or dropped player is projected as if they’ll play every game, and a mid-season transfer
+          is measured against their new club’s goals.
         </p>
       </section>
 
@@ -186,7 +195,8 @@ export default function Races() {
         <RaceTable rows={c.assists} stat="assists" unit="assists" who="Player" chance="Top assister" chanceTip={EXPLAIN.topAssister} />
         <p className="panel__note">
           <strong>Assumes they stay fit. Incomplete list:</strong> our data only includes players who have scored at
-          least once, so creators who haven’t scored yet are missing.
+          least once, so creators who haven’t scored yet are missing. Last season’s assists are blended in the same way
+          as goals.
         </p>
       </section>
 
@@ -201,8 +211,8 @@ export default function Races() {
       </section>
 
       <p className="panel__note page__source">
-        Player goals, assists and appearances: football-data.org’s top-100 scorer list for each competition, refreshed
-        every 6 hours. Team results and fixtures: football-data.co.uk and football-data.org.
+        Player goals, assists and appearances: football-data.org’s top-100 scorer list for each competition, this
+        season (refreshed every 6 hours) and last season. Team results and fixtures: football-data.co.uk and football-data.org.
       </p>
     </div>
   );

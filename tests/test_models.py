@@ -96,3 +96,11 @@ def test_fit_params_prefers_the_informative_input():
     assert params["stats"][1] > 0.8                  # Dixon-Coles slot carries the signal
     assert params["market"][1] + params["market"][2] > 0.8  # DC and market both hold the signal
     assert pool_market(noise, truth, truth, params["market"]).shape == (len(y), 3)
+
+
+def test_goal_calibration_only_shrinks_high_rates():
+    from predictor.models.dixon_coles import GOAL_KNEE, calibrate_rate
+    assert calibrate_rate(1.4) == pytest.approx(1.4)
+    assert calibrate_rate(GOAL_KNEE) == pytest.approx(GOAL_KNEE)
+    high = calibrate_rate([3.0, 4.0])
+    assert (high < [3.0, 4.0]).all() and high[1] > high[0]   # still increasing
