@@ -37,7 +37,7 @@ On the 25,951 matches with pre-match odds, xGenius scores **0.9591**: better tha
 
 - **Champions League** 2024/25–2025/26 (378 matches, no odds available): 0.9171 log loss, 56.6% accuracy (base rate 1.0121).
 - **This season so far** (289 covered matches, replayed): 0.8337 log loss, 63.7% accuracy.
-- **Season races:** rest-of-season clean sheets projected from 19 Nov 2025 were off by 2.1 per team (3.3 for extending each team's pace); team goals 5.75 vs 7.39. Player goal/assist projections can't be backtested (no historical mid-season scorer data on the free tier).
+- **Season races:** rest-of-season clean sheets projected from 19 Nov 2025 were off by 2.1 per team (3.3 for extending each team's pace); team goals 5.75 vs 7.39. Player goal/assist projections can't be backtested (no historical mid-season scorer data on the free tier); they blend this season with last season's scoring share.
 
 ## Architecture
 
@@ -55,7 +55,8 @@ No always-on server, no database, no cold starts. A weekly job re-runs the backt
 - **Dixon-Coles** (`models/dixon_coles.py`): Poisson goals with the low-score correction, fitted jointly on every league and the Champions League, time-decayed (half-life 300 days), ridge-regularised. This season it also learns from xG (50% weight). It gives the score grid, xG, over/under and BTTS.
 - **Cross-league strength:** each team's attack and defence is a country offset plus a team effect. Champions League matches pin down the country offsets, which puts every club on one scale. Clubs from countries we don't ingest (Slavia, Qarabağ, Kairat...) share an "other" group and are flagged low-confidence until they've played enough.
 - **Ensemble** (`models/ensemble.py`): two logarithmic pools with per-outcome calibration. *Stats* (Elo + Dixon-Coles, with its own Champions League calibration) is used when no odds exist; *market* (Elo + Dixon-Coles + pre-match market-average odds, margin removed) is used once odds are published, usually a few days before a league round. Both are refitted every season on out-of-sample predictions only. The score grid is rescaled to match the final home/draw/away.
-- **Season races** (`races.py`): 20,000 simulated rest-of-seasons from the Dixon-Coles outlook for every remaining fixture. Players keep their share of team goals (`goals / (team goals + 3)`); clean-sheet chances are scaled by 0.935 to correct a bias measured on 2022–24.
+- **Goal calibration:** above 2.0 expected goals, Dixon-Coles rates grow at 0.777× (fitted on 2018–23 by Poisson likelihood). On 2023–26 it fixes the top bins (forecast 3.0–3.5 → 2.93 vs 2.97 actual; 3.5+ → 3.43 vs 3.13, was 3.84) and improves exact-score log loss in big-favourite matches (3.0439 → 3.0373), at +0.0003 over-2.5 log loss. Applied to xG, the score grid, goal markets and races; win/draw/loss chances were already calibrated and are unchanged.
+- **Season races** (`races.py`): 20,000 simulated rest-of-seasons from the Dixon-Coles outlook for every remaining fixture. A player's share of team goals blends this season with last season in the same competition: `(goals + 40 × last share) / (team goals + 40)`; players new to the competition use `goals / (team goals + 3)`. The prior weight (40 team goals) is a judgement call: there's no historical mid-season scorer data to tune it on. Clean-sheet chances are scaled by 0.935 to correct a bias measured on 2022–24.
 
 Tried and dropped: gradient boosting (nothing to add on top of model outputs and odds), league-specific calibration for domestic leagues (overfits; kept for the Champions League, where it helps), refitting Dixon-Coles every 3 days instead of 7 (no gain).
 

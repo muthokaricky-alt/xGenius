@@ -181,10 +181,12 @@ export default function Races() {
         <h2 id="g-h">Top scorers</h2>
         <RaceTable rows={c.scorers} stat="goals" unit="goals" who="Player" chance="Golden Boot" chanceTip={EXPLAIN.goldenBoot} />
         <p className="panel__note">
-          <strong>Assumes every player stays fit and keeps their role.</strong> A player keeps their share of their
-          team’s goals so far (eased back a little for small samples), applied to the goals the model expects the team
-          to score from here. The data has no minutes or injury news, so an injured or dropped player is projected as
-          if they’ll play every game, and a mid-season transfer is measured against their new club’s goals.
+          <strong>Assumes every player stays fit and keeps their role.</strong> A player’s share of their team’s goals
+          blends this season with last season in the same competition (last season counts as much as about 40 team
+          goals, so a slow start like Harry Kane’s doesn’t sink a proven scorer, and this season takes over as it goes
+          on), applied to the goals the model expects the team to score from here. The data has no minutes or injury
+          news, so an injured or dropped player is projected as if they’ll play every game, and a mid-season transfer
+          is measured against their new club’s goals.
         </p>
       </section>
 
@@ -193,7 +195,8 @@ export default function Races() {
         <RaceTable rows={c.assists} stat="assists" unit="assists" who="Player" chance="Top assister" chanceTip={EXPLAIN.topAssister} />
         <p className="panel__note">
           <strong>Assumes they stay fit. Incomplete list:</strong> our data only includes players who have scored at
-          least once, so creators who haven’t scored yet are missing.
+          least once, so creators who haven’t scored yet are missing. Last season’s assists are blended in the same way
+          as goals.
         </p>
       </section>
 
@@ -208,8 +211,8 @@ export default function Races() {
       </section>
 
       <p className="panel__note page__source">
-        Player goals, assists and appearances: football-data.org’s top-100 scorer list for each competition, refreshed
-        every 6 hours. Team results and fixtures: football-data.co.uk and football-data.org.
+        Player goals, assists and appearances: football-data.org’s top-100 scorer list for each competition, this
+        season (refreshed every 6 hours) and last season. Team results and fixtures: football-data.co.uk and football-data.org.
       </p>
     </div>
   );
