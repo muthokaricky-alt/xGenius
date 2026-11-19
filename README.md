@@ -27,9 +27,12 @@ No always-on server, no database, no cold starts. Training runs offline in Pytho
 | `predictor/leagues.py` | Leagues ingested and their code in each source |
 | `predictor/ingest/` | Downloaders (cached) + `python -m predictor.ingest` |
 | `predictor/teams.py` | Name normalisation and alias lookup |
+| `predictor/models/` | Models (`fit` / `predict` / `update` contract): base rate, Elo |
+| `predictor/metrics.py` | Log loss, Brier, RPS, accuracy; odds → probabilities |
+| `predictor/backtest.py` | Walk-forward backtest + tuning: `python -m predictor.backtest [--tune]` |
 | `tests/` | Python tests (pytest) |
 | `data/raw/` | Download cache (gitignored, re-fetchable) |
-| `data/processed/` | Clean tables built by ingestion (gitignored, rebuildable) |
+| `data/processed/` | Clean tables built by ingestion, plus `backtest/` predictions (gitignored, rebuildable) |
 | `web/` | React + Vite frontend |
 
 ## Data
