@@ -1,6 +1,6 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
-  <rect width="64" height="64" rx="14" fill="#0B1733"/>
+  <rect width="64" height="64" rx="2" fill="#111111"/>
   <rect x="0" y="50" width="64" height="4" fill="#F2B705"/>
-  <rect x="0" y="54" width="64" height="3" fill="#5FB4E5"/>
+  <rect x="0" y="54" width="64" height="3" fill="#F4F4F1"/>
   <text x="32" y="40" text-anchor="middle" font-family="Arial Narrow, Arial, sans-serif" font-weight="700" font-size="30" fill="#F2B705">xG</text>
 </svg>

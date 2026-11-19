@@ -1,36 +1,47 @@
-/* ---------- fonts: self-hosted, preloaded in index.html ----------
-   Fallbacks are metric-matched (size-adjust + ascent/descent overrides measured
-   from the font files) so the swap from fallback to web font moves nothing. */
+/* ---------- fonts ----------
+   Self-hosted, trimmed to the ranges used (Archivo wght 600-900 / wdth 75-125%,
+   Space Grotesk 500-700, Barlow 400 + 600), latin preloaded in index.html.
+   Fallbacks are metric-matched so the swap moves nothing. */
+@font-face {
+  font-family: 'Archivo';
+  font-style: normal;
+  font-weight: 600 900;
+  font-stretch: 75% 125%;
+  font-display: swap;
+  src: url('/fonts/archivo-latin-var.woff2') format('woff2-variations');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+@font-face {
+  font-family: 'Archivo';
+  font-style: normal;
+  font-weight: 600 900;
+  font-stretch: 75% 125%;
+  font-display: swap;
+  src: url('/fonts/archivo-latin-ext-var.woff2') format('woff2-variations');
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+@font-face {
+  font-family: 'Space Grotesk';
+  font-style: normal;
+  font-weight: 500 700;
+  font-display: swap;
+  src: url('/fonts/space-grotesk-latin-var.woff2') format('woff2-variations');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+@font-face {
+  font-family: 'Space Grotesk';
+  font-style: normal;
+  font-weight: 500 700;
+  font-display: swap;
+  src: url('/fonts/space-grotesk-latin-ext-var.woff2') format('woff2-variations');
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
 @font-face {
   font-family: 'Barlow';
   font-style: normal;
   font-weight: 400;
   font-display: swap;
   src: url('/fonts/barlow-latin-400-normal.woff2') format('woff2');
-  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
-}
-@font-face {
-  font-family: 'Barlow';
-  font-style: normal;
-  font-weight: 500;
-  font-display: swap;
-  src: url('/fonts/barlow-latin-500-normal.woff2') format('woff2');
-  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
-}
-@font-face {
-  font-family: 'Barlow';
-  font-style: normal;
-  font-weight: 600;
-  font-display: swap;
-  src: url('/fonts/barlow-latin-600-normal.woff2') format('woff2');
-  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
-}
-@font-face {
-  font-family: 'Barlow';
-  font-style: normal;
-  font-weight: 700;
-  font-display: swap;
-  src: url('/fonts/barlow-latin-700-normal.woff2') format('woff2');
   unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
 }
 @font-face {
@@ -44,10 +55,10 @@
 @font-face {
   font-family: 'Barlow';
   font-style: normal;
-  font-weight: 500;
+  font-weight: 600;
   font-display: swap;
-  src: url('/fonts/barlow-latin-ext-500-normal.woff2') format('woff2');
-  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+  src: url('/fonts/barlow-latin-600-normal.woff2') format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
 }
 @font-face {
   font-family: 'Barlow';
@@ -55,30 +66,6 @@
   font-weight: 600;
   font-display: swap;
   src: url('/fonts/barlow-latin-ext-600-normal.woff2') format('woff2');
-  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
-}
-@font-face {
-  font-family: 'Barlow';
-  font-style: normal;
-  font-weight: 700;
-  font-display: swap;
-  src: url('/fonts/barlow-latin-ext-700-normal.woff2') format('woff2');
-  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
-}
-@font-face {
-  font-family: 'Big Shoulders Display';
-  font-style: normal;
-  font-weight: 100 900;
-  font-display: swap;
-  src: url('/fonts/big-shoulders-display-latin-wght-normal.woff2') format('woff2-variations');
-  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
-}
-@font-face {
-  font-family: 'Big Shoulders Display';
-  font-style: normal;
-  font-weight: 100 900;
-  font-display: swap;
-  src: url('/fonts/big-shoulders-display-latin-ext-wght-normal.woff2') format('woff2-variations');
   unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
 }
 @font-face {
@@ -90,11 +77,29 @@
   line-gap-override: 0%;
 }
 @font-face {
-  font-family: 'Big Shoulders Fallback';
-  src: local('Arial Narrow'), local('Roboto Condensed');
-  size-adjust: 101%;
-  ascent-override: 97.4%;
-  descent-override: 21.1%;
+  font-family: 'Archivo Display Fallback'; /* headlines: 800 at 112% width */
+  src: local('Arial Bold'), local('Arial');
+  font-weight: 800;
+  size-adjust: 116.8%;
+  ascent-override: 75.2%;
+  descent-override: 18%;
+  line-gap-override: 0%;
+}
+@font-face {
+  font-family: 'Archivo Num Fallback'; /* numbers: 800 at 78% width */
+  src: local('Arial Bold'), local('Arial');
+  font-weight: 800;
+  size-adjust: 84%;
+  ascent-override: 104.6%;
+  descent-override: 25%;
+  line-gap-override: 0%;
+}
+@font-face {
+  font-family: 'Space Grotesk Fallback';
+  src: local('Arial');
+  size-adjust: 99.2%;
+  ascent-override: 99.2%;
+  descent-override: 29.4%;
   line-gap-override: 0%;
 }
 
@@ -103,81 +108,83 @@
 
 :root {
   --font-text: 'Barlow', 'Barlow Fallback', system-ui, -apple-system, 'Segoe UI', sans-serif;
-  --font-num: 'Big Shoulders Display', 'Big Shoulders Fallback', 'Arial Narrow', sans-serif;
+  --font-display: 'Archivo', 'Archivo Display Fallback', system-ui, sans-serif;
+  --font-num: 'Archivo', 'Archivo Num Fallback', 'Arial Narrow', sans-serif;
+  --font-ui: 'Space Grotesk', 'Space Grotesk Fallback', system-ui, sans-serif;
   --page: 1200px;
-  --kit-edge-strong: rgba(11, 23, 51, 0.5);
+  --kit-edge-strong: rgba(17, 17, 17, 0.55);
   --spring: cubic-bezier(0.34, 1.3, 0.64, 1); /* small overshoot: the "stretch" after a press */
 
-  --ground: #eef1f5;
-  --surface: #ffffff;
-  --sunk: #f5f7fa;
-  --ink: #0b1733;
-  --ink-2: #3c4864;
-  --ink-3: #5b6682;
-  --rule: #d8dee8;
-  --rule-strong: #b9c2d2;
-  --sel: #e6ecf7;
-  --draw: #a9b2c3;
-  --kit-edge: rgba(11, 23, 51, 0.16);
-  --collar: #0b1733;
-  --collar-ink: #ffffff;
-  --collar-ink-2: rgba(255, 255, 255, 0.74);
+  --ground: #f4f4f1;
+  --surface: #fbfbf9;
+  --sunk: #ecece8;
+  --ink: #111111;
+  --ink-2: #3b3b39;
+  --ink-3: #66655f;
+  --rule: #d9d8d2;
+  --rule-strong: #b3b2ab;
+  --sel: #f3ead0;
+  --draw: #b2b1aa;
+  --kit-edge: rgba(17, 17, 17, 0.18);
+  --collar: #111111;
+  --collar-ink: #f4f4f1;
+  --collar-ink-2: rgba(244, 244, 241, 0.66);
   --gold: #f2b705;
-  --sky: #5fb4e5;
-  --focus: #0b1733;
-  --hit: #17784a;
-  --miss: #b3261e;
-  --win: #17784a;
-  --loss: #b3261e;
-  --shadow: 0 1px 2px rgba(11, 23, 51, 0.06), 0 8px 24px -12px rgba(11, 23, 51, 0.18);
-  --radius: 14px;
+  --sky: #f4f4f1;
+  --focus: #111111;
+  --hit: #111111;
+  --miss: #66655f;
+  --win: #111111;
+  --loss: #66655f;
+  --shadow: none;
+  --radius: 2px;
   color-scheme: light;
 }
 
 :root[data-kit='away'] {
-  --ground: #08112a;
-  --surface: #0e1a3a;
-  --sunk: #0b1531;
-  --ink: #f1f4fa;
-  --ink-2: #c3cbdd;
-  --ink-3: #95a1bc;
-  --rule: #213058;
-  --rule-strong: #34467a;
-  --sel: #18295a;
-  --draw: #6c7894;
+  --ground: #0c0c0d;
+  --surface: #131314;
+  --sunk: #1b1b1c;
+  --ink: #f2f1ec;
+  --ink-2: #c9c7c0;
+  --ink-3: #93918a;
+  --rule: #2b2b2c;
+  --rule-strong: #46464a;
+  --sel: #1d1b14;
+  --draw: #6b6a66;
   --kit-edge: rgba(255, 255, 255, 0.2);
   --kit-edge-strong: rgba(255, 255, 255, 0.55);
-  --collar: #050b1d;
+  --collar: #000000;
   --focus: #f2b705;
-  --hit: #4cc38a;
-  --miss: #ff8a7a;
-  --win: #3fae7a;
-  --loss: #e0655a;
-  --shadow: 0 1px 2px rgba(0, 0, 0, 0.3), 0 10px 28px -12px rgba(0, 0, 0, 0.6);
+  --hit: #f2f1ec;
+  --miss: #93918a;
+  --win: #f2f1ec;
+  --loss: #93918a;
+  --shadow: none;
   color-scheme: dark;
 }
 
 @media (prefers-color-scheme: dark) {
   :root:not([data-kit='home']) {
-    --ground: #08112a;
-    --surface: #0e1a3a;
-    --sunk: #0b1531;
-    --ink: #f1f4fa;
-    --ink-2: #c3cbdd;
-    --ink-3: #95a1bc;
-    --rule: #213058;
-    --rule-strong: #34467a;
-    --sel: #18295a;
-    --draw: #6c7894;
-    --kit-edge: rgba(255, 255, 255, 0.2);
+    --ground: #0c0c0d;
+  --surface: #131314;
+  --sunk: #1b1b1c;
+  --ink: #f2f1ec;
+  --ink-2: #c9c7c0;
+  --ink-3: #93918a;
+  --rule: #2b2b2c;
+  --rule-strong: #46464a;
+  --sel: #1d1b14;
+  --draw: #6b6a66;
+  --kit-edge: rgba(255, 255, 255, 0.2);
   --kit-edge-strong: rgba(255, 255, 255, 0.55);
-    --collar: #050b1d;
-    --focus: #f2b705;
-    --hit: #4cc38a;
-    --miss: #ff8a7a;
-    --win: #3fae7a;
-    --loss: #e0655a;
-    --shadow: 0 1px 2px rgba(0, 0, 0, 0.3), 0 10px 28px -12px rgba(0, 0, 0, 0.6);
+  --collar: #000000;
+  --focus: #f2b705;
+  --hit: #f2f1ec;
+  --miss: #93918a;
+  --win: #f2f1ec;
+  --loss: #93918a;
+  --shadow: none;
     color-scheme: dark;
   }
 }
@@ -203,7 +210,7 @@ body {
 }
 ::selection {
   background: var(--gold);
-  color: #0b1733;
+  color: #111111;
 }
 a {
   color: inherit;
@@ -217,7 +224,7 @@ a:hover {
 :focus-visible {
   outline: 2px solid var(--focus);
   outline-offset: 2px;
-  border-radius: 4px;
+  border-radius: 2px;
 }
 h1,
 h2,
@@ -263,9 +270,9 @@ main {
   top: -60px;
   z-index: 20;
   background: var(--gold);
-  color: #0b1733;
+  color: #111111;
   padding: 8px 14px;
-  border-radius: 8px;
+  border-radius: 2px;
   font-weight: 650;
 }
 .skip:focus {
@@ -346,7 +353,7 @@ main {
   bottom: 0;
   height: 3px;
   background: var(--gold);
-  border-radius: 3px 3px 0 0;
+  border-radius: 2px 0 0;
 }
 .tabs__tab:focus-visible,
 .kit-toggle:focus-visible,
@@ -360,7 +367,7 @@ main {
   background: transparent;
   border: 1px solid rgba(255, 255, 255, 0.28);
   color: var(--collar-ink);
-  border-radius: 999px;
+  border-radius: 2px;
   padding: 7px 13px;
   font-size: 13.5px;
   font-weight: 600;
@@ -405,7 +412,7 @@ main {
   max-height: calc(100vh - 108px);
   overflow: auto;
   background: var(--surface);
-  border-radius: var(--radius);
+  border-radius: 2px;
   box-shadow: var(--shadow);
   overscroll-behavior: contain;
   scrollbar-width: thin;
@@ -434,14 +441,14 @@ main {
   display: inline-flex;
   padding: 3px;
   gap: 2px;
-  border-radius: 10px;
+  border-radius: 2px;
   background: var(--sunk);
   border: 1px solid var(--rule);
   margin-bottom: 14px;
 }
 .segmented a {
   padding: 7px 14px;
-  border-radius: 8px;
+  border-radius: 2px;
   text-decoration: none;
   font-weight: 600;
   font-size: 14px;
@@ -503,7 +510,7 @@ main {
   transition: background 140ms ease-out, color 140ms ease-out, border-color 140ms ease-out, transform 220ms var(--spring);
   border: 1px solid var(--rule-strong);
   background: var(--surface);
-  border-radius: 999px;
+  border-radius: 2px;
   padding: 6px 13px;
   font-size: 13.5px;
   font-weight: 600;
@@ -536,7 +543,7 @@ main {
   max-width: 320px;
   background: var(--surface);
   border: 1px solid var(--rule-strong);
-  border-radius: 10px;
+  border-radius: 2px;
   padding: 0 10px;
   color: var(--ink-3);
 }
@@ -563,7 +570,7 @@ main {
 .search__clear {
   border: 0;
   background: var(--sunk);
-  border-radius: 999px;
+  border-radius: 2px;
   width: 22px;
   height: 22px;
   display: grid;
@@ -595,7 +602,7 @@ main {
 }
 .day__rows {
   background: var(--surface);
-  border-radius: var(--radius);
+  border-radius: 2px;
   box-shadow: var(--shadow);
   overflow: hidden;
   display: grid;
@@ -655,7 +662,7 @@ main {
 .fx--link:has(.fx__link:focus-visible) {
   outline: 2px solid var(--focus);
   outline-offset: -3px;
-  border-radius: 6px;
+  border-radius: 2px;
 }
 .fx--link .tip__btn {
   position: relative;
@@ -714,7 +721,7 @@ main {
 }
 .tag {
   border: 1px solid var(--rule-strong);
-  border-radius: 6px;
+  border-radius: 2px;
   padding: 0 6px;
   font-size: 11.5px;
   font-weight: 600;
@@ -758,7 +765,7 @@ main {
   color: var(--ink-2);
   background: var(--sunk);
   border: 1px solid var(--rule);
-  border-radius: 6px;
+  border-radius: 2px;
   padding: 4px 7px;
 }
 .fx__score {
@@ -805,7 +812,7 @@ main {
   box-shadow: inset 0 0 0 1.5px var(--kit-edge-strong);
 }
 .kitbar__panel:first-child {
-  border-radius: 4px 0 0 4px;
+  border-radius: 2px 0 0 4px;
 }
 .kitbar__panel:last-child {
   border-radius: 0 4px 4px 0;
@@ -882,7 +889,7 @@ main {
 }
 main > .detail {
   background: var(--surface);
-  border-radius: var(--radius);
+  border-radius: 2px;
   box-shadow: var(--shadow);
   margin: 0 auto;
   max-width: 760px;
@@ -1006,7 +1013,7 @@ main > .detail {
 .page .panel {
   background: var(--surface);
   border: 0;
-  border-radius: var(--radius);
+  border-radius: 2px;
   box-shadow: var(--shadow);
   padding: 20px;
   margin-bottom: 18px;
@@ -1081,14 +1088,14 @@ main > .detail {
 .scores__bar {
   height: 8px;
   background: var(--sunk);
-  border-radius: 4px;
+  border-radius: 2px;
   overflow: hidden;
 }
 .scores__bar span {
   display: block;
   height: 100%;
   background: var(--ink-2);
-  border-radius: 4px;
+  border-radius: 2px;
 }
 .scores__p {
   text-align: right;
@@ -1122,7 +1129,7 @@ main > .detail {
   height: 38px;
   text-align: center;
   font: 600 14px/1 var(--font-text);
-  border-radius: 5px;
+  border-radius: 2px;
   color: var(--ink);
 }
 .scoregrid__tiny {
@@ -1163,7 +1170,7 @@ main > .detail {
 .meter__track {
   height: 8px;
   background: var(--sunk);
-  border-radius: 4px;
+  border-radius: 2px;
   overflow: hidden;
   box-shadow: inset 0 0 0 1px var(--rule);
 }
@@ -1198,7 +1205,7 @@ main > .detail {
   height: 26px;
   display: grid;
   place-items: center;
-  border-radius: 6px;
+  border-radius: 2px;
   font: 800 15px/1 var(--font-num);
   color: #fff;
 }
@@ -1207,7 +1214,7 @@ main > .detail {
 }
 .chip--D {
   background: var(--draw);
-  color: #0b1733;
+  color: #111111;
 }
 .chip--L {
   background: var(--loss);
@@ -1247,7 +1254,7 @@ main > .detail {
 }
 .prose {
   background: var(--surface);
-  border-radius: var(--radius);
+  border-radius: 2px;
   box-shadow: var(--shadow);
   padding: 8px 22px 26px;
 }
@@ -1282,7 +1289,7 @@ main > .detail {
 .table-wrap {
   overflow-x: auto;
   background: var(--surface);
-  border-radius: var(--radius);
+  border-radius: 2px;
 }
 .page > .table-wrap {
   box-shadow: var(--shadow);
@@ -1384,7 +1391,7 @@ main > .detail {
   width: 84px;
   height: 8px;
   background: var(--sunk);
-  border-radius: 4px;
+  border-radius: 2px;
 }
 .ratingcell__bar::before {
   content: '';
@@ -1399,7 +1406,7 @@ main > .detail {
   position: absolute;
   top: 0;
   bottom: 0;
-  border-radius: 4px;
+  border-radius: 2px;
 }
 .ratingcell__bar .pos {
   left: 50%;
@@ -1437,7 +1444,7 @@ main > .detail {
   margin: 0;
   background: var(--rule);
   border: 1px solid var(--rule);
-  border-radius: 10px;
+  border-radius: 2px;
   overflow: hidden;
 }
 .stat {
@@ -1520,7 +1527,7 @@ main > .detail {
   font-size: 13.5px;
   color: var(--ink-2);
   background: var(--surface);
-  border-radius: 10px;
+  border-radius: 2px;
   box-shadow: var(--shadow);
 }
 .legend li {
@@ -1533,7 +1540,7 @@ main > .detail {
   display: inline-block;
   width: 26px;
   height: 10px;
-  border-radius: 3px;
+  border-radius: 2px;
   flex: none;
 }
 .legend__key--now {
@@ -1573,7 +1580,7 @@ main > .detail {
   width: 28%;
 }
 .race thead th:nth-child(3) {
-  width: 60px;
+  width: 92px;
 }
 .race thead th:nth-child(5) {
   width: 130px;
@@ -1596,16 +1603,15 @@ main > .detail {
 .racebar {
   position: relative;
   display: block;
-  height: 30px;
+  height: 40px;
   margin-right: 34px;
 }
 .racebar__track {
   position: absolute;
   left: 0;
   right: 0;
-  top: 5px;
-  height: 11px;
-  border-radius: 3px;
+  top: 7px;
+  height: 10px;
   background: var(--sunk);
 }
 .racebar__proj,
@@ -1614,44 +1620,74 @@ main > .detail {
   left: 0;
   top: 0;
   bottom: 0;
-  border-radius: 3px;
 }
 .racebar__proj {
-  background: color-mix(in srgb, var(--club) 30%, var(--surface));
+  background: color-mix(in srgb, var(--club) 32%, var(--surface));
   box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--club) 50%, transparent);
 }
 .racebar__now {
   background: var(--club);
   box-shadow: inset 0 0 0 1px var(--kit-edge);
 }
-/* likely range: a thin whisker under the bar, so it never collides with the label */
-.racebar__range {
+/* likely range: a soft translucent band over the bar */
+.racebar__band {
   position: absolute;
-  top: 24px;
-  height: 1.5px;
-  background: var(--ink-2);
+  top: 3px;
+  height: 18px;
+  background: color-mix(in srgb, var(--ink) 13%, transparent);
 }
-.racebar__range::before,
-.racebar__range::after {
-  content: '';
+.racebar__tick {
   position: absolute;
-  top: -3px;
-  width: 1.5px;
-  height: 7.5px;
-  background: var(--ink-2);
-}
-.racebar__range::before {
-  left: 0;
-}
-.racebar__range::after {
-  right: 0;
+  top: 0;
+  height: 24px;
+  width: 2px;
+  margin-left: -1px;
+  background: var(--ink);
 }
 .racebar__label {
   position: absolute;
-  top: 10.5px;
-  transform: translate(6px, -50%);
-  font: 800 19px/1 var(--font-num);
+  top: 12px;
+  transform: translate(7px, -50%);
+  font-size: 19px;
+  line-height: 1;
   color: var(--ink);
+}
+.race__rangelabel {
+  position: absolute;
+  top: 27px;
+  white-space: nowrap;
+  font-size: 9.5px;
+  font-weight: 600;
+  color: var(--ink-3);
+}
+.racekey {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px 18px;
+  margin: 2px 0 10px;
+  color: var(--ink-2);
+}
+.racekey__item {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+}
+.racekey__sw {
+  display: inline-block;
+  width: 18px;
+  height: 10px;
+}
+.racekey__sw--now {
+  background: var(--ink-2);
+}
+.racekey__sw--proj {
+  background: color-mix(in srgb, var(--ink-2) 30%, var(--surface));
+  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--ink-2) 45%, transparent), inset -2px 0 0 var(--ink);
+}
+.racekey__sw--band {
+  height: 14px;
+  background: color-mix(in srgb, var(--ink) 13%, transparent);
 }
 .page__source {
   margin-top: 4px;
@@ -1679,6 +1715,16 @@ main > .detail {
   }
   .race .shirt {
     display: none;
+  }
+  .race .teamcell > span:last-child {
+    min-width: 0;
+  }
+  .race .teamcell__league {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    letter-spacing: 0.05em;
+    overflow-wrap: normal;
   }
   .race .race__barcol {
     min-width: 0;
@@ -1747,7 +1793,7 @@ main > .detail {
   letter-spacing: 0;
   text-align: left;
   padding: 10px 12px;
-  border-radius: 10px;
+  border-radius: 2px;
   box-shadow: 0 10px 30px -8px rgba(0, 0, 0, 0.45);
   pointer-events: auto;
 }
@@ -1784,7 +1830,7 @@ h1 .tip {
   color: var(--ink-2);
   background: var(--surface);
   border: 1px dashed var(--rule-strong);
-  border-radius: 10px;
+  border-radius: 2px;
   padding: 9px 12px;
   margin-bottom: 18px;
 }
@@ -1801,7 +1847,7 @@ h1 .tip {
 .readkey__home {
   flex: 5;
   background: var(--ink-2);
-  border-radius: 3px 0 0 3px;
+  border-radius: 2px 0 0 3px;
 }
 .readkey__draw {
   flex: 2.5;
@@ -1819,7 +1865,7 @@ h1 .tip {
   height: 8px;
   flex: none;
   background: var(--sunk);
-  border-radius: 4px;
+  border-radius: 2px;
 }
 .readkey__diverge::before {
   content: '';
@@ -1834,7 +1880,7 @@ h1 .tip {
   margin-left: 25%;
   width: 25%;
   background: var(--draw);
-  border-radius: 4px 0 0 4px;
+  border-radius: 2px 0 0 4px;
 }
 .readkey__pos {
   width: 40%;
@@ -1863,7 +1909,7 @@ h1 .tip {
 .gridkey__sw {
   width: 14px;
   height: 14px;
-  border-radius: 3px;
+  border-radius: 2px;
   box-shadow: inset 0 0 0 1px var(--kit-edge-strong);
 }
 .gridkey__sw--draw {
@@ -1931,6 +1977,286 @@ h1 .tip {
   box-shadow: inset 0 0 0 1.5px var(--ink);
 }
 
+/* ---------- type & surface system ----------
+   Archivo, heavy and slightly expanded, for headlines (caps only for page
+   titles); Archivo narrow + tabular for numbers, like squad numbers; Space
+   Grotesk small caps for labels, nav, chips, buttons and column headers;
+   Barlow for reading. Square corners, 1px hairlines, no soft shadows. */
+.wordmark {
+  font: 900 26px/1 var(--font-display);
+  font-stretch: 125%;
+  letter-spacing: -0.02em;
+}
+.board__head h1,
+.page__head h1 {
+  font: 900 clamp(32px, 4.2vw, 52px) / 0.92 var(--font-display);
+  font-stretch: 118%;
+  letter-spacing: -0.04em;
+  text-transform: uppercase;
+}
+.board__head,
+.page__head {
+  margin-bottom: 30px;
+  padding-top: 8px;
+}
+.day__h,
+.panel h2,
+.page .panel h2,
+.prose h2 {
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-stretch: 112%;
+  letter-spacing: -0.03em;
+  text-transform: none;
+}
+.day__h {
+  font-size: 22px;
+  padding-top: 6px;
+}
+.panel h2 {
+  font-size: 21px;
+}
+.page .panel h2,
+.prose h2 {
+  font-size: 26px;
+}
+.prose h2 {
+  margin-top: 34px;
+}
+.halves__name {
+  font-family: var(--font-display);
+  font-weight: 900;
+  font-stretch: 112%;
+  letter-spacing: -0.035em;
+  text-transform: uppercase;
+}
+/* numbers: Archivo narrow, heavy, tabular */
+.nums__n--lead .nums__v,
+.bignums__n,
+.xg__n,
+.fx__score,
+.racebar__label,
+.stat__v,
+.rank,
+.race__now,
+.race__chance,
+.ratingcell__n,
+.meter__value,
+.scores__score,
+.table td.num,
+.scoregrid td {
+  font-family: var(--font-num);
+  font-stretch: 78%;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0;
+}
+.nums__n--lead .nums__v {
+  font-weight: 900;
+  font-size: 36px;
+}
+.nums__v {
+  font-family: var(--font-num);
+  font-stretch: 78%;
+  font-weight: 700;
+  font-size: 18px;
+}
+.bignums__n {
+  font-weight: 900;
+}
+.xg__n,
+.fx__score,
+.racebar__label,
+.stat__v {
+  font-weight: 900;
+}
+.rank,
+.race__now,
+.race__chance,
+.ratingcell__n,
+.meter__value,
+.scores__score,
+.table td.num {
+  font-weight: 700;
+  font-size: 17px;
+}
+.scoregrid td {
+  font-weight: 700;
+  font-size: 15px;
+}
+/* labels: Space Grotesk, small caps */
+.tabs__tab,
+.kit-toggle,
+.chipbtn,
+.segmented a,
+.btn,
+.tag,
+.table thead th,
+.fx__meta,
+.fx__time,
+.nums__l,
+.bignums__label,
+.halves__role,
+.detail__label,
+.detail__when,
+.board__stamp,
+.legend,
+.racekey,
+.gridkey,
+.formkey,
+.stat__l,
+.teamcell__league,
+.race__rangelabel,
+.scoregrid th,
+.calib__tick,
+.calib__axis,
+.foot,
+.skip {
+  font-family: var(--font-ui);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+}
+.tabs__tab {
+  font-size: 12px;
+  font-weight: 600;
+}
+.kit-toggle,
+.chipbtn,
+.segmented a,
+.btn {
+  font-size: 11.5px;
+  font-weight: 600;
+}
+.table thead th {
+  font-size: 10.5px;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+}
+.fx__meta,
+.board__stamp,
+.detail__when,
+.detail__label,
+.halves__role,
+.nums__l,
+.bignums__label,
+.stat__l,
+.teamcell__league,
+.legend,
+.racekey,
+.gridkey,
+.formkey,
+.foot {
+  font-size: 10.5px;
+  font-weight: 500;
+}
+.tag,
+.fx__time {
+  font-size: 10.5px;
+  font-weight: 600;
+}
+.scoregrid th,
+.calib__tick,
+.calib__axis {
+  font-weight: 600;
+}
+.calib__tick {
+  font-size: 10px;
+}
+.calib__axis {
+  font-size: 10.5px;
+}
+.chipbtn {
+  padding: 8px 13px;
+}
+/* reading text stays Barlow */
+.lede,
+.panel p,
+.prose p,
+.prose li,
+.panel__note,
+.detail__verdict,
+.notice__body,
+.tip__pop {
+  font-family: var(--font-text);
+  text-transform: none;
+  letter-spacing: 0;
+}
+/* surfaces: hairlines instead of shadows */
+.day__rows,
+.pane,
+.page .panel,
+.prose,
+.page > .table-wrap,
+main > .detail,
+.notice,
+.legend,
+.stats,
+.skeleton__row {
+  box-shadow: none;
+  border: 1px solid var(--rule);
+}
+.segmented {
+  border-radius: 2px;
+}
+.segmented a[aria-selected='true'] {
+  box-shadow: none;
+  background: var(--ink);
+  color: var(--ground);
+}
+.chipbtn[aria-pressed='true'] {
+  background: var(--ink);
+  color: var(--ground);
+}
+.tabs__tab[aria-current='page']::after {
+  height: 2px;
+}
+.collar__trim {
+  height: 5px;
+  background: linear-gradient(var(--gold) 0 3px, var(--collar-ink) 3px 5px);
+}
+.tip__pop {
+  border-radius: 2px;
+  box-shadow: none;
+  border: 1px solid var(--ink);
+}
+.row--ours,
+.row--ours:hover {
+  background: color-mix(in srgb, var(--gold) 14%, var(--surface)) !important;
+}
+.fx--selected,
+.fx--selected:hover {
+  background: var(--sel);
+  box-shadow: inset 0 0 0 1px var(--gold);
+}
+.chip--W {
+  background: var(--ink);
+  color: var(--ground);
+}
+.chip--D {
+  background: var(--draw);
+  color: var(--ink);
+}
+.chip--L {
+  background: transparent;
+  color: var(--ink);
+  box-shadow: inset 0 0 0 1.5px var(--ink);
+}
+.res--W,
+.res--L {
+  color: var(--ink);
+}
+.panel--low .conf {
+  color: var(--ink);
+  text-decoration: underline;
+  text-decoration-color: var(--gold);
+  text-decoration-thickness: 2px;
+}
+.readkey__away {
+  background: var(--gold);
+}
+.calib__dot {
+  stroke: var(--ink);
+}
+
 /* ---------- buttons, notices, skeleton ---------- */
 .btn {
   display: inline-flex;
@@ -1939,7 +2265,7 @@ h1 .tip {
   gap: 7px;
   border: 1px solid var(--rule-strong);
   background: var(--surface);
-  border-radius: 10px;
+  border-radius: 2px;
   padding: 9px 16px;
   font-weight: 650;
   font-size: 14px;
@@ -1960,7 +2286,7 @@ h1 .tip {
   align-items: flex-start;
   gap: 12px 14px;
   background: var(--surface);
-  border-radius: var(--radius);
+  border-radius: 2px;
   box-shadow: var(--shadow);
   padding: 20px;
   color: var(--ink-2);
@@ -1989,7 +2315,7 @@ h1 .tip {
 }
 .skeleton__row {
   height: 120px;
-  border-radius: var(--radius);
+  border-radius: 2px;
   background: linear-gradient(90deg, var(--surface) 0%, var(--sunk) 50%, var(--surface) 100%);
   background-size: 200% 100%;
   animation: shimmer 1.4s ease-in-out infinite;
