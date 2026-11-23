@@ -1,16 +1,16 @@
 {
  "_comment": "Fitted by `python -m predictor.backtest` on all walk-forward predictions before this season. stats: w_elo, w_dc, b_draw, b_away, cl_b_draw, cl_b_away. market: w_elo, w_dc, w_market, b_draw, b_away.",
  "stats": [
-  0.55044,
-  0.4638,
+  0.55034,
+  0.4639,
   0.04013,
   0.01317,
-  -0.35007,
-  -0.01227
+  -0.35006,
+  -0.01223
  ],
  "market": [
   -0.05572,
-  -0.09959,
+  -0.09958,
   1.29602,
   0.08416,
   0.01393

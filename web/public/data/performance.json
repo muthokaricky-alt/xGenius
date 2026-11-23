@@ -1,5 +1,5 @@
 {
- "generated_at": "2026-11-19T05:48:33+00:00",
+ "generated_at": "2026-11-23T16:30:46+00:00",
  "test": {
   "from": "2018-07-01",
   "to": "2026-07-01",
@@ -24,7 +24,7 @@
     "log_loss": 0.9829,
     "brier": 0.5855,
     "rps": 0.2,
-    "accuracy": 0.522,
+    "accuracy": 0.5219,
     "n": 32123
    },
    {
@@ -89,7 +89,7 @@
     "league": "austrian_bl",
     "base_rate": 1.0922,
     "elo": 1.0156,
-    "dixon_coles": 1.0115,
+    "dixon_coles": 1.0114,
     "ensemble": 1.0112,
     "ensemble_stats": 1.0112,
     "market": 0.993
@@ -143,7 +143,7 @@
     "league": "greek_super",
     "base_rate": 1.0823,
     "elo": 0.9484,
-    "dixon_coles": 0.9472,
+    "dixon_coles": 0.9471,
     "ensemble": 0.9308,
     "ensemble_stats": 0.9447,
     "market": 0.9247
@@ -197,7 +197,7 @@
     "league": "serie_a",
     "base_rate": 1.0846,
     "elo": 0.9811,
-    "dixon_coles": 0.9801,
+    "dixon_coles": 0.9802,
     "ensemble": 0.959,
     "ensemble_stats": 0.9776,
     "market": 0.9594
@@ -230,26 +230,26 @@
    {
     "forecast": 0.1561,
     "observed": 0.156,
-    "n": 14420
+    "n": 14421
    },
    {
     "forecast": 0.2565,
     "observed": 0.2628,
-    "n": 34881
+    "n": 34879
    },
    {
     "forecast": 0.3418,
     "observed": 0.3412,
-    "n": 15502
+    "n": 15503
    },
    {
     "forecast": 0.447,
-    "observed": 0.4308,
+    "observed": 0.4307,
     "n": 10247
    },
    {
     "forecast": 0.5474,
-    "observed": 0.545,
+    "observed": 0.5451,
     "n": 6912
    },
    {
@@ -293,7 +293,7 @@
     "key": "dixon_coles",
     "model": "Dixon-Coles",
     "note": "",
-    "log_loss": 0.9221,
+    "log_loss": 0.9222,
     "brier": 0.5439,
     "rps": 0.2028,
     "accuracy": 0.5714,
@@ -313,7 +313,7 @@
  },
  "season": {
   "from": "2026-07-01",
-  "to": "2026-11-20",
+  "to": "2026-11-24",
   "matches": 289,
   "leaderboard": [
    {
